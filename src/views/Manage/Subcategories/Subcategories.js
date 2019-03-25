@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
-import MultiSelectReact from 'multi-select-react';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label } from 'reactstrap';
 import SubcategoryService from './SubcategoryService';
-import './style.css';
+import './../style.css';
 const Toolbars = React.lazy(() => import('../../../components/Toolbars/Toolbars'));
 
 class Subcategories extends Component {
@@ -66,13 +65,9 @@ class Subcategories extends Component {
         if (checkedSubcategory.checked) {
             this.setState({
                 checkedSubcategories: this.state.checkedSubcategories.concat([Id]),
-                checkAll: Subcategories.find(element => element.checked === false) === undefined
+                checkedAll: Subcategories.find(element => element.checked === false) === undefined
             });
-            // if (Categories.find(element => element.checked === false) === undefined) {
-            //     this.setState({ checkedAll: true })
-            // } else {
-            //     this.setState({ checkedAll: false })
-            // }
+          
         } else {
             const _temp = this.state.checkedSubcategories
             _temp.splice(this.state.checkedSubcategories.indexOf(Id), 1)

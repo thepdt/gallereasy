@@ -6,9 +6,6 @@
 	color: #666;
 	font-size: 20px;
 }
-label{
-	
-}
 
 input[type="checkbox"]{
 	position: absolute;
@@ -67,3 +64,8 @@ input[type="checkbox"]:disabled + .label-text:before{
 .modal-body{
 	background-color: #e4e5e6;
 }
+
+.modal-title {
+	font-weight: bold;
+}
+

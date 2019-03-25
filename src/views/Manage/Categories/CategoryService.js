@@ -12,14 +12,33 @@ class CategoryService {
     // parseUrl(url) { 
     //     return this.baseUrl() + url; 
     // }
+    updateCategory(category) {
+        let url = "http://10.1.110.33:9090/categories";
+        return fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(category)
+        }).then(res => res.json());
+    }
+    
 
     getItems = () => {
-        const url = "localhost:9090/categories"
+        const url = "http://10.1.110.33:9090/categories"
         console.log(url);
-        axios
-        .get(url) 
-        .then(response => console.log(response))
-        .catch(error => console.log("sdfsdf" + error));
+
+        fetch(url).then(res => {return res.json()})
+        .then(data => {
+            console.log(data);
+        })
+        // axios
+        // .get(url) 
+        // .then(response => console.log(response))
+        // .catch(error => console.log("sdfsdf" + error));
+
+
         // axios
         //     .get("10.1.110.33:9090/categories")
         //     .then(function (response) {

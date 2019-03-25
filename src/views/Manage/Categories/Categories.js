@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label } from 'reactstrap';
 import CategoryService from './CategoryService';
-import './style.css';
+import './../style.css';
 const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
 
 class Categories extends Component {
@@ -15,11 +15,16 @@ class Categories extends Component {
             checkedCategories: [],
             checkedAll: false,
             modal: false,
+            title: "",
+            code: "",
+            description: "",
         };
         this.showCategoryDetail = this.showCategoryDetail.bind(this);
-        this._categoryService.getItems()
-        // this.checkOne = this.checkOne.bind(this);
 
+    }
+
+    componentWillMount() {
+        this._categoryService.getItems()
     }
 
     // Show detail category
@@ -65,7 +70,7 @@ class Categories extends Component {
         if (checkedCategory.checked) {
             this.setState({
                 checkedCategories: this.state.checkedCategories.concat([Id]),
-                checkAll: Categories.find(element => element.checked === false) === undefined
+                checkedAll: Categories.find(element => element.checked === false) === undefined
             });
             // if (Categories.find(element => element.checked === false) === undefined) {
             //     this.setState({ checkedAll: true })
@@ -87,6 +92,26 @@ class Categories extends Component {
 
     updateCategory() {
         console.log("update");
+        console.log("1: " + this.state.title);
+        console.log("2: " + this.state.code);
+        console.log("3: " + this.state.description);
+        const data = {
+            Id: 111,
+            Code: this.state.title,
+            Title: this.state.code,
+            Description: this.state.description
+        }
+
+        this._categoryService.updateCategory(data)
+        .then((result) => {
+            console.log(result);            
+        }).catch((err) => {
+            console.log("error: " + err);            
+        });
+
+        this.setState({
+            modal: !this.state.modal,
+        });
     }
 
     deleteCategory() {
@@ -95,6 +120,26 @@ class Categories extends Component {
 
     searchCategory(e) {
         console.log(e);
+    }
+
+    getTitle(event) {
+        this.setState({
+            title: event.target.value
+        }, () => {
+            console.log("1111: " + this.state.title);
+        })
+    }
+
+    getCode(event) {
+        this.setState({
+            code: event.target.value
+        })
+    }
+
+    getDescription(event) {
+        this.setState({
+            description: event.target.value
+        })
     }
 
     render() {
@@ -160,7 +205,7 @@ class Categories extends Component {
                                 <Label htmlFor="title-input">Tên chuyên mục</Label>
                             </Col>
                             <Col xs="12" md="11">
-                                <Input type="text" id="title-input" name="title-input" />
+                                <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -168,7 +213,7 @@ class Categories extends Component {
                                 <Label htmlFor="code-input">Mã chuyên mục</Label>
                             </Col>
                             <Col xs="12" md="11">
-                                <Input type="text" id="code-input" name="code-input" />
+                                <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
                             </Col>
                         </FormGroup>
                         <FormGroup row>
@@ -176,13 +221,13 @@ class Categories extends Component {
                                 <Label htmlFor="description-input">Miêu tả</Label>
                             </Col>
                             <Col xs="12" md="11">
-                                <Input type="text" id="description-input" name="description-input" />
+                                <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescription(e)} />
                             </Col>
                         </FormGroup>
 
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.updateCategory}>Cập nhật</Button>{' '}
+                        <Button color="primary" onClick={this.updateCategory.bind(this)}>Cập nhật</Button>{' '}
                         <Button color="secondary" onClick={this.showCategoryDetail}>Hủy</Button>
                     </ModalFooter>
                 </Modal>

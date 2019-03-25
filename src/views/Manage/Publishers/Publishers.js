@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import PublisherService from './PublisherService';
-import './style.css';
+import './../style.css';
+import Widget04 from './../../Widgets/Widget04';
 const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
 
 class Publishers extends Component {
@@ -15,10 +16,9 @@ class Publishers extends Component {
             checkedPublishers: [],
             checkedAll: false,
             modal: false,
+            activeTab: ['general', 'statistics'],
         };
         this.showPublisherDetail = this.showPublisherDetail.bind(this);
-        // this._publisherService.getItems()
-        // this.checkOne = this.checkOne.bind(this);
 
     }
 
@@ -65,7 +65,7 @@ class Publishers extends Component {
         if (checkedPublisher.checked) {
             this.setState({
                 checkedPublishers: this.state.checkedPublishers.concat([Id]),
-                checkAll: Publishers.find(element => element.checked === false) === undefined
+                checkedAll: Publishers.find(element => element.checked === false) === undefined
             });
         } else {
             const _temp = this.state.checkedPublishers
@@ -90,6 +90,86 @@ class Publishers extends Component {
 
     searchPublisher(e) {
         console.log(e);
+    }
+
+    selectedTab(tabPane, tab) {
+        const _temp = this.state.activeTab.slice()
+        _temp[tabPane] = tab
+        this.setState({
+            activeTab: _temp,
+        });
+    }
+
+    tabPane() {
+        return (
+            <>
+                <TabPane tabId="general">
+                    {
+                        <div>
+                            <FormGroup row>
+                                <Col md="1">
+                                    <Label htmlFor="title-input">Tên đầu báo</Label>
+                                </Col>
+                                <Col xs="12" md="11">
+                                    <Input type="text" id="title-input" name="title-input" />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="1">
+                                    <Label htmlFor="code-input">Mã đầu báo</Label>
+                                </Col>
+                                <Col xs="12" md="11">
+                                    <Input type="text" id="code-input" name="code-input" />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="1">
+                                    <Label htmlFor="code-input">Logo đầu báo</Label>
+                                </Col>
+                                <Col xs="12" md="11">
+                                    <Input type="text" id="code-input" name="code-input" />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="1">
+                                    <Label htmlFor="code-input">Loại đầu báo</Label>
+                                </Col>
+                                <Col xs="12" md="11">
+                                    <Input type="text" id="code-input" name="code-input" />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="1">
+                                    <Label htmlFor="description-input">Miêu tả</Label>
+                                </Col>
+                                <Col xs="12" md="11">
+                                    <Input type="text" id="description-input" name="description-input" />
+                                </Col>
+                            </FormGroup>
+
+                        </div>
+                    }
+                </TabPane>
+
+                <TabPane tabId="statistics">
+                    {
+                        <div className="container">
+                            <FormGroup row>
+                                <Col md="4">
+                                    <Widget04 icon="icon-user-following" color="primary" header="972" value="25" invert>Số người theo dõi</Widget04>
+                                </Col>
+                                <Col md="4">
+                                    <Widget04 icon="fa fa-newspaper-o" color="info" header="972" value="25" invert>Số bài đăng lưu trên hệ thống</Widget04>
+                                </Col>
+                                <Col md="4">
+                                    <Widget04 icon="fa fa-film" color="warning" header="972" value="25" invert>Số videos lưu trên hệ thống</Widget04>
+                                </Col>
+                            </FormGroup>
+                        </div>
+                    }
+                </TabPane>
+            </>
+        );
     }
 
     render() {
@@ -118,9 +198,9 @@ class Publishers extends Component {
                                                     <span className="label-text"></span>
                                                 </label>
                                             </th>
-                                            <th scope="col">Id</th>
-                                            <th scope="col">Tên chuyên mục</th>
-                                            <th scope="col">Mã chuyên mục</th>
+                                            <th scope="col">Tên đầu báo</th>
+                                            <th scope="col">Mã đầu báo</th>
+                                            <th scope="col">Loại đầu báo </th>
                                             <th scope="col">Mô tả</th>
                                         </tr>
                                     </thead>
@@ -133,11 +213,11 @@ class Publishers extends Component {
                                                         <span className="label-text"></span>
                                                     </label>
                                                 </td>
-                                                <td>{publisher.Id}</td>
                                                 <td>
                                                     <span className="title" onClick={() => this.showPublisherDetail(publisher.Id)}>{publisher.Title}</span>
                                                 </td>
                                                 <td>{publisher.Code}</td>
+                                                <td>{publisher.Kind}</td>
                                                 <td>{publisher.Description}</td>
                                             </tr>)
                                         )}
@@ -148,32 +228,23 @@ class Publishers extends Component {
                     </Col>
                 </Row>
                 <Modal isOpen={this.state.modal} toggle={this.showPublisherDetail} className={'modal-lg ' + this.props.className}>
-                    <ModalHeader toggle={this.showPublisherDetail}>Chuyên mục</ModalHeader>
+                    <ModalHeader toggle={this.showPublisherDetail}>Đầu báo</ModalHeader>
                     <ModalBody className="modal-body">
-                        <FormGroup row>
-                            <Col md="1">
-                                <Label htmlFor="title-input">Tên chuyên mục</Label>
-                            </Col>
-                            <Col xs="12" md="11">
-                                <Input type="text" id="title-input" name="title-input" />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Col md="1">
-                                <Label htmlFor="code-input">Mã chuyên mục</Label>
-                            </Col>
-                            <Col xs="12" md="11">
-                                <Input type="text" id="code-input" name="code-input" />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Col md="1">
-                                <Label htmlFor="description-input">Miêu tả</Label>
-                            </Col>
-                            <Col xs="12" md="11">
-                                <Input type="text" id="description-input" name="description-input" />
-                            </Col>
-                        </FormGroup>
+                        <Nav tabs>
+                            <NavItem>
+                                <NavLink active={this.state.activeTab[0] === 'general'} onClick={() => { this.selectedTab(0, 'general'); }}>
+                                    <i className="fa fa-tasks"></i> &nbsp;Thông tin chung
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink active={this.state.activeTab[0] === 'statistics'} onClick={() => { this.selectedTab(0, 'statistics'); }}>
+                                    <i className="fa fa-line-chart"></i>&nbsp;Thống kê
+                                </NavLink>
+                            </NavItem>
+                        </Nav>
+                        <TabContent activeTab={this.state.activeTab[0]}>
+                            {this.tabPane()}
+                        </TabContent>
 
                     </ModalBody>
                     <ModalFooter>

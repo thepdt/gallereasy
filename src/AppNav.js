@@ -13,30 +13,31 @@ export default {
             divider: true,
         },
         {
-            name: 'Manage',
+            name: 'Quản lý',
             url: '/manage',
-            icon: 'icon-cursor',
+            icon: 'fa fa-gears',
             children: [
                 {
-                    name: 'Categories',
+                    name: 'Đầu báo',
+                    url: '/manage/publishers',
+                    icon: 'fa fa-address-card-o',
+                },
+                {
+                    name: 'Bài đăng',
+                    url: '/manage/posts',
+                    icon: 'fa fa-newspaper-o',
+                },
+                {
+                    name: 'Chuyên mục',
                     url: '/manage/categories',
                     icon: 'fa fa-list-alt',
                 },
                 {
-                    name: 'Subcategories',
+                    name: 'Chuyên mục con',
                     url: '/manage/subcategories',
-                    icon: 'fa fa-list-alt',
+                    icon: 'fa fa-list-ul',
                 },
-                {
-                    name: 'Publishers',
-                    url: '/manage/publishers',
-                    icon: 'fa fa-list-alt',
-                },
-                {
-                    name: 'Posts',
-                    url: '/manage/posts',
-                    icon: 'icon-book-open',
-                }
+                
             ],
         },
         {

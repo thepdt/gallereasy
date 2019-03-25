@@ -3,7 +3,7 @@ import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, 
 import MultiSelectReact from 'multi-select-react';
 import PaginationComponent from "react-reactstrap-pagination";
 import PostService from './PostService';
-import './style.css';
+import './../style.css';
 import Widget04 from './../../Widgets/Widget04';
 const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
 
@@ -47,7 +47,7 @@ class Posts extends Component {
                         { value: false, id: '10', label: 'Doanh nghiệp' }, { value: false, id: '11', label: 'Bất động sản' }, { value: false, id: '12', label: 'Ebank' }, { value: false, id: '13', label: 'Thương mại điện tử' }, { value: false, id: '14', label: 'Hàng hóa' },
                         { value: false, id: '15', label: 'Tiền của tôi' }, { value: false, id: '16', label: 'Chứng khoán' }, { value: false, id: '17', label: 'Quốc tế' }, { value: false, id: '18', label: 'Vĩ mô' }, { value: false, id: '19', label: 'Startup' },
                     ],
-                },
+                },	
                 {
                     parentCatId: 4,
                     subCat: [
@@ -125,7 +125,6 @@ class Posts extends Component {
             subCategorySelects: [],
         };
         this.showPostDetail = this.showPostDetail.bind(this);
-        // this.checkOne = this.checkOne.bind(this);
 
     }
 
@@ -209,7 +208,7 @@ class Posts extends Component {
         if (checkedPost.checked) {
             this.setState({
                 checkedPosts: this.state.checkedPosts.concat([id]),
-                checkAll: Posts.find(element => element.checked === false) === undefined
+                checkedAll: Posts.find(element => element.checked === false) === undefined
             });
             // if (Posts.find(element => element.checked === false) === undefined) {
             //     this.setState({ checkedAll: true })
@@ -323,7 +322,7 @@ class Posts extends Component {
                                     <Label htmlFor="content-input">Nội dung</Label>
                                 </Col>
                                 <Col xs="12" md="11">
-                                    <Input type="textarea" name="content-input" id="content-input" rows="20" />
+                                    <Input type="textarea" name="content-input" id="content-input" rows="15" />
                                 </Col>
                             </FormGroup>
                         </div>
@@ -506,10 +505,6 @@ class Posts extends Component {
                         <TabContent activeTab={this.state.activeTab[0]}>
                             {this.tabPane()}
                         </TabContent>
-
-
-
-
 
                     </ModalBody>
                     <ModalFooter>
