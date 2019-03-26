@@ -50,8 +50,7 @@ class ToolBars extends Component {
                     <Col md="9">
                         <Row className="text-right">
                             <Col md="12">
-                                <Button color="primary" onClick={() => this.showSearchBox()}>
-                                <i className="fa fa-search"></i>&nbsp;Công cụ tìm kiếm&nbsp;<i className="fa fa-chevron-down"></i></Button>
+                                <Button color="primary" onClick={() => this.showSearchBox()}>Công cụ tìm kiếm&nbsp;<i className="fa fa-chevron-down"></i></Button>
                             </Col>
                         </Row >
                     </Col>
@@ -61,8 +60,8 @@ class ToolBars extends Component {
                         <div className="input-group">
                             <Input type="text" id="searchByTitle-input" name="searchByTitle-input" placeholder={this.props.searchPlaceholder1} value={this.state.titleSearch} onChange={(e) => this.getTitle(e)}/>
                             <div className="input-group-append">
-                                <Button style={{ width: 100 + 'px' }} color="primary" onClick={() => this.props.onSearch(this.state.titleSearch)}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
-                                <Button style={{ width: 100 + 'px' }} color="secondary" onClick={() => this.props.onSearch(this.state.titleSearch)}><i className="fa fa-eraser"></i>&nbsp;Xóa</Button>
+                                <Button color="primary" onClick={() => this.props.onSearch(this.state.titleSearch)}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
+                                <Button color="danger" onClick={() => this.props.onSearch(this.state.titleSearch)}><i className="fa fa-eraser"></i>&nbsp;Xóa</Button>
                             </div>
                         </div>
                     </Row>
