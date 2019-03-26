@@ -50,7 +50,8 @@ class ToolBars extends Component {
                     <Col md="9">
                         <Row className="text-right">
                             <Col md="12">
-                                <Button color="primary" onClick={() => this.showSearchBox()}>Công cụ tìm kiếm&nbsp;<i className="fa fa-chevron-down"></i></Button>
+                                <Button color="primary" onClick={() => this.showSearchBox()}>
+                                <i className="fa fa-search"></i>&nbsp;Công cụ tìm kiếm&nbsp;<i className="fa fa-chevron-down"></i></Button>
                             </Col>
                         </Row >
                     </Col>
