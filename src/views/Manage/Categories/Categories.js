@@ -143,94 +143,92 @@ class Categories extends Component {
     }
 
     render() {
-
         return (
-            <div className="animated fadeIn">
-                <Row>
-                    <Col>
-                        <Toolbars
-                            onDelete={e => this.deleteCategory(e)}
-                            onShowDetail={e => this.showCategoryDetail(e)}
-                            onSearch={e => this.searchCategory(e)}
-                            searchPlaceholder1={'Tìm kiếm theo tên chuyên mục'}
-                            searchPlaceholder2={'Tìm kiếm theo mã chuyên mục '} />
-                        <Card>
-                            <CardHeader>
-                                <i className="fa fa-align-justify"></i> Chuyên mục
-                            </CardHeader>
-                            <CardBody>
-                                <Table responsive hover bordered striped>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" style={{ width: 25 + 'px' }}>
-                                                <label className="checkboxLabel">
-                                                    <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} />
-                                                    <span className="label-text"></span>
-                                                </label>
-                                            </th>
-                                            <th scope="col">Id</th>
-                                            <th scope="col">Tên chuyên mục</th>
-                                            <th scope="col">Mã chuyên mục</th>
-                                            <th scope="col">Mô tả</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {this.state.categories.map((category, index) =>
-                                            (< tr key={category.Id.toString()} >
-                                                <td >
+            <div className="container-fullwidth">
+                <Toolbars className="toolbar"
+                    onDelete={e => this.deleteCategory(e)}
+                    onShowDetail={e => this.showCategoryDetail(e)}
+                    onSearch={e => this.searchCategory(e)}
+                    searchPlaceholder1={'Tìm kiếm theo tên chuyên mục'} />
+                <div className="animated fadeIn">
+                    <Row>
+                        <Col>
+                            <Card>
+                                <CardHeader>
+                                    <i className="fa fa-align-justify"></i> Chuyên mục
+                                </CardHeader>
+                                <CardBody>
+                                    <Table responsive hover bordered striped>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" width="3%" className="centered">
                                                     <label className="checkboxLabel">
-                                                        <Input className="form-check-input" type="checkbox" id={category.Id} name={category.Id} value={category.checked} checked={category.checked} onChange={() => this.checkOne(category.Id)} />
+                                                        <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} />
                                                         <span className="label-text"></span>
                                                     </label>
-                                                </td>
-                                                <td>{category.Id}</td>
-                                                <td>
-                                                    <span className="title" onClick={() => this.showCategoryDetail(category.Id)}>{category.Title}</span>
-                                                </td>
-                                                <td>{category.Code}</td>
-                                                <td>{category.Description}</td>
-                                            </tr>)
-                                        )}
-                                    </tbody>
-                                </Table>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-                <Modal isOpen={this.state.modal} toggle={this.showCategoryDetail} className={'modal-lg ' + this.props.className}>
-                    <ModalHeader toggle={this.showCategoryDetail}>Chuyên mục</ModalHeader>
-                    <ModalBody className="modal-body">
-                        <FormGroup row>
-                            <Col md="1">
-                                <Label htmlFor="title-input">Tên chuyên mục</Label>
-                            </Col>
-                            <Col xs="12" md="11">
-                                <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Col md="1">
-                                <Label htmlFor="code-input">Mã chuyên mục</Label>
-                            </Col>
-                            <Col xs="12" md="11">
-                                <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Col md="1">
-                                <Label htmlFor="description-input">Miêu tả</Label>
-                            </Col>
-                            <Col xs="12" md="11">
-                                <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescription(e)} />
-                            </Col>
-                        </FormGroup>
+                                                </th>
+                                                <th scope="col" width="47%" className="centered">Tên chuyên mục</th>
+                                                <th scope="col" width="10%" className="centered">Mã chuyên mục</th>
+                                                <th scope="col" width="40%" className="centered">Mô tả</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {this.state.categories.map((category, index) =>
+                                                (< tr key={category.Id.toString()} >
+                                                    <td className="centered">
+                                                        <label className="checkboxLabel">
+                                                            <Input className="form-check-input" type="checkbox" id={category.Id} name={category.Id} value={category.checked} checked={category.checked} onChange={() => this.checkOne(category.Id)} />
+                                                            <span className="label-text"></span>
+                                                        </label>
+                                                    </td>
+                                                    <td>
+                                                        <span className="title" onClick={() => this.showCategoryDetail(category.Id)}>{category.Title}</span>
+                                                    </td>
+                                                    <td>{category.Code}</td>
+                                                    <td>{category.Description}</td>
+                                                </tr>)
+                                            )}
+                                        </tbody>
+                                    </Table>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Modal isOpen={this.state.modal} toggle={this.showCategoryDetail} className={'modal-lg ' + this.props.className}>
+                        <ModalHeader toggle={this.showCategoryDetail}>Chuyên mục</ModalHeader>
+                        <ModalBody className="modal-body">
+                            <FormGroup row>
+                                <Col md="4" xs="12">
+                                    <Label htmlFor="title-input" className="title-required">Tên chuyên mục:</Label>
+                                </Col>
+                                <Col md="8" xs="12">
+                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="4" xs="12">
+                                    <Label htmlFor="code-input" className="title-required">Mã chuyên mục:</Label>
+                                </Col>
+                                <Col md="8" xs="12">
+                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="4" xs="12">
+                                    <Label htmlFor="description-input">Miêu tả:</Label>
+                                </Col>
+                                <Col md="8" xs="12">
+                                    <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescription(e)} />
+                                </Col>
+                            </FormGroup>
 
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={this.updateCategory.bind(this)}>Cập nhật</Button>{' '}
-                        <Button color="secondary" onClick={this.showCategoryDetail}>Hủy</Button>
-                    </ModalFooter>
-                </Modal>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="primary" onClick={this.updateCategory.bind(this)}>Cập nhật</Button>{' '}
+                            <Button color="secondary" onClick={this.showCategoryDetail}>Hủy</Button>
+                        </ModalFooter>
+                    </Modal>
+                </div>
             </div>
         )
     }

@@ -4,7 +4,7 @@
     position: relative;
 	cursor: pointer;
 	color: #666;
-	font-size: 20px;
+	font-size: 18px;
 }
 
 input[type="checkbox"]{
@@ -25,6 +25,7 @@ input[type="checkbox"] + .label-text:before{
 	-webkit-font-smoothing:antialiased;
 	/* width: 1em; */
 	display: inline-block;
+	font-size: 18px;
 }
 
 input[type="checkbox"]:checked + .label-text:before{
@@ -55,17 +56,3 @@ input[type="checkbox"]:disabled + .label-text:before{
 .title:hover {
     color: #1fa7d8; /* Change the value to with anchors hover color*/
 }
-
-.modal-lg {
-    max-width: 100vW;
-    min-height: 100vh;
-}
-
-.modal-body{
-	background-color: #e4e5e6;
-}
-
-.modal-title {
-	font-weight: bold;
-}
-
