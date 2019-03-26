@@ -11,7 +11,7 @@ class Categories extends Component {
         super(props);
 
         this.state = {
-            categories: this._categoryService.List(),
+            categories: [],
             checkedCategories: [],
             checkedAll: false,
             modal: false,
@@ -24,11 +24,61 @@ class Categories extends Component {
     }
 
     componentWillMount() {
-        this._categoryService.getItems()
+        this._categoryService.getCategories()
+        .then((result) => {
+            result.forEach(element => {
+                element.checked = false
+            });
+            this.setState({
+                categories: result
+            })
+        }).catch((err) => {
+            console.log("error: " + err);
+        });
+    }
+
+    //Close modal 
+    closeModal() {
+        this.setState({
+            modal: !this.state.modal,
+        });
+    }
+
+    //Add a new category
+    createCategory() {
+        this.setState({
+            modal: !this.state.modal,
+            title: "",
+            code: "",
+            description: ""
+        });
     }
 
     // Show detail category
     showCategoryDetail(id) {
+        const categorySelected = this.state.categories.find(element => element.Id === id)
+        this.setState({
+            modal: !this.state.modal,
+            title: categorySelected.Title,
+            code: categorySelected.Code,
+            description: categorySelected.Description
+        });
+    }
+
+    updateCategory() {
+        const data = {
+            Code: this.state.title,
+            Title: this.state.code,
+            Description: this.state.description
+        }
+
+        this._categoryService.updateCategory(data)
+            .then((result) => {
+                console.log(result);
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+
         this.setState({
             modal: !this.state.modal,
         });
@@ -72,11 +122,6 @@ class Categories extends Component {
                 checkedCategories: this.state.checkedCategories.concat([Id]),
                 checkedAll: Categories.find(element => element.checked === false) === undefined
             });
-            // if (Categories.find(element => element.checked === false) === undefined) {
-            //     this.setState({ checkedAll: true })
-            // } else {
-            //     this.setState({ checkedAll: false })
-            // }
         } else {
             const _temp = this.state.checkedCategories
             _temp.splice(this.state.checkedCategories.indexOf(Id), 1)
@@ -90,30 +135,6 @@ class Categories extends Component {
         });
     }
 
-    updateCategory() {
-        console.log("update");
-        console.log("1: " + this.state.title);
-        console.log("2: " + this.state.code);
-        console.log("3: " + this.state.description);
-        const data = {
-            Id: 111,
-            Code: this.state.title,
-            Title: this.state.code,
-            Description: this.state.description
-        }
-
-        this._categoryService.updateCategory(data)
-        .then((result) => {
-            console.log(result);            
-        }).catch((err) => {
-            console.log("error: " + err);            
-        });
-
-        this.setState({
-            modal: !this.state.modal,
-        });
-    }
-
     deleteCategory() {
         console.log("deleted");
     }
@@ -122,11 +143,15 @@ class Categories extends Component {
         console.log(e);
     }
 
+    getId(event) {
+        this.setState({
+            id: event.target.value
+        })
+    }
+
     getTitle(event) {
         this.setState({
             title: event.target.value
-        }, () => {
-            console.log("1111: " + this.state.title);
         })
     }
 
@@ -150,7 +175,7 @@ class Categories extends Component {
                     <Col>
                         <Toolbars
                             onDelete={e => this.deleteCategory(e)}
-                            onShowDetail={e => this.showCategoryDetail(e)}
+                            onCreate={e => this.createCategory(e)}
                             onSearch={e => this.searchCategory(e)}
                             searchPlaceholder1={'Tìm kiếm theo tên chuyên mục'}
                             searchPlaceholder2={'Tìm kiếm theo mã chuyên mục '} />
@@ -198,7 +223,7 @@ class Categories extends Component {
                     </Col>
                 </Row>
                 <Modal isOpen={this.state.modal} toggle={this.showCategoryDetail} className={'modal-lg ' + this.props.className}>
-                    <ModalHeader toggle={this.showCategoryDetail}>Chuyên mục</ModalHeader>
+                    <ModalHeader toggle={this.closeModal.bind(this)}>Chuyên mục</ModalHeader>
                     <ModalBody className="modal-body">
                         <FormGroup row>
                             <Col md="1">
@@ -228,7 +253,7 @@ class Categories extends Component {
                     </ModalBody>
                     <ModalFooter>
                         <Button color="primary" onClick={this.updateCategory.bind(this)}>Cập nhật</Button>{' '}
-                        <Button color="secondary" onClick={this.showCategoryDetail}>Hủy</Button>
+                        <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                     </ModalFooter>
                 </Modal>
             </div>

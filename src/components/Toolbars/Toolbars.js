@@ -42,7 +42,7 @@ class ToolBars extends Component {
             <div>
                 <Row style={{ marginBottom: 10 + 'px' }}>
                     <Col md="3">
-                        <Button style={{ marginRight: 20 + 'px' }} color="primary" onClick={() => this.props.onShowDetail()}><i className="fa fa-plus"></i>&nbsp;Thêm mới</Button>
+                        <Button style={{ marginRight: 20 + 'px' }} color="primary" onClick={() => this.props.onCreate()}><i className="fa fa-plus"></i>&nbsp;Thêm mới</Button>
                         <Button color="danger" onClick={e => this.props.onDelete(e)}>Xóa</Button>
                     </Col>
                     <Col md="9">

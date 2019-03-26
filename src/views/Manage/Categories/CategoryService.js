@@ -25,35 +25,12 @@ class CategoryService {
     }
     
 
-    getItems = () => {
+    getCategories = () => {
         const url = "http://10.1.110.33:9090/categories"
-        console.log(url);
-
-        fetch(url).then(res => {return res.json()})
-        .then(data => {
-            console.log(data);
-        })
-        // axios
-        // .get(url) 
-        // .then(response => console.log(response))
-        // .catch(error => console.log("sdfsdf" + error));
-
-
-        // axios
-        //     .get("10.1.110.33:9090/categories")
-        //     .then(function (response) {
-        //         if (response.status === 200 && response != null) {
-        //             var data = response.data
-        //             return data
-        //         } else {
-        //             throw new Error('Empty data')
-        //         }
-        //     })
-        //     .catch(function (error) {
-        //         console.log("1.error " + error)
-        //         return [] // Return empty array in case error response.
-        //     })
+        return fetch(url).then(res => res.json())
     }
+
+
     ListCategories() {
         // // Where we're fetching data from
         // get(`https://jsonplaceholder.typicode.com/users`)
