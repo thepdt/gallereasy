@@ -61,7 +61,7 @@ class ToolBars extends Component {
                             <Input type="text" id="searchByTitle-input" name="searchByTitle-input" placeholder={this.props.searchPlaceholder1} value={this.state.titleSearch} onChange={(e) => this.getTitle(e)}/>
                             <div className="input-group-append">
                                 <Button style={{ width: 100 + 'px' }} color="primary" onClick={() => this.props.onSearch(this.state.titleSearch)}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
-                                <Button style={{ width: 100 + 'px' }} color="danger" onClick={() => this.props.onSearch(this.state.titleSearch)}><i className="fa fa-eraser"></i>&nbsp;Xóa</Button>
+                                <Button style={{ width: 100 + 'px' }} color="secondary" onClick={() => this.props.onSearch(this.state.titleSearch)}><i className="fa fa-eraser"></i>&nbsp;Xóa</Button>
                             </div>
                         </div>
                     </Row>
