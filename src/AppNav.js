@@ -39,19 +39,6 @@ export default {
                 },
                 
             ],
-        },
-        {
-            divider: true,
-        },
-        {
-            title: true,
-            name: 'Extras',
-        },        
-        {
-            name: 'Disabled',
-            url: '/dashboard',
-            icon: 'icon-ban',
-            attributes: { disabled: true },
         }
     ],
 };
