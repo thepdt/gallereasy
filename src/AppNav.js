@@ -21,12 +21,7 @@ export default {
                     name: 'Đầu báo',
                     url: '/manage/publishers',
                     icon: 'fa fa-address-card-o',
-                },
-                {
-                    name: 'Bài đăng',
-                    url: '/manage/posts',
-                    icon: 'fa fa-newspaper-o',
-                },
+                },                
                 {
                     name: 'Chuyên mục',
                     url: '/manage/categories',
@@ -37,7 +32,11 @@ export default {
                     url: '/manage/subcategories',
                     icon: 'fa fa-list-ul',
                 },
-                
+                {
+                    name: 'Bài đăng',
+                    url: '/manage/posts',
+                    icon: 'fa fa-newspaper-o',
+                },
             ],
         }
     ],
