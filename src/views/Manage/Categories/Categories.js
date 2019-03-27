@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label } from 'reactstrap';
+import PaginationComponent from "react-reactstrap-pagination";
 import CategoryService from './CategoryService';
 import './../style.css';
 const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
@@ -14,7 +15,10 @@ class Categories extends Component {
             categories: [],
             checkedCategories: [],
             checkedAll: false,
+            selectedPage: 1,
             modal: false,
+            createModalMode: Boolean,
+            id: "",
             title: "",
             code: "",
             description: "",
@@ -24,17 +28,24 @@ class Categories extends Component {
     }
 
     componentWillMount() {
+        this.getCategories()
+    }
+
+    //get all categories
+    getCategories() {
         this._categoryService.getCategories()
-        .then((result) => {
-            result.forEach(element => {
-                element.checked = false
+            .then((result) => {
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.forEach(element => {
+                        element.checked = false
+                    });
+                    this.setState({
+                        categories: result.Data
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
             });
-            this.setState({
-                categories: result
-            })
-        }).catch((err) => {
-            console.log("error: " + err);
-        });
     }
 
     //Close modal 
@@ -45,13 +56,37 @@ class Categories extends Component {
     }
 
     //Add a new category
-    createCategory() {
+    openCreateModal() {
         this.setState({
             modal: !this.state.modal,
+            createModalMode: true,
             title: "",
             code: "",
             description: ""
         });
+    }
+
+    createCategory() {
+        const data = {
+            Title: this.state.title,
+            Code: this.state.code,
+            Description: this.state.description
+        }
+        if (data.Title !== null && data.Code !== null && data.Description !== null) {
+            this._categoryService.createCategory(data)
+                .then((result) => {
+                    result.Data.checked = false;
+                    this.setState({
+                        categories: this.state.categories.concat(result.Data)
+                    })
+                }).catch((err) => {
+                    console.log("err: " + err);
+                });
+
+            this.setState({
+                modal: !this.state.modal,
+            });
+        }
     }
 
     // Show detail category
@@ -59,6 +94,8 @@ class Categories extends Component {
         const categorySelected = this.state.categories.find(element => element.Id === id)
         this.setState({
             modal: !this.state.modal,
+            createModalMode: false,
+            id: categorySelected.Id,
             title: categorySelected.Title,
             code: categorySelected.Code,
             description: categorySelected.Description
@@ -67,14 +104,22 @@ class Categories extends Component {
 
     updateCategory() {
         const data = {
-            Code: this.state.title,
-            Title: this.state.code,
+            Id: this.state.id,
+            Title: this.state.title,
+            Code: this.state.code,
             Description: this.state.description
         }
 
         this._categoryService.updateCategory(data)
             .then((result) => {
-                console.log(result);
+                result.Data.checked = false;
+                const _categories = this.state.categories
+                const index = _categories.findIndex(el => el.Id === result.Data.Id)
+                _categories[index] = result.Data
+
+                this.setState({
+                    categories: _categories
+                })
             }).catch((err) => {
                 console.log("error: " + err);
             });
@@ -113,7 +158,7 @@ class Categories extends Component {
         });
     }
 
-    checkOne(Id) {
+    checkMulti(Id) {
         const Categories = this.state.categories;
         const checkedCategory = Categories.find(element => element.Id === Id);
         checkedCategory.checked = !checkedCategory.checked;
@@ -135,8 +180,46 @@ class Categories extends Component {
         });
     }
 
+    checkOne(Id) {
+        const Categories = this.state.categories;
+        const index = Categories.findIndex(element => element.Id === Id);
+        for (var i = 0; i < Categories.length; i++) {
+            if (i !== index) {
+                Categories[i].checked = false
+            } else {
+                Categories[index].checked = !Categories[index].checked
+            }
+        }
+        if (Categories[index].checked) {
+            this.setState({
+                checkedCategories: [Id],
+            });
+        } else {
+            this.setState({
+                checkedCategories: [],
+            });
+        }
+        this.setState({
+            categories: Categories
+        });
+    }
+
     deleteCategory() {
-        console.log("deleted");
+        if (this.state.checkedCategories.length !== 0) {
+            this._categoryService.deleteCategory(this.state.checkedCategories[0])
+                .then((result) => {
+                    if (result.StatusCode === 200) {
+                        const _categories = this.state.categories
+                        const index = _categories.findIndex(el => el.Id === this.state.checkedCategories[0])
+                        _categories.splice(index, 1);
+                        this.setState({
+                            categories: _categories
+                        })
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
+        }
     }
 
     searchCategory(e) {
@@ -167,95 +250,103 @@ class Categories extends Component {
         })
     }
 
-    render() {
+    selectePage(selectedPage) {
+        console.log("selected", selectedPage);
+        this.setState({ selectedPage: selectedPage });
+    }
 
+    render() {
         return (
-            <div className="animated fadeIn">
-                <Row>
-                    <Col>
-                        <Toolbars
-                            onDelete={e => this.deleteCategory(e)}
-                            onCreate={e => this.createCategory(e)}
-                            onSearch={e => this.searchCategory(e)}
-                            searchPlaceholder1={'Tìm kiếm theo tên chuyên mục'}
-                            searchPlaceholder2={'Tìm kiếm theo mã chuyên mục '} />
-                        <Card>
-                            <CardHeader>
-                                <i className="fa fa-align-justify"></i> Chuyên mục
-                            </CardHeader>
-                            <CardBody>
-                                <Table responsive hover bordered striped>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" style={{ width: 25 + 'px' }}>
-                                                <label className="checkboxLabel">
-                                                    <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} />
-                                                    <span className="label-text"></span>
-                                                </label>
-                                            </th>
-                                            <th scope="col">Id</th>
-                                            <th scope="col">Tên chuyên mục</th>
-                                            <th scope="col">Mã chuyên mục</th>
-                                            <th scope="col">Mô tả</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {this.state.categories.map((category, index) =>
-                                            (< tr key={category.Id.toString()} >
-                                                <td >
-                                                    <label className="checkboxLabel">
-                                                        <Input className="form-check-input" type="checkbox" id={category.Id} name={category.Id} value={category.checked} checked={category.checked} onChange={() => this.checkOne(category.Id)} />
+            <div className="container-fullwidth">
+                <Toolbars className="toolbar"
+                    onDelete={e => this.deleteCategory(e)}
+                    onOpenCreateModal={e => this.openCreateModal(e)}
+                    onSearch={e => this.searchCategory(e)}
+                    searchPlaceholder1={'Tìm kiếm theo tên chuyên mục'} />
+                <div className="animated fadeIn">
+                    <Row>
+                        <Col>
+                            <Card>
+                                <CardHeader>
+                                    <i className="fa fa-align-justify"></i> Chuyên mục
+                                </CardHeader>
+                                <CardBody>
+                                    <Table responsive hover bordered striped>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" width="3%" className="centered">
+                                                    <label className="checkboxLabel">#
+                                                        {/* <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} /> */}
                                                         <span className="label-text"></span>
                                                     </label>
-                                                </td>
-                                                <td>{category.Id}</td>
-                                                <td>
-                                                    <span className="title" onClick={() => this.showCategoryDetail(category.Id)}>{category.Title}</span>
-                                                </td>
-                                                <td>{category.Code}</td>
-                                                <td>{category.Description}</td>
-                                            </tr>)
-                                        )}
-                                    </tbody>
-                                </Table>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-                <Modal isOpen={this.state.modal} toggle={this.showCategoryDetail} className={'modal-lg ' + this.props.className}>
-                    <ModalHeader toggle={this.closeModal.bind(this)}>Chuyên mục</ModalHeader>
-                    <ModalBody className="modal-body">
-                        <FormGroup row>
-                            <Col md="1">
-                                <Label htmlFor="title-input">Tên chuyên mục</Label>
-                            </Col>
-                            <Col xs="12" md="11">
-                                <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Col md="1">
-                                <Label htmlFor="code-input">Mã chuyên mục</Label>
-                            </Col>
-                            <Col xs="12" md="11">
-                                <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
-                            </Col>
-                        </FormGroup>
-                        <FormGroup row>
-                            <Col md="1">
-                                <Label htmlFor="description-input">Miêu tả</Label>
-                            </Col>
-                            <Col xs="12" md="11">
-                                <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescription(e)} />
-                            </Col>
-                        </FormGroup>
+                                                </th>
+                                                <th scope="col" width="47%" className="centered">Tên chuyên mục</th>
+                                                <th scope="col" width="10%" className="centered">Mã chuyên mục</th>
+                                                <th scope="col" width="40%" className="centered">Mô tả</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {this.state.categories.map((category, index) =>
+                                                (< tr key={category.Id.toString()} >
+                                                    <td className="centered">
+                                                        <label className="checkboxLabel">
+                                                            <Input className="form-check-input" type="checkbox" id={category.Id} name={category.Id} value={category.checked} checked={category.checked} onChange={() => this.checkOne(category.Id)} />
+                                                            <span className="label-text"></span>
+                                                        </label>
+                                                    </td>
+                                                    <td>
+                                                        <span className="title" onClick={() => this.showCategoryDetail(category.Id)}>{category.Title}</span>
+                                                    </td>
+                                                    <td>{category.Code}</td>
+                                                    <td>{category.Description}</td>
+                                                </tr>)
+                                            )}
+                                        </tbody>
+                                    </Table>
+                                    <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectePage.bind(this)} />
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
+                        <ModalHeader toggle={this.closeModal.bind(this)}>Chuyên mục</ModalHeader>
+                        <ModalBody className="modal-body">
+                            <FormGroup row>
+                                <Col md="4" xs="12">
+                                    <Label htmlFor="title-input" className="title-required">Tên chuyên mục:</Label>
+                                </Col>
+                                <Col md="8" xs="12">
+                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="4" xs="12">
+                                    <Label htmlFor="code-input" className="title-required">Mã chuyên mục:</Label>
+                                </Col>
+                                <Col md="8" xs="12">
+                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="4" xs="12">
+                                    <Label htmlFor="description-input">Miêu tả:</Label>
+                                </Col>
+                                <Col md="8" xs="12">
+                                    <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescription(e)} />
+                                </Col>
+                            </FormGroup>
 
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onClick={this.updateCategory.bind(this)}>Cập nhật</Button>{' '}
-                        <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
-                    </ModalFooter>
-                </Modal>
+                        </ModalBody>
+                        <ModalFooter>
+                            {this.state.createModalMode ?
+                                <Button color="primary" onClick={this.createCategory.bind(this)}>Thêm mới</Button>
+                                :
+                                <Button color="primary" onClick={this.updateCategory.bind(this)}>Cập nhật</Button>
+                            }
+                            <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
+                        </ModalFooter>
+                    </Modal>
+                </div>
             </div>
         )
     }

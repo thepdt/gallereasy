@@ -472,7 +472,7 @@ class Posts extends Component {
                         </Card>
                     </Col>
                 </Row>
-                <Modal isOpen={this.state.modal} toggle={this.showPostDetail} className={'modal-lg ' + this.props.className}>
+                <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
                     <ModalHeader toggle={this.showPostDetail}>Bài đăng</ModalHeader>
                     <ModalBody className="modal-body">
                         <Nav tabs>

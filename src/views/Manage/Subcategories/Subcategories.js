@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label } from 'reactstrap';
+import PaginationComponent from "react-reactstrap-pagination";
 import SubcategoryService from './SubcategoryService';
 import './../style.css';
 const Toolbars = React.lazy(() => import('../../../components/Toolbars/Toolbars'));
@@ -11,15 +12,78 @@ class Subcategories extends Component {
         super(props);
 
         this.state = {
-            subcategories: this._subcategoryService.List(),
+            subcategories: [],
             checkedSubcategories: [],
             checkedAll: false,
             modal: false,
+            createModalMode: Boolean,
+            id: "",
+            title: "",
+            code: "",
+            description: "",
+            ParentId: ""
         };
         this.showSubcategoryDetail = this.showSubcategoryDetail.bind(this);
-        // this._categoryService.getItems()
-        // this.checkOne = this.checkOne.bind(this);
 
+    }
+
+    componentWillMount() {
+        this.getSubcategories()
+    }
+    //get all Subcategories
+    getSubcategories() {
+        this._subcategoryService.getSubcategories()
+            .then((result) => {
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.forEach(element => {
+                        element.checked = false
+                    });
+                    this.setState({
+                        subcategories: result.Data
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
+    closeModal() {
+        this.setState({
+            modal: !this.state.modal,
+        });
+    }
+
+    openCreateModal() {
+        this.setState({
+            modal: !this.state.modal,
+            createModalMode: true,
+            title: "",
+            code: "",
+            description: "",
+            ParentId: ""
+        });
+    }
+
+    createSubcategory() {
+        const data = {
+            Title: this.state.title,
+            Code: this.state.code,
+            Description: this.state.description
+        }
+        if (data.Title !== null && data.Code !== null && data.Description !== null) {
+            this._categoryService.createCategory(data)
+                .then((result) => {
+                    result.Data.checked = false;
+                    this.setState({
+                        categories: this.state.categories.concat(result.Data)
+                    })
+                }).catch((err) => {
+                    console.log("err: " + err);
+                });
+
+            this.setState({
+                modal: !this.state.modal,
+            });
+        }
     }
 
     // Show detail category
@@ -67,7 +131,7 @@ class Subcategories extends Component {
                 checkedSubcategories: this.state.checkedSubcategories.concat([Id]),
                 checkedAll: Subcategories.find(element => element.checked === false) === undefined
             });
-          
+
         } else {
             const _temp = this.state.checkedSubcategories
             _temp.splice(this.state.checkedSubcategories.indexOf(Id), 1)
@@ -150,8 +214,8 @@ class Subcategories extends Component {
                         </Card>
                     </Col>
                 </Row>
-                <Modal isOpen={this.state.modal} toggle={this.showSubcategoryDetail} className={'modal-lg ' + this.props.className}>
-                    <ModalHeader toggle={this.showSubcategoryDetail}>Chuyên mục con</ModalHeader>
+                <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
+                    <ModalHeader toggle={this.closeModal.bind(this)}>Chuyên mục con</ModalHeader>
                     <ModalBody className="modal-body">
                         <FormGroup row>
                             <Col md="1">

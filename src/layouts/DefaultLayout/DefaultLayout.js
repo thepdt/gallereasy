@@ -4,7 +4,6 @@ import { Container } from 'reactstrap';
 
 import {
     AppAside,
-    AppBreadcrumb,
     AppFooter,
     AppHeader,
     AppSidebar,
@@ -53,7 +52,7 @@ class DefaultLayout extends Component {
                         <AppSidebarMinimizer />
                     </AppSidebar>
                     <main className="main">
-                        <AppBreadcrumb appRoutes={routes} />
+                        {/* <AppBreadcrumb appRoutes={routes} />                         */}
                         <Container fluid>
                             <Suspense fallback={this.loading()}>
                                 <Switch>
@@ -70,9 +69,9 @@ class DefaultLayout extends Component {
                                         ) : (null);
                                     })}
                                     <Redirect from="/" to="/dashboard" />
-                                  </Switch>
-                              </Suspense>
-                          </Container>
+                                </Switch>
+                            </Suspense>
+                        </Container>
                     </main>
                     <AppAside fixed>
                         <Suspense fallback={this.loading()}>
