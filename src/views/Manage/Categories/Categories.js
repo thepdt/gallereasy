@@ -75,10 +75,12 @@ class Categories extends Component {
         if (data.Title !== null && data.Code !== null && data.Description !== null) {
             this._categoryService.createCategory(data)
                 .then((result) => {
-                    result.Data.checked = false;
-                    this.setState({
-                        categories: this.state.categories.concat(result.Data)
-                    })
+                    if (result.StatusCode === 200 && result.Data !== null) {
+                        result.Data.checked = false;
+                        this.setState({
+                            categories: this.state.categories.concat(result.Data)
+                        })
+                    }
                 }).catch((err) => {
                     console.log("err: " + err);
                 });
@@ -112,14 +114,16 @@ class Categories extends Component {
 
         this._categoryService.updateCategory(data)
             .then((result) => {
-                result.Data.checked = false;
-                const _categories = this.state.categories
-                const index = _categories.findIndex(el => el.Id === result.Data.Id)
-                _categories[index] = result.Data
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.checked = false;
+                    const _categories = this.state.categories
+                    const index = _categories.findIndex(el => el.Id === result.Data.Id)
+                    _categories[index] = result.Data
 
-                this.setState({
-                    categories: _categories
-                })
+                    this.setState({
+                        categories: _categories
+                    })
+                }
             }).catch((err) => {
                 console.log("error: " + err);
             });
@@ -208,7 +212,7 @@ class Categories extends Component {
         if (this.state.checkedCategories.length !== 0) {
             this._categoryService.deleteCategory(this.state.checkedCategories[0])
                 .then((result) => {
-                    if (result.StatusCode === 200) {
+                    if (result.StatusCode === 200 && result.Data !== null) {
                         const _categories = this.state.categories
                         const index = _categories.findIndex(el => el.Id === this.state.checkedCategories[0])
                         _categories.splice(index, 1);
@@ -251,7 +255,6 @@ class Categories extends Component {
     }
 
     selectePage(selectedPage) {
-        console.log("selected", selectedPage);
         this.setState({ selectedPage: selectedPage });
     }
 

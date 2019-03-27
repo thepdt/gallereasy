@@ -43,8 +43,7 @@ class Publishers extends Component {
     getPublishers() {
         this._publisherService.getPublishers()
             .then((result) => {
-                console.log(result);
-                if (result.StatusCode == 200 && result.Data != null) {
+                if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
                         element.kindText = this.state.kindTexts.find(el => el.key === element.Kind).value
@@ -236,7 +235,6 @@ class Publishers extends Component {
     }
 
     deletePublisher() {
-        console.log("deleted");
         if (this.state.checkedPublishers.length !== 0) {
             this._publisherService.deletePublisher(this.state.checkedPublishers[0])
                 .then((result) => {
@@ -302,7 +300,6 @@ class Publishers extends Component {
     }
 
     selectePage(selectedPage) {
-        console.log("selected", selectedPage);
         this.setState({ selectedPage: selectedPage });
     }
 
@@ -387,90 +384,93 @@ class Publishers extends Component {
     render() {
 
         return (
-            <div className="animated fadeIn">
-                <Row>
-                    <Col>
-                        <Toolbars
-                            onDelete={e => this.deletePublisher(e)}
-                            onOpenCreateModal={e => this.openCreateModal(e)}
-                            onSearch={e => this.searchPublisher(e)}
-                            searchPlaceholder1={'Tìm kiếm theo tên đầu báo'}
-                            searchPlaceholder2={'Tìm kiếm theo mã đầu báo '} />
-                        <Card>
-                            <CardHeader>
-                                <i className="fa fa-align-justify"></i> Chuyên mục
+            <div className="container-fullwidth">
+                <Toolbars
+                    onDelete={e => this.deletePublisher(e)}
+                    onOpenCreateModal={e => this.openCreateModal(e)}
+                    onSearch={e => this.searchPublisher(e)}
+                    searchPlaceholder1={'Tìm kiếm theo tên đầu báo'}
+                    searchPlaceholder2={'Tìm kiếm theo mã đầu báo '} />
+                <div className="animated fadeIn">
+                    <Row>
+                        <Col>
+
+                            <Card>
+                                <CardHeader>
+                                    <i className="fa fa-align-justify"></i> Chuyên mục
                             </CardHeader>
-                            <CardBody>
-                                <Table responsive hover bordered striped>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" style={{ width: 25 + 'px' }}>
-                                                <label className="checkboxLabel">#
+                                <CardBody>
+                                    <Table responsive hover bordered striped>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" style={{ width: 25 + 'px' }}>
+                                                    <label className="checkboxLabel">#
                                                     {/* <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} /> */}
-                                                    <span className="label-text"></span>
-                                                </label>
-                                            </th>
-                                            <th scope="col">Tên đầu báo</th>
-                                            <th scope="col">Mã đầu báo</th>
-                                            <th scope="col">Loại đầu báo </th>
-                                            <th scope="col">Mô tả</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {this.state.publishers.map((publisher, index) =>
-                                            (< tr key={publisher.Id.toString()} >
-                                                <td >
-                                                    <label className="checkboxLabel">
-                                                        <Input className="form-check-input" type="checkbox" id={publisher.Id} name={publisher.Id} value={publisher.checked} checked={publisher.checked} onChange={() => this.checkOne(publisher.Id)} />
                                                         <span className="label-text"></span>
                                                     </label>
-                                                </td>
-                                                <td>
-                                                    <span className="title" onClick={() => this.showPublisherDetail(publisher.Id)}>{publisher.Title}</span>
-                                                </td>
-                                                <td>{publisher.Code}</td>
-                                                <td>{publisher.kindText}</td>
-                                                <td>{publisher.Description}</td>
-                                            </tr>)
-                                        )}
-                                    </tbody>
-                                </Table>
-                                <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectePage.bind(this)} />
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-                <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
-                    <ModalHeader toggle={this.closeModal.bind(this)}>Đầu báo</ModalHeader>
-                    <ModalBody className="modal-body">
-                        <Nav tabs>
-                            <NavItem>
-                                <NavLink active={this.state.activeTab[0] === 'general'} onClick={() => { this.selectedTab(0, 'general'); }}>
-                                    <i className="fa fa-tasks"></i> &nbsp;Thông tin chung
-                                </NavLink>
-                            </NavItem>
-                            {!this.state.createModalMode ?
+                                                </th>
+                                                <th scope="col">Tên đầu báo</th>
+                                                <th scope="col">Mã đầu báo</th>
+                                                <th scope="col">Loại đầu báo </th>
+                                                <th scope="col">Mô tả</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {this.state.publishers.map((publisher, index) =>
+                                                (< tr key={publisher.Id.toString()} >
+                                                    <td >
+                                                        <label className="checkboxLabel">
+                                                            <Input className="form-check-input" type="checkbox" id={publisher.Id} name={publisher.Id} value={publisher.checked} checked={publisher.checked} onChange={() => this.checkOne(publisher.Id)} />
+                                                            <span className="label-text"></span>
+                                                        </label>
+                                                    </td>
+                                                    <td>
+                                                        <span className="title" onClick={() => this.showPublisherDetail(publisher.Id)}>{publisher.Title}</span>
+                                                    </td>
+                                                    <td>{publisher.Code}</td>
+                                                    <td>{publisher.kindText}</td>
+                                                    <td>{publisher.Description}</td>
+                                                </tr>)
+                                            )}
+                                        </tbody>
+                                    </Table>
+                                    <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectePage.bind(this)} />
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
+                        <ModalHeader toggle={this.closeModal.bind(this)}>Đầu báo</ModalHeader>
+                        <ModalBody className="modal-body">
+                            <Nav tabs>
                                 <NavItem>
-                                    <NavLink active={this.state.activeTab[0] === 'statistics'} onClick={() => { this.selectedTab(0, 'statistics'); }}>
-                                        <i className="fa fa-line-chart"></i>&nbsp;Thống kê
-                                    </NavLink>
+                                    <NavLink active={this.state.activeTab[0] === 'general'} onClick={() => { this.selectedTab(0, 'general'); }}>
+                                        <i className="fa fa-tasks"></i> &nbsp;Thông tin chung
+                                </NavLink>
                                 </NavItem>
-                                : null}
-                        </Nav>
-                        <TabContent activeTab={this.state.activeTab[0]}>
-                            {this.tabPane()}
-                        </TabContent>
+                                {!this.state.createModalMode ?
+                                    <NavItem>
+                                        <NavLink active={this.state.activeTab[0] === 'statistics'} onClick={() => { this.selectedTab(0, 'statistics'); }}>
+                                            <i className="fa fa-line-chart"></i>&nbsp;Thống kê
+                                    </NavLink>
+                                    </NavItem>
+                                    : null}
+                            </Nav>
+                            <TabContent activeTab={this.state.activeTab[0]}>
+                                {this.tabPane()}
+                            </TabContent>
 
-                    </ModalBody>
-                    <ModalFooter>
-                        {this.state.createModalMode ?
-                            <Button color="primary" onClick={this.createPublisher.bind(this)}>Thêm mới</Button>
-                            :
-                            <Button color="primary" onClick={this.updatePublisher.bind(this)}>Cập nhật</Button>
-                        }
-                        <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
-                    </ModalFooter>
-                </Modal>
+                        </ModalBody>
+                        <ModalFooter>
+                            {this.state.createModalMode ?
+                                <Button color="primary" onClick={this.createPublisher.bind(this)}>Thêm mới</Button>
+                                :
+                                <Button color="primary" onClick={this.updatePublisher.bind(this)}>Cập nhật</Button>
+                            }
+                            <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
+                        </ModalFooter>
+                    </Modal>
+                </div>
             </div>
         )
     }

@@ -2,7 +2,6 @@ import api from './../../../Environment'
 
 class PublisherService {
     getPublishers = () => {
-        console.log("get");
         const url = api.getBaseURL() + "/publishers"
         return fetch(url).then(res => res.json())
     }

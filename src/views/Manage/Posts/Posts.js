@@ -241,7 +241,6 @@ class Posts extends Component {
     }
 
     selectePage(selectedPage) {
-        console.log("selected", selectedPage);
         this.setState({ selectedPage: selectedPage });
     }
 
