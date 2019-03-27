@@ -335,7 +335,7 @@ class Subcategories extends Component {
                                         <tbody>
                                             {this.state.subcategories.map((subcategory, index) =>
                                                 (< tr key={subcategory.Id.toString()} >
-                                                    <td >
+                                                    <td className="centered">
                                                         <label className="checkboxLabel">
                                                             <Input className="form-check-input" type="checkbox" id={subcategory.Id} name={subcategory.Id} value={subcategory.checked} checked={subcategory.checked} onChange={() => this.checkOne(subcategory.Id)} />
                                                             <span className="label-text"></span>

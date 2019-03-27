@@ -44,6 +44,7 @@ class Publishers extends Component {
     getPublishers() {
         this._publisherService.getPublishers()
             .then((result) => {
+                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -438,7 +439,7 @@ class Publishers extends Component {
                                         <tbody>
                                             {this.state.publishers.map((publisher, index) =>
                                                 (< tr key={publisher.Id.toString()} >
-                                                    <td >
+                                                    <td  className="centered">
                                                         <label className="checkboxLabel">
                                                             <Input className="form-check-input" type="checkbox" id={publisher.Id} name={publisher.Id} value={publisher.checked} checked={publisher.checked} onChange={() => this.checkOne(publisher.Id)} />
                                                             <span className="label-text"></span>
