@@ -22,6 +22,7 @@ class Categories extends Component {
             title: "",
             code: "",
             description: "",
+            ordinal: ""
         };
         this.showCategoryDetail = this.showCategoryDetail.bind(this);
 
@@ -62,7 +63,8 @@ class Categories extends Component {
             createModalMode: true,
             title: "",
             code: "",
-            description: ""
+            description: "",
+            ordinal: ""
         });
     }
 
@@ -70,11 +72,13 @@ class Categories extends Component {
         const data = {
             Title: this.state.title,
             Code: this.state.code,
-            Description: this.state.description
+            Description: this.state.description,
+            Ordinal: Number(this.state.ordinal)
         }
         if (data.Title !== null && data.Code !== null && data.Description !== null) {
             this._categoryService.createCategory(data)
                 .then((result) => {
+                    console.log(result);
                     if (result.StatusCode === 200 && result.Data !== null) {
                         result.Data.checked = false;
                         this.setState({
@@ -100,7 +104,8 @@ class Categories extends Component {
             id: categorySelected.Id,
             title: categorySelected.Title,
             code: categorySelected.Code,
-            description: categorySelected.Description
+            description: categorySelected.Description,
+            ordinal: categorySelected.Ordinal
         });
     }
 
@@ -109,7 +114,8 @@ class Categories extends Component {
             Id: this.state.id,
             Title: this.state.title,
             Code: this.state.code,
-            Description: this.state.description
+            Description: this.state.description,
+            Ordinal: Number(this.state.ordinal)
         }
 
         this._categoryService.updateCategory(data)
@@ -212,7 +218,7 @@ class Categories extends Component {
         if (this.state.checkedCategories.length !== 0) {
             this._categoryService.deleteCategory(this.state.checkedCategories[0])
                 .then((result) => {
-                    if (result.StatusCode === 200 && result.Data !== null) {
+                    if (result.StatusCode === 200) {
                         const _categories = this.state.categories
                         const index = _categories.findIndex(el => el.Id === this.state.checkedCategories[0])
                         _categories.splice(index, 1);
@@ -233,6 +239,12 @@ class Categories extends Component {
     getId(event) {
         this.setState({
             id: event.target.value
+        })
+    }
+
+    getOrdinal(event) {
+        this.setState({
+            ordinal: event.target.value
         })
     }
 
@@ -283,8 +295,9 @@ class Categories extends Component {
                                                         <span className="label-text"></span>
                                                     </label>
                                                 </th>
-                                                <th scope="col" width="47%" className="centered">Tên chuyên mục</th>
-                                                <th scope="col" width="10%" className="centered">Mã chuyên mục</th>
+                                                <th scope="col" width="7%" className="centered">Độ ưu tiên</th>
+                                                <th scope="col" width="30%" className="centered">Tên chuyên mục</th>
+                                                <th scope="col" width="20%" className="centered">Mã chuyên mục</th>
                                                 <th scope="col" width="40%" className="centered">Mô tả</th>
                                             </tr>
                                         </thead>
@@ -297,6 +310,7 @@ class Categories extends Component {
                                                             <span className="label-text"></span>
                                                         </label>
                                                     </td>
+                                                    <td>{category.Ordinal}</td>
                                                     <td>
                                                         <span className="title" onClick={() => this.showCategoryDetail(category.Id)}>{category.Title}</span>
                                                     </td>
@@ -328,6 +342,14 @@ class Categories extends Component {
                                 </Col>
                                 <Col md="8" xs="12">
                                     <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="4" xs="12">
+                                    <Label htmlFor="ordinal-input" className="title-required">Độ ưu tiên:</Label>
+                                </Col>
+                                <Col md="8" xs="12">
+                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>

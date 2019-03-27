@@ -29,6 +29,7 @@ class Publishers extends Component {
             postCount: "",
             videoCount: "",
             followerCount: "",
+            ordinal: "",
             kindTexts: [{ key: -1, value: 'Chọn loại đầu báo' }, { key: 0, value: 'Báo lớn' }, { key: 1, value: 'Báo địa phương' }]
         };
         this.showPublisherDetail = this.showPublisherDetail.bind(this);
@@ -77,7 +78,8 @@ class Publishers extends Component {
             videoCount: "",
             followerCount: "",
             kind: "",
-            logoUrl: ""
+            logoUrl: "",
+            ordinal: "",
         });
     }
 
@@ -87,7 +89,8 @@ class Publishers extends Component {
             Code: this.state.code,
             Description: this.state.description,
             LogoUrl: this.state.logoUrl,
-            Kind: Number(this.state.kind)
+            Kind: Number(this.state.kind),
+            Ordinal: Number(this.state.ordinal)
         }
         this._publisherService.createPublisher(data)
             .then((result) => {
@@ -122,7 +125,8 @@ class Publishers extends Component {
                 videoCount: publisherSelected.VideoCount,
                 followerCount: publisherSelected.FollowerCount,
                 logoUrl: publisherSelected.LogoUrl,
-                kind: publisherSelected.Kind
+                kind: publisherSelected.Kind,
+                ordinal: publisherSelected.Ordinal
             });
         }
     }
@@ -134,7 +138,8 @@ class Publishers extends Component {
             Code: this.state.code,
             Description: this.state.description,
             Kind: Number(this.state.kind),
-            LogoUrl: this.state.logoUrl
+            LogoUrl: this.state.logoUrl,
+            Ordinal: Number(this.state.ordinal)
         }
 
         this._publisherService.updatePublisher(data)
@@ -282,6 +287,12 @@ class Publishers extends Component {
         })
     }
 
+    getOrdinal(event) {
+        this.setState({
+            ordinal: event.target.value
+        })
+    }
+
     getKind(event) {
         this.setState({
             kind: event.target.value
@@ -323,6 +334,14 @@ class Publishers extends Component {
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="4">
+                                    <Label htmlFor="ordinal-input">Độ ưu tiên</Label>
+                                </Col>
+                                <Col xs="12" md="8">
+                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -403,16 +422,17 @@ class Publishers extends Component {
                                     <Table responsive hover bordered striped>
                                         <thead>
                                             <tr>
-                                                <th scope="col" style={{ width: 25 + 'px' }}>
+                                                <th scope="col" width="3%" className="centered">
                                                     <label className="checkboxLabel">#
                                                     {/* <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} /> */}
                                                         <span className="label-text"></span>
                                                     </label>
                                                 </th>
-                                                <th scope="col">Tên đầu báo</th>
-                                                <th scope="col">Mã đầu báo</th>
-                                                <th scope="col">Loại đầu báo </th>
-                                                <th scope="col">Mô tả</th>
+                                                <th scope="col" width="7%" className="centered">Độ ưu tiên</th>
+                                                <th scope="col" width="25%" className="centered">Tên đầu báo</th>
+                                                <th scope="col" width="20%" className="centered">Mã đầu báo</th>
+                                                <th scope="col" width="10%" className="centered">Loại đầu báo </th>
+                                                <th scope="col" width="35%" className="centered">Mô tả</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -424,6 +444,7 @@ class Publishers extends Component {
                                                             <span className="label-text"></span>
                                                         </label>
                                                     </td>
+                                                    <td>{publisher.Ordinal}</td>
                                                     <td>
                                                         <span className="title" onClick={() => this.showPublisherDetail(publisher.Id)}>{publisher.Title}</span>
                                                     </td>

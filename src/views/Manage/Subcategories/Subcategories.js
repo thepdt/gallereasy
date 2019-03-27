@@ -22,7 +22,8 @@ class Subcategories extends Component {
             title: "",
             code: "",
             description: "",
-            ParentId: "",
+            parentId: "",
+            ordinal: "",
             parentCategories: []
         };
         this.showSubcategoryDetail = this.showSubcategoryDetail.bind(this);
@@ -77,7 +78,8 @@ class Subcategories extends Component {
             title: "",
             code: "",
             description: "",
-            parentId: ""
+            parentId: "",
+            ordinal: ""
         });
     }
 
@@ -86,7 +88,8 @@ class Subcategories extends Component {
             Title: this.state.title,
             Code: this.state.code,
             Description: this.state.description,
-            ParentId: this.state.parentId
+            ParentId: this.state.parentId,
+            Ordinal: Number(this.state.ordinal)
         }
         if (data.Title !== null && data.Code !== null && data.Description !== null && data.ParentId !== null) {
             this._subcategoryService.createSubcategory(data)
@@ -121,6 +124,7 @@ class Subcategories extends Component {
             code: subcategorySelected.Code,
             description: subcategorySelected.Description,
             parentId: subcategorySelected.ParentId,
+            ordinal: subcategorySelected.Ordinal
         });
     }
 
@@ -130,7 +134,8 @@ class Subcategories extends Component {
             Title: this.state.title,
             Code: this.state.code,
             Description: this.state.description,
-            ParentId: this.state.parentId
+            ParentId: this.state.parentId,
+            Ordinal: Number(this.state.ordinal)
         }
         this._subcategoryService.updateSubcategory(data)
             .then((result) => {
@@ -260,6 +265,12 @@ class Subcategories extends Component {
         })
     }
 
+    getOrdinal(event) {
+        this.setState({
+            ordinal: event.target.value
+        })
+    }
+
     getTitle(event) {
         this.setState({
             title: event.target.value
@@ -308,16 +319,17 @@ class Subcategories extends Component {
                                     <Table responsive hover bordered striped>
                                         <thead>
                                             <tr>
-                                                <th scope="col" style={{ width: 25 + 'px' }}>
+                                                <th scope="col" width="3%" className="centered">
                                                     <label className="checkboxLabel">#
                                                         {/* <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} /> */}
                                                         <span className="label-text"></span>
                                                     </label>
                                                 </th>
-                                                <th scope="col">Tên chuyên mục con</th>
-                                                <th scope="col">Mã chuyên mục con</th>
-                                                <th scope="col">Chuyên mục cha</th>
-                                                <th scope="col">Mô tả</th>
+                                                <th scope="col" width="7%" className="centered">Độ ưu tiên</th>
+                                                <th scope="col" width="25%" className="centered">Tên chuyên mục con</th>
+                                                <th scope="col" width="15%" className="centered">Mã chuyên mục con</th>
+                                                <th scope="col" width="15%" className="centered">Chuyên mục cha</th>
+                                                <th scope="col" width="35%" className="centered">Mô tả</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -329,6 +341,7 @@ class Subcategories extends Component {
                                                             <span className="label-text"></span>
                                                         </label>
                                                     </td>
+                                                    <td>{subcategory.Ordinal}</td>
                                                     <td>
                                                         <span className="title" onClick={() => this.showSubcategoryDetail(subcategory.Id)}>{subcategory.Title}</span>
                                                     </td>
@@ -361,6 +374,14 @@ class Subcategories extends Component {
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="4">
+                                    <Label htmlFor="ordinal-input">Độ ưu tiên</Label>
+                                </Col>
+                                <Col xs="12" md="8">
+                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
