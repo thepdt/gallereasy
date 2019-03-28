@@ -323,7 +323,7 @@ class Publishers extends Component {
                         <div>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="title-input">Tên đầu báo</Label>
+                                    <Label htmlFor="title-input" className="title-required">Tên đầu báo:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
@@ -331,7 +331,7 @@ class Publishers extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="code-input">Mã đầu báo</Label>
+                                    <Label htmlFor="code-input" className="title-required">Mã đầu báo:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
@@ -339,7 +339,7 @@ class Publishers extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="ordinal-input">Độ ưu tiên</Label>
+                                    <Label htmlFor="ordinal-input" className="title-required">Độ ưu tiên:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} />
@@ -347,7 +347,7 @@ class Publishers extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="logoUrl-input">Logo đầu báo</Label>
+                                    <Label htmlFor="logoUrl-input" className="title-required">Logo đầu báo:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="logoUrl-input" name="logoUrl-input" value={this.state.logoUrl} onChange={(e) => this.getLogoUrl(e)} />
@@ -355,7 +355,7 @@ class Publishers extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="kind-input">Loại đầu báo</Label>
+                                    <Label htmlFor="kind-input" className="title-required">Loại đầu báo:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="select" id="kind-input" name="kind-input" value={this.state.kind} onChange={(e) => this.getKind(e)}>
@@ -439,13 +439,13 @@ class Publishers extends Component {
                                         <tbody>
                                             {this.state.publishers.map((publisher, index) =>
                                                 (< tr key={publisher.Id.toString()} >
-                                                    <td  className="centered">
+                                                    <td className="centered">
                                                         <label className="checkboxLabel">
                                                             <Input className="form-check-input" type="checkbox" id={publisher.Id} name={publisher.Id} value={publisher.checked} checked={publisher.checked} onChange={() => this.checkOne(publisher.Id)} />
                                                             <span className="label-text"></span>
                                                         </label>
                                                     </td>
-                                                    <td>{publisher.Ordinal}</td>
+                                                    <td className="centered">{publisher.Ordinal}</td>
                                                     <td>
                                                         <span className="title" onClick={() => this.showPublisherDetail(publisher.Id)}>{publisher.Title}</span>
                                                     </td>
