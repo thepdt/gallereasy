@@ -56,3 +56,7 @@ input[type="checkbox"]:disabled + .label-text:before{
 .title:hover {
     color: #1fa7d8; /* Change the value to with anchors hover color*/
 }
+
+.image {
+	width: 50%
+}

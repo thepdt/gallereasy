@@ -30,7 +30,7 @@ class Publishers extends Component {
             videoCount: "",
             followerCount: "",
             ordinal: "",
-            kindTexts: [{ key: -1, value: 'Chọn loại đầu báo' }, { key: 0, value: 'Báo lớn' }, { key: 1, value: 'Báo địa phương' }]
+            kindTexts: [{ key: -1, value: '--Chọn loại đầu báo--' }, { key: 0, value: 'Báo lớn' }, { key: 1, value: 'Báo địa phương' }]
         };
         this.showPublisherDetail = this.showPublisherDetail.bind(this);
 
@@ -67,7 +67,7 @@ class Publishers extends Component {
         });
     }
 
-    //Add a new category
+    //Add a new publisher
     openCreateModal() {
         this.setState({
             modal: !this.state.modal,
@@ -369,7 +369,7 @@ class Publishers extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="description-input">Miêu tả</Label>
+                                    <Label htmlFor="description-input">Miêu tả:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescription(e)} />

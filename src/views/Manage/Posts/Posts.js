@@ -21,18 +21,208 @@ class Posts extends Component {
             modal: false,
             activeTab: ['general', 'seo', 'tags', 'media', 'statistics'],
             createModalMode: Boolean,
+            id: "",
+            publisher: "",
+            title: "",
+            abstract: "",
+            contents: [],
+            tags: [],
+            category: "",
+            categorySubLevel1: "",
+            categorySubLevel2: "",
+            imageThumbUrl: "",
+            imageUrls: "",
+            videoUrls: "",
+            viewCount: "",
+            quickViewCount: "",
+            commentCount: "",
+            likeCount: "",
+            dislikeCount: "",
+            shareCount: "",
+            saveCount: "",
+            createAt: "",
+            lastUpdatedAt: "",
+            publishedAt: "",
+            postedAt: "",
+            postedUrl: "",
+            status: Number,
+            statusOptions: [{ key: -1, value: '--Chọn loại đầu báo--' }, { key: 0, value: 'In Trash' }, { key: 1, value: 'Unpublished' }, { key: 2, value: 'In Review' }, { key: 3, value: 'Published' },],
+
             subCategorySelects: [],
         };
         this.showPostDetail = this.showPostDetail.bind(this);
-
     }
 
-    // Show detail post
-    showPostDetail(id) {
+    componentWillMount() {
+        this.getPosts()
+    }
+
+    //get all categories
+    getPosts() {
+        this._postService.getPosts()
+            .then((result) => {
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.forEach(element => {
+                        element.checked = false
+                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
+                    });
+                    this.setState({
+                        posts: result.Data
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
+
+    //Close modal 
+    closeModal() {
+        this.setState({
+            modal: !this.state.modal,
+            activeTab: ['general']
+        });
+    }
+
+    //Add a new  post
+    openCreateModal() {
+        this.setState({
+            modal: !this.state.modal,
+            createModalMode: true,
+            publisher: "",
+            title: "",
+            abstract: "",
+            contents: "",
+            tags: "",
+            categoriesId: "",
+            categorySubLevel1: "",
+            categorySubLevel2: "",
+            imageThumbUrl: "",
+            imageUrls: "",
+            VideoUrls: "",
+            viewCount: "",
+            quickViewCount: "",
+            commentCount: "",
+            likeCount: "",
+            dislikeCount: "",
+            shareCount: "",
+            saveCount: "",
+            createAt: "",
+            lastUpdatedAt: "",
+            publishedAt: "",
+            postedAt: "",
+            postedUrl: "",
+            status: "",
+        });
+    }
+
+    createPost() {
+        const data = {
+            Publisher: this.state.publisher,
+            Title: this.state.title,
+            Abstract: this.state.abstract,
+            Contents: this.state.contents,
+            Tags: this.state.tags,
+            CategoriesId: this.state.categoriesId,
+            CategorySubLevel1: this.state.categorySubLevel1,
+            CategorySubLevel2: this.state.categorySubLevel2,
+            ImageThumbUrl: this.state.imageThumbUrl,
+            ImageUrls: this.state.imageUrls,
+            VideoUrls: this.state.videoUrls,
+            PostedUrl: this.state.postedUrl,
+            Status: this.state.status
+        }
+        this._postService.createPost(data)
+            .then((result) => {
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.checked = false;
+                    result.Data.statusText = this.state.statusOptions.find(el => el.key === result.Data.Status).value
+                    this.setState({
+                        posts: this.state.posts.concat(result.Data)
+                    })
+                }
+            }).catch((err) => {
+                console.log("err: " + err);
+            });
+
         this.setState({
             modal: !this.state.modal,
         });
     }
+
+    // Show detail post
+    showPostDetail(id) {
+        if (id !== null) {
+            const postSelected = this.state.posts.find(element => element.Id === id)
+            this.setState({
+                modal: !this.state.modal,
+                createModalMode: false,
+                id: postSelected.Id,
+                publisher: postSelected.Publisher,
+                category: postSelected.Category,
+                categorySubLevel1: postSelected.CategorySubLevel1,
+                categorySubLevel2: postSelected.CategorySubLevel2,
+                title: postSelected.Title,
+                abstract: postSelected.Abstract,
+                contents: postSelected.Contents,
+                tags: postSelected.Tags,
+                imageThumbUrl: postSelected.ImageThumbUrl,
+                imageUrls: postSelected.ImageUrls,
+                videoUrls: postSelected.VideoUrls,
+                viewCount: postSelected.ViewCount,
+                quickViewCount: postSelected.QuickViewCount,
+                commentCount: postSelected.CommentCount,
+                likeCount: postSelected.LikeCount,
+                dislikeCount: postSelected.DislikeCount,
+                shareCount: postSelected.ShareCount,
+                saveCount: postSelected.SaveCount,
+                postedAt: postSelected.PostedAt,
+                status: postSelected.Status
+            });
+        }
+    }
+
+    updatePost() {
+        const data = {
+            Id: this.state.id,
+            Publisher: this.state.publisher,
+            Title: this.state.title,
+            Abstract: this.state.abstract,
+            Contents: this.state.contents,
+            Tags: this.state.tags,
+            Category: this.state.category,
+            categorySubLevel1: this.state.categorySubLevel1,
+            categorySubLevel2: this.state.categorySubLevel2,
+            ImageThumbUrl: this.state.imageThumbUrl,
+            ImageUrls: this.state.imageUrls,
+            VideoUrls: this.state.videoUrls,
+            PostedUrl: this.state.postedUrl,
+            Status: this.state.status,
+            PostedAt: this.state.postedAt,
+            Status: this.state.status
+        }
+
+        this._postService.updatePost(data)
+            .then((result) => {
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.checked = false;
+                    result.Data.statusText = this.state.statusOptions.find(el => el.key === result.Data.Status).value
+                    const _posts = this.state.posts
+                    const index = _posts.findIndex(el => el.Id === result.Data.Id)
+                    _posts[index] = result.Data
+
+                    this.setState({
+                        posts: _posts
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+
+        this.setState({
+            modal: !this.state.modal,
+        });
+    }
+
 
     // event unseclection in category list
     categoryOptionClicked(categorySelected) {
@@ -100,7 +290,7 @@ class Posts extends Component {
         });
     }
 
-    checkOne(id) {
+    checkMulti(id) {
         const Posts = this.state.posts;
         const checkedPost = Posts.find(element => element.id === id);
         checkedPost.checked = !checkedPost.checked;
@@ -109,11 +299,6 @@ class Posts extends Component {
                 checkedPosts: this.state.checkedPosts.concat([id]),
                 checkedAll: Posts.find(element => element.checked === false) === undefined
             });
-            // if (Posts.find(element => element.checked === false) === undefined) {
-            //     this.setState({ checkedAll: true })
-            // } else {
-            //     this.setState({ checkedAll: false })
-            // }
         } else {
             const _temp = this.state.checkedPosts
             _temp.splice(this.state.checkedPosts.indexOf(id), 1)
@@ -127,16 +312,134 @@ class Posts extends Component {
         });
     }
 
-    updatePost() {
-        console.log("update");
+    checkOne(Id) {
+        const Posts = this.state.posts;
+        const index = Posts.findIndex(element => element.Id === Id);
+        for (var i = 0; i < Posts.length; i++) {
+            if (i !== index) {
+                Posts[i].checked = false
+            } else {
+                Posts[index].checked = !Posts[index].checked
+            }
+        }
+        if (Posts[index].checked) {
+            this.setState({
+                checkedPosts: [Id],
+            });
+        } else {
+            this.setState({
+                checkedPosts: [],
+            });
+        }
+        this.setState({
+            posts: Posts
+        });
     }
 
     deletePost() {
-        console.log("deleted");
+        if (this.state.checkedPosts.length !== 0) {
+            this._postService.deletePost(this.state.checkedPosts[0])
+                .then((result) => {
+                    if (result.StatusCode === 200) {
+                        const _posts = this.state.posts
+                        const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0])
+                        _posts.splice(index, 1);
+                        this.setState({
+                            posts: _posts
+                        })
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
+        }
     }
 
     searchPost(e) {
         console.log(e);
+    }
+
+    getPublisher(event) {
+        this.setState({
+            publisher: event.target.value
+        })
+    }
+
+    getCategoriesId(event) {
+        this.setState({
+            categoriesId: event.target.value
+        })
+    }
+    
+    getCategorySubLevel1 (event) {
+        this.setState({
+            categorySubLevel1: event.target.value
+        })
+    }
+    
+    getCategorySubLevel2 (event) {
+        this.setState({
+            categorySubLevel2: event.target.value
+        })
+    }
+
+    getTitle(event) {
+        this.setState({
+            title: event.target.value
+        })
+    }
+
+    getAbstract(event) {
+        this.setState({
+            abstract: event.target.value
+        })
+    }
+
+    getContent(event, index) {
+        const _contents = this.state.contents
+        _contents[index].Text = event.target.value
+        this.setState({
+            contents: _contents
+        })
+    }
+
+    getContentImageUrl(event, index) {
+        const _contents = this.state.contents
+        _contents[index].ImageUrl = event.target.value
+        this.setState({
+            contents: _contents
+        })
+    }
+
+    getContentImageCaption(event, index) {
+        const _contents = this.state.contents
+        _contents[index].ImageCaption = event.target.value
+        this.setState({
+            contents: _contents
+        })
+    }
+
+    getTags(event) {
+        this.setState({
+            tags: event.target.value
+        })
+    }
+
+    getImageThumbUrl(event) {
+        this.setState({
+            imageThumbUrl: event.target.value
+        })
+    }
+
+    getImageUrls(event) {
+        this.setState({
+            imageUrls: event.target.value
+        })
+    }
+
+    getVideoUrls(event) {
+        this.setState({
+            videoUrls: event.target.value
+        })
     }
 
     selectePage(selectedPage) {
@@ -166,14 +469,14 @@ class Posts extends Component {
                     {
                         <div>
                             <FormGroup row>
-                                <Col md="1">
+                                <Col md="2">
                                     <Label htmlFor="publisher-input">Nguồn báo</Label>
                                 </Col>
-                                <Col xs="12" md="11">
-                                    <Input type="text" id="publisher-input" name="publisher-input" />
+                                <Col xs="12" md="10">
+                                    <Input type="text" id="publisher-input" name="publisher-input" value={this.state.publisher} onChange={(e) => this.getPublisher(e)} />
                                 </Col>
                             </FormGroup>
-                            <FormGroup row>
+                            {/* <FormGroup row>
                                 <Col md="1">
                                     <Label htmlFor="multiple-select">Chuyên mục</Label>
                                 </Col>
@@ -198,29 +501,56 @@ class Posts extends Component {
                                         selectedOptionsStyles={selectedOptionsStyles}
                                         optionsListStyles={optionsListStyles} />
                                 </Col>
-                            </FormGroup>
+                            </FormGroup> */}
                             <FormGroup row>
-                                <Col md="1">
+                                <Col md="2">
                                     <Label htmlFor="title-input">Tiêu đề</Label>
                                 </Col>
-                                <Col xs="12" md="11">
-                                    <Input type="text" id="title-input" name="title-input" />
+                                <Col xs="12" md="10">
+                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                <Col md="1">
-                                    <Label htmlFor="sapo-input">Sapo</Label>
+                                <Col md="2">
+                                    <Label htmlFor="abstract-input">Abstract</Label>
                                 </Col>
-                                <Col xs="12" md="11">
-                                    <Input type="textarea" name="sapo-input" id="sapo-input" rows="5" />
+                                <Col xs="12" md="10">
+                                    <Input type="textarea" name="abstract-input" id="abstract-input" rows="5" value={this.state.abstract} onChange={(e) => this.getAbstract(e)} />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                <Col md="1">
-                                    <Label htmlFor="content-input">Nội dung</Label>
+                                <Col md="2">
+                                    <Label htmlFor="contents-input">Nội dung</Label>
                                 </Col>
-                                <Col xs="12" md="11">
-                                    <Input type="textarea" name="content-input" id="content-input" rows="15" />
+                                <Col xs="12" md="10">
+                                    {this.state.contents.map((content, index) => {
+                                        if (content.hasOwnProperty('Text')) {
+                                            return (
+                                                <Input key={content.SubId.toString()} type="textarea" name="contents-input" id={content.SubId} rows="5" value={content.Text} onChange={(e) => this.getContent(e, index)} />
+                                            )
+                                        }
+                                        return (
+                                            <div key={content.SubId.toString()}>
+                                                <FormGroup row>
+                                                    <Col md="2">
+                                                        <Label htmlFor="imageUrl-input">Link ảnh</Label>
+                                                    </Col>
+                                                    <Col xs="12" md="10">
+                                                        <img className="image" src={content.ImageUrl} alt={content.ImageCaption}/>
+                                                        <Input type="textarea" name="imageUrl-input" id={"imageUrl" + content.SubId} rows="2" value={content.ImageUrl} onChange={(e) => this.getContentImageUrl(e, index)} />
+                                                    </Col>
+                                                </FormGroup>
+                                                <FormGroup row>
+                                                    <Col md="2">
+                                                        <Label htmlFor="imageUrl-input">Caption ảnh</Label>
+                                                    </Col>
+                                                    <Col xs="12" md="10">
+                                                        <Input type="textarea" name="contents-input" id={"caption " + content.SubId} rows="2" value={content.ImageCaption} onChange={(e) => this.getContentImageCaption(e, index)} />
+                                                    </Col>
+                                                </FormGroup>
+                                            </div>
+                                        )
+                                    })}
                                 </Col>
                             </FormGroup>
                         </div>
@@ -237,7 +567,7 @@ class Posts extends Component {
                                     <Label htmlFor="tag-input">Tags</Label>
                                 </Col>
                                 <Col xs="12" md="11">
-                                    <Input type="text" id="tag-input" name="tag-input" />
+                                    <Input type="text" id="tag-input" name="tag-input" value={this.state.tags} onChange={(e) => this.getTags(e)} />
                                 </Col>
                             </FormGroup>
                         </div>
@@ -247,27 +577,27 @@ class Posts extends Component {
                     {
                         <div>
                             <FormGroup row>
-                                <Col md="1">
+                                <Col md="3">
                                     <Label htmlFor="thumb-image-url-input">Ảnh đại diện</Label>
                                 </Col>
-                                <Col xs="12" md="11">
-                                    <Input type="textarea" id="thumb-image-url-input" name="thumb-image-url-input" />
+                                <Col xs="12" md="9">
+                                    <Input type="textarea" id="thumb-image-url-input" name="thumb-image-url-input" value={this.state.imageThumbUrl} onChange={(e) => this.getImageThumbUrl(e)} />
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                <Col md="1">
+                                <Col md="3">
                                     <Label htmlFor="image-url-input">Danh sách ảnh</Label>
                                 </Col>
-                                <Col xs="12" md="11">
-                                    <Input type="textarea" id="image-url-input" name="image-url-input" />
+                                <Col xs="12" md="9">
+                                    {/* <Input type="textarea" id="image-url-input" name="image-url-input"  value={this.state.imageUrls} onChange={(e) => this.getImageUrls(e)} /> */}
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
-                                <Col md="1">
+                                <Col md="3">
                                     <Label htmlFor="video-url-input">Danh sách video</Label>
                                 </Col>
-                                <Col xs="12" md="11">
-                                    <Input type="textarea" id="video-url-input" name="video-url-input" />
+                                <Col xs="12" md="9">
+                                    {/* <Input type="textarea" id="video-url-input" name="video-url-input"  value={this.state.videoUrls} onChange={(e) => this.getVideoUrls(e)} /> */}
                                 </Col>
                             </FormGroup>
                         </div>
@@ -284,27 +614,27 @@ class Posts extends Component {
                                             <div>Lượt xem</div>
                                         </CardBody>
                                     </Card> */}
-                                    <Widget04 icon="icon-people" color="primary" header="972" value="25" invert>Lượt xem</Widget04>
+                                    <Widget04 icon="icon-people" color="primary" header={this.state.viewCount.toString()} value="100" invert>Lượt xem</Widget04>
                                 </Col>
                                 <Col md="4">
-                                    <Widget04 icon="icon-eye" color="info" header="972" value="25" invert>Lượt xem nhanh</Widget04>
+                                    <Widget04 icon="icon-eye" color="info" header={this.state.quickViewCount.toString()} value="100" invert>Lượt xem nhanh</Widget04>
                                 </Col>
                                 <Col md="4">
-                                    <Widget04 icon="icon-speech" color="warning" header="972" value="25" invert>Lượt comment</Widget04>
+                                    <Widget04 icon="icon-speech" color="warning" header={this.state.commentCount.toString()} value="100" invert>Lượt comment</Widget04>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="3">
-                                    <Widget04 icon="icon-like" color="primary" header="972" value="25" invert>Lượt like</Widget04>
+                                    <Widget04 icon="icon-like" color="primary" header={this.state.likeCount.toString()} value="100" invert>Lượt like</Widget04>
                                 </Col>
                                 <Col md="3">
-                                    <Widget04 icon="icon-dislike" color="danger" header="972" value="25" invert>Lượt dislike</Widget04>
+                                    <Widget04 icon="icon-dislike" color="danger" header={this.state.dislikeCount.toString()} value="100" invert>Lượt dislike</Widget04>
                                 </Col>
                                 <Col md="3">
-                                    <Widget04 icon="icon-share-alt" color="warning" header="972" value="25" invert>Lượt share</Widget04>
+                                    <Widget04 icon="icon-share-alt" color="warning" header={this.state.shareCount.toString()} value="100" invert>Lượt share</Widget04>
                                 </Col>
                                 <Col md="3">
-                                    <Widget04 icon="icon-docs" color="info" header="972" value="25" invert>Lượt lưu</Widget04>
+                                    <Widget04 icon="icon-docs" color="info" header={this.state.saveCount.toString()} value="100" invert>Lượt lưu</Widget04>
                                 </Col>
                             </FormGroup>
                         </div>
@@ -320,12 +650,12 @@ class Posts extends Component {
             <div className="animated fadeIn">
                 <Row>
                     <Col>
-                        <Toolbars 
-                            onDelete={e => this.deletePost(e)} 
-                            onShowDetail={e => this.showPostDetail(e)} 
+                        <Toolbars
+                            onDelete={e => this.deletePost(e)}
+                            onOpenCreateModal={e => this.openCreateModal(e)}
                             onSearch={e => this.searchPost(e)}
                             searchPlaceholder1={'Tìm kiếm theo tiêu đề'}
-                            searchPlaceholder2={'Tìm kiếm theo trạng thái'}/>
+                            searchPlaceholder2={'Tìm kiếm theo trạng thái'} />
                         <Card>
                             <CardHeader>
                                 <i className="fa fa-align-justify"></i> Bài đăng
@@ -341,26 +671,26 @@ class Posts extends Component {
                                                 </label>
                                             </th>
                                             <th scope="col">Tiêu đề</th>
-                                            <th scope="col">Thể loại</th>
+                                            <th scope="col">Chuyên mục</th>
                                             <th scope="col">Ngày tạo</th>
                                             <th scope="col">Trạng thái</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {this.state.posts.map((post, index) =>
-                                            (< tr key={post.id.toString()} >
+                                            (< tr key={post.Id.toString()} >
                                                 <td >
                                                     <label className="checkboxLabel">
-                                                        <Input className="form-check-input" type="checkbox" id={post.id} name={post.id} value={post.checked} checked={post.checked} onChange={() => this.checkOne(post.id)} />
+                                                        <Input className="form-check-input" type="checkbox" id={post.Id} name={post.Id} value={post.checked} checked={post.checked} onChange={() => this.checkOne(post.Id)} />
                                                         <span className="label-text"></span>
                                                     </label>
                                                 </td>
                                                 <td>
-                                                    <span className="title" onClick={() => this.showPostDetail(post.id)}>{post.name}</span>
+                                                    <span className="title" onClick={() => this.showPostDetail(post.Id)}>{post.Title}</span>
                                                 </td>
-                                                <td>{post.role}</td>
-                                                <td>{post.registered}</td>
-                                                <td>{post.role}</td>
+                                                <td>{post.Category}</td>
+                                                <td>{post.CreatedAt}</td>
+                                                <td>{post.statusText}</td>
                                             </tr>)
                                         )}
                                     </tbody>
@@ -371,7 +701,7 @@ class Posts extends Component {
                     </Col>
                 </Row>
                 <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
-                    <ModalHeader toggle={this.showPostDetail}>Bài đăng</ModalHeader>
+                    <ModalHeader toggle={this.closeModal.bind(this)}>Bài đăng</ModalHeader>
                     <ModalBody className="modal-body">
                         <Nav tabs>
                             <NavItem>
@@ -406,8 +736,12 @@ class Posts extends Component {
 
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="primary" onClick={this.updatePost}>Cập nhật</Button>{' '}
-                        <Button color="secondary" onClick={this.showPostDetail}>Hủy</Button>
+                        {this.state.createModalMode ?
+                            <Button color="primary" onClick={this.createPost.bind(this)}>Thêm mới</Button>
+                            :
+                            <Button color="primary" onClick={this.updatePost.bind(this)}>Cập nhật</Button>
+                        }
+                        <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                     </ModalFooter>
                 </Modal>
             </div>

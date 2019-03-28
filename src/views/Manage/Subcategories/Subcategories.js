@@ -362,7 +362,7 @@ class Subcategories extends Component {
                         <ModalBody className="modal-body">
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="title-input">Tên chuyên mục con</Label>
+                                    <Label htmlFor="title-input" className="title-required">Tên chuyên mục con:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
@@ -370,7 +370,7 @@ class Subcategories extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="code-input">Mã chuyên mục con</Label>
+                                    <Label htmlFor="code-input" className="title-required">Mã chuyên mục con:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
@@ -378,7 +378,7 @@ class Subcategories extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="ordinal-input">Độ ưu tiên</Label>
+                                    <Label htmlFor="ordinal-input" className="title-required">Độ ưu tiên:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} />
@@ -386,7 +386,7 @@ class Subcategories extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="parent-input">Chuyên mục cha</Label>
+                                    <Label htmlFor="parent-input" className="title-required">Chuyên mục cha:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="select" id="parent-input" name="parentId-input" value={this.state.parentId} onChange={(e) => this.getParentId(e)}>
@@ -401,7 +401,7 @@ class Subcategories extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
-                                    <Label htmlFor="description-input">Miêu tả</Label>
+                                    <Label htmlFor="description-input" >Miêu tả:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescription(e)} />
