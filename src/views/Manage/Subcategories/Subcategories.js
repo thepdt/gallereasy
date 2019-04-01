@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label } from 'reactstrap';
 import PaginationComponent from "react-reactstrap-pagination";
 import SubcategoryService from './SubcategoryService';
 import './../style.css';
@@ -365,7 +365,8 @@ class Subcategories extends Component {
                                     <Label htmlFor="title-input" className="title-required">Tên chuyên mục con:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
+                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""}/>
+                                    <FormFeedback invalid>Tên chuyên mục con không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -373,7 +374,8 @@ class Subcategories extends Component {
                                     <Label htmlFor="code-input" className="title-required">Mã chuyên mục con:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
+                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} invalid={this.state.code === ""}/>
+                                    <FormFeedback invalid>Mã chuyên mục con không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -381,7 +383,8 @@ class Subcategories extends Component {
                                     <Label htmlFor="ordinal-input" className="title-required">Độ ưu tiên:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} />
+                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} invalid={(Number(this.state.ordinal) < 1) || this.state.ordinal === "" }/>
+                                    <FormFeedback invalid>Độ ưu tiên không được bỏ trống và phải lớn hơn 0</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -389,14 +392,15 @@ class Subcategories extends Component {
                                     <Label htmlFor="parent-input" className="title-required">Chuyên mục cha:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="select" id="parent-input" name="parentId-input" value={this.state.parentId} onChange={(e) => this.getParentId(e)}>
-                                        <option key='0' value='0'>--Chọn chuyên mục cha--</option>
+                                    <Input type="select" id="parent-input" name="parentId-input" value={this.state.parentId} onChange={(e) => this.getParentId(e)} invalid={this.state.parentId === ""}>
+                                        <option key='-1' value=''>--Chọn chuyên mục cha--</option>
                                         {this.state.parentCategories.map((parentCategory, index) =>
                                             (
                                                 <option key={parentCategory.Id} value={parentCategory.Id}>{parentCategory.Title}</option>
                                             )
                                         )}
                                     </Input>
+                                    <FormFeedback invalid>Hãy chọn chuyên mục cha</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -411,9 +415,9 @@ class Subcategories extends Component {
                         </ModalBody>
                         <ModalFooter>
                             {this.state.createModalMode ?
-                                <Button color="primary" onClick={this.createSubcategory.bind(this)}>Thêm mới</Button>
+                                <Button color="primary" onClick={this.createSubcategory.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (this.state.ordinal === "") || (this.state.ordinal < 1) || (this.state.parentId ==="")}>Thêm mới</Button>
                                 :
-                                <Button color="primary" onClick={this.updateSubcategory.bind(this)}>Cập nhật</Button>
+                                <Button color="primary" onClick={this.updateSubcategory.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (this.state.ordinal === "") || (this.state.ordinal < 1) || (this.state.parentId ==="")}>Cập nhật</Button>
                             }
                             <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                         </ModalFooter>

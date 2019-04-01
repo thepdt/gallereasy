@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import MultiSelectReact from 'multi-select-react';
 import PaginationComponent from "react-reactstrap-pagination";
 import PostService from './PostService';
@@ -47,6 +47,8 @@ class Posts extends Component {
             postedUrl: "",
             status: Number,
             statusOptions: [{ key: -1, value: '--Chọn loại đầu báo--' }, { key: 0, value: 'In Trash' }, { key: 1, value: 'Unpublished' }, { key: 2, value: 'In Review' }, { key: 3, value: 'Published' },],
+            categoryAi: "",
+            subcategoryAi: "",
 
             subCategorySelects: [],
         };
@@ -57,10 +59,11 @@ class Posts extends Component {
         this.getPosts()
     }
 
-    //get all categories
+    //get all posts
     getPosts() {
         this._postService.getPosts()
             .then((result) => {
+                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -93,9 +96,11 @@ class Posts extends Component {
             abstract: "",
             contents: "",
             tags: "",
-            categoriesId: "",
+            category: "",
             categorySubLevel1: "",
             categorySubLevel2: "",
+            categoryAi: "",
+            subcategoryAi: "",
             imageThumbUrl: "",
             imageUrls: "",
             VideoUrls: "",
@@ -125,6 +130,8 @@ class Posts extends Component {
             CategoriesId: this.state.categoriesId,
             CategorySubLevel1: this.state.categorySubLevel1,
             CategorySubLevel2: this.state.categorySubLevel2,
+            CategoryAi: this.state.categoryAi,
+            SubcategoryAi: this.state.subcategoryAi,
             ImageThumbUrl: this.state.imageThumbUrl,
             ImageUrls: this.state.imageUrls,
             VideoUrls: this.state.videoUrls,
@@ -161,6 +168,8 @@ class Posts extends Component {
                 category: postSelected.Category,
                 categorySubLevel1: postSelected.CategorySubLevel1,
                 categorySubLevel2: postSelected.CategorySubLevel2,
+                categoryAi: postSelected.CategoryAi,
+                subcategoryAi: postSelected.SubcategoryAi,
                 title: postSelected.Title,
                 abstract: postSelected.Abstract,
                 contents: postSelected.Contents,
@@ -190,15 +199,16 @@ class Posts extends Component {
             Contents: this.state.contents,
             Tags: this.state.tags,
             Category: this.state.category,
-            categorySubLevel1: this.state.categorySubLevel1,
-            categorySubLevel2: this.state.categorySubLevel2,
+            CategorySubLevel1: this.state.categorySubLevel1,
+            CategorySubLevel2: this.state.categorySubLevel2,
+            CategoryAi: this.state.categoryAi,
+            SubcategoryAi: this.state.subcategoryAi,
             ImageThumbUrl: this.state.imageThumbUrl,
             ImageUrls: this.state.imageUrls,
             VideoUrls: this.state.videoUrls,
             PostedUrl: this.state.postedUrl,
             Status: this.state.status,
             PostedAt: this.state.postedAt,
-            Status: this.state.status
         }
 
         this._postService.updatePost(data)
@@ -340,6 +350,7 @@ class Posts extends Component {
         if (this.state.checkedPosts.length !== 0) {
             this._postService.deletePost(this.state.checkedPosts[0])
                 .then((result) => {
+                    console.log(result);
                     if (result.StatusCode === 200) {
                         const _posts = this.state.posts
                         const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0])
@@ -364,21 +375,32 @@ class Posts extends Component {
         })
     }
 
-    getCategoriesId(event) {
+    getCategory(event) {
         this.setState({
-            categoriesId: event.target.value
+            category: event.target.value
         })
     }
-    
-    getCategorySubLevel1 (event) {
+
+    getCategorySubLevel1(event) {
         this.setState({
             categorySubLevel1: event.target.value
         })
     }
-    
-    getCategorySubLevel2 (event) {
+
+    getCategorySubLevel2(event) {
         this.setState({
             categorySubLevel2: event.target.value
+        })
+    }
+
+    getCategoryAi(event) {
+        this.setState({
+            categoryAi: event.target.value
+        })
+    }
+    getSubcategoryAi(event) {
+        this.setState({
+            subcategoryAi: event.target.value
         })
     }
 
@@ -403,6 +425,7 @@ class Posts extends Component {
     }
 
     getContentImageUrl(event, index) {
+        console.log(event.target.value);
         const _contents = this.state.contents
         _contents[index].ImageUrl = event.target.value
         this.setState({
@@ -470,12 +493,88 @@ class Posts extends Component {
                         <div>
                             <FormGroup row>
                                 <Col md="2">
-                                    <Label htmlFor="publisher-input">Nguồn báo</Label>
+                                    <Label htmlFor="publisher-input" className="title-required">Nguồn báo</Label>
                                 </Col>
                                 <Col xs="12" md="10">
-                                    <Input type="text" id="publisher-input" name="publisher-input" value={this.state.publisher} onChange={(e) => this.getPublisher(e)} />
+                                    <Input type="text" id="publisher-input" name="publisher-input" value={this.state.publisher} onChange={(e) => this.getPublisher(e)} invalid={this.state.publisher === ""} />
+                                    <FormFeedback invalid>Nguồn báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
+                            {this.state.createModalMode ?
+                                <>
+                                    <FormGroup row>
+                                        <Col md="1">
+                                            <Label htmlFor="multiple-select" className="title-required">Chuyên mục</Label>
+                                        </Col>
+                                        <Col xs="12" md="11">
+                                            <MultiSelectReact
+                                                options={this.state.categorySelects}
+                                                optionClicked={this.categoryOptionClicked.bind(this)}
+                                                selectedBadgeClicked={this.categorySelectedBadgeClicked.bind(this)}
+                                                selectedOptionsStyles={selectedOptionsStyles}
+                                                optionsListStyles={optionsListStyles} />
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        <Col md="1">
+                                            <Label htmlFor="multiple-select" className="title-required">Chuyên mục con</Label>
+                                        </Col>
+                                        <Col xs="12" md="11">
+                                            <MultiSelectReact
+                                                options={this.state.subCategorySelects}
+                                                optionClicked={this.subCategoryOptionClicked.bind(this)}
+                                                selectedBadgeClicked={this.subCategorySelectedBadgeClicked.bind(this)}
+                                                selectedOptionsStyles={selectedOptionsStyles}
+                                                optionsListStyles={optionsListStyles} />
+                                        </Col>
+                                    </FormGroup>
+                                </>
+                                :
+                                <>
+                                    <FormGroup row>
+                                        <Col md="2">
+                                            <Label htmlFor="category-input" className="title-required">Chuyên mục</Label>
+                                        </Col>
+                                        <Col xs="12" md="10">
+                                            <Input type="text" id="category-input" name="category-input" value={this.state.category} onChange={(e) => this.getCategory(e)} invalid={this.state.category === ""} />
+                                            <FormFeedback invalid>Chuyên mục không được bỏ trống</FormFeedback>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        <Col md="2">
+                                            <Label htmlFor="categorySubLevel1-input" className="title-required">Chuyên mục con 1</Label>
+                                        </Col>
+                                        <Col xs="12" md="10">
+                                            <Input type="text" id="categorySubLevel1-input" name="categorySubLevel1-input" value={this.state.categorySubLevel1} onChange={(e) => this.getCategorySubLevel1(e)} invalid={this.state.categorySubLevel1 === ""} />
+                                            <FormFeedback invalid>Chuyên mục con không được bỏ trống</FormFeedback>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        <Col md="2">
+                                            <Label htmlFor="categorySubLevel2-input">Chuyên mục con 2</Label>
+                                        </Col>
+                                        <Col xs="12" md="10">
+                                            <Input type="text" id="categorySubLevel2-input" name="categorySubLevel2-input" value={this.state.categorySubLevel2} onChange={(e) => this.getCategorySubLevel2(e)} />
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        <Col md="2">
+                                            <Label htmlFor="categoryAi-input">Chuyên mục AI</Label>
+                                        </Col>
+                                        <Col xs="12" md="10">
+                                            <Input type="text" id="categoryAi-input" name="categoryAi-input" value={this.state.categoryAi} onChange={(e) => this.getCategoryAi(e)} />
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        <Col md="2">
+                                            <Label htmlFor="subcategoryAi-input">Chuyên mục con AI</Label>
+                                        </Col>
+                                        <Col xs="12" md="10">
+                                            <Input type="text" id="subcategoryAi-input" name="subcategoryAi-input" value={this.state.subcategoryAi} onChange={(e) => this.getSubcategoryAi(e)} />
+                                        </Col>
+                                    </FormGroup>
+                                </>
+                            }
                             {/* <FormGroup row>
                                 <Col md="1">
                                     <Label htmlFor="multiple-select">Chuyên mục</Label>
@@ -504,29 +603,31 @@ class Posts extends Component {
                             </FormGroup> */}
                             <FormGroup row>
                                 <Col md="2">
-                                    <Label htmlFor="title-input">Tiêu đề</Label>
+                                    <Label htmlFor="title-input" className="title-required">Tiêu đề</Label>
                                 </Col>
                                 <Col xs="12" md="10">
-                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
+                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""} />
+                                    <FormFeedback invalid>Tiêu đề không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="2">
-                                    <Label htmlFor="abstract-input">Abstract</Label>
+                                    <Label htmlFor="abstract-input" className="title-required">Abstract</Label>
                                 </Col>
                                 <Col xs="12" md="10">
-                                    <Input type="textarea" name="abstract-input" id="abstract-input" rows="5" value={this.state.abstract} onChange={(e) => this.getAbstract(e)} />
+                                    <Input type="textarea" name="abstract-input" id="abstract-input" rows="5" value={this.state.abstract} onChange={(e) => this.getAbstract(e)} invalid={this.state.abstract === ""} />
+                                    <FormFeedback invalid>Abstract không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="2">
-                                    <Label htmlFor="contents-input">Nội dung</Label>
+                                    <Label htmlFor="contents-input" className="title-required">Nội dung</Label>
                                 </Col>
                                 <Col xs="12" md="10">
                                     {this.state.contents.map((content, index) => {
                                         if (content.hasOwnProperty('Text')) {
                                             return (
-                                                <Input key={content.SubId.toString()} type="textarea" name="contents-input" id={content.SubId} rows="5" value={content.Text} onChange={(e) => this.getContent(e, index)} />
+                                                <Input key={content.SubId.toString()} type="textarea" name="contents-input" id={content.SubId} rows="5" value={content.Text} onChange={(e) => this.getContent(e, index)} invalid={this.state.contents.lenth === 0} />
                                             )
                                         }
                                         return (
@@ -536,7 +637,7 @@ class Posts extends Component {
                                                         <Label htmlFor="imageUrl-input">Link ảnh</Label>
                                                     </Col>
                                                     <Col xs="12" md="10">
-                                                        <img className="image" src={content.ImageUrl} alt={content.ImageCaption}/>
+                                                        <img className="image" src={content.ImageUrl} alt={content.ImageCaption} />
                                                         <Input type="textarea" name="imageUrl-input" id={"imageUrl" + content.SubId} rows="2" value={content.ImageUrl} onChange={(e) => this.getContentImageUrl(e, index)} />
                                                     </Col>
                                                 </FormGroup>
@@ -551,6 +652,7 @@ class Posts extends Component {
                                             </div>
                                         )
                                     })}
+                                    <FormFeedback invalid>Nội dung không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                         </div>
@@ -563,11 +665,12 @@ class Posts extends Component {
                     {
                         <div>
                             <FormGroup row>
-                                <Col md="1">
-                                    <Label htmlFor="tag-input">Tags</Label>
+                                <Col md="2">
+                                    <Label htmlFor="tag-input" className="title-required">Tags</Label>
                                 </Col>
-                                <Col xs="12" md="11">
-                                    <Input type="text" id="tag-input" name="tag-input" value={this.state.tags} onChange={(e) => this.getTags(e)} />
+                                <Col xs="12" md="10">
+                                    <Input type="text" id="tag-input" name="tag-input" value={this.state.tags} onChange={(e) => this.getTags(e)} invalid={this.state.tags.length === []} />
+                                    <FormFeedback invalid>Tags không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                         </div>
@@ -664,22 +767,24 @@ class Posts extends Component {
                                 <Table responsive hover bordered striped>
                                     <thead>
                                         <tr>
-                                            <th scope="col" style={{ width: 25 + 'px' }}>
-                                                <label className="checkboxLabel">
-                                                    <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} />
+                                            <th scope="col" width="3%" className="centered">
+                                                <label className="checkboxLabel">#
+                                                    {/* <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} /> */}
                                                     <span className="label-text"></span>
                                                 </label>
                                             </th>
-                                            <th scope="col">Tiêu đề</th>
-                                            <th scope="col">Chuyên mục</th>
-                                            <th scope="col">Ngày tạo</th>
-                                            <th scope="col">Trạng thái</th>
+                                            <th scope="col" width="30%" className="centered">Tiêu đề</th>
+                                            <th scope="col" width="10%" className="centered">Chuyên mục</th>
+                                            <th scope="col" width="10%" className="centered">Chuyên mục AI</th>
+                                            <th scope="col" width="10%" className="centered">Chuyên mục con AI</th>
+                                            <th scope="col" width="27%" className="centered">Ngày tạo</th>
+                                            <th scope="col" width="10%" className="centered">Trạng thái</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {this.state.posts.map((post, index) =>
                                             (< tr key={post.Id.toString()} >
-                                                <td >
+                                                <td className="centered">
                                                     <label className="checkboxLabel">
                                                         <Input className="form-check-input" type="checkbox" id={post.Id} name={post.Id} value={post.checked} checked={post.checked} onChange={() => this.checkOne(post.Id)} />
                                                         <span className="label-text"></span>
@@ -689,6 +794,8 @@ class Posts extends Component {
                                                     <span className="title" onClick={() => this.showPostDetail(post.Id)}>{post.Title}</span>
                                                 </td>
                                                 <td>{post.Category}</td>
+                                                <td>{post.CategoryAI}</td>
+                                                <td>{post.SubcategoryAI}</td>
                                                 <td>{post.CreatedAt}</td>
                                                 <td>{post.statusText}</td>
                                             </tr>)
@@ -702,7 +809,7 @@ class Posts extends Component {
                 </Row>
                 <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
                     <ModalHeader toggle={this.closeModal.bind(this)}>Bài đăng</ModalHeader>
-                    <ModalBody className="modal-body">
+                    <ModalBody>
                         <Nav tabs>
                             <NavItem>
                                 <NavLink active={this.state.activeTab[0] === 'general'} onClick={() => { this.selectedTab(0, 'general'); }}>
@@ -737,9 +844,9 @@ class Posts extends Component {
                     </ModalBody>
                     <ModalFooter>
                         {this.state.createModalMode ?
-                            <Button color="primary" onClick={this.createPost.bind(this)}>Thêm mới</Button>
+                            <Button color="primary" onClick={this.createPost.bind(this)} >Thêm mới</Button>
                             :
-                            <Button color="primary" onClick={this.updatePost.bind(this)}>Cập nhật</Button>
+                            <Button color="primary" onClick={this.updatePost.bind(this)} disabled={(this.state.publisher === "") || (this.state.category === "") || (this.state.categorySubLevel1 === "") || (this.state.title === "") || (this.state.abstract === "") || (this.state.contents.length === 0) || (this.state.tags.length === 0)}>Cập nhật</Button>
                         }
                         <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                     </ModalFooter>

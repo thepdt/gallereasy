@@ -7,7 +7,7 @@ class PublisherService {
     }
 
     createPublisher(publisher) {
-        const url =  api.getBaseURL() + "/publishers";
+        const url = api.getBaseURL() + "/publishers";
         return fetch(url, {
             method: 'POST',
             headers: api.headers,
@@ -16,7 +16,7 @@ class PublisherService {
     }
 
     updatePublisher(publisher) {
-        const url =  api.getBaseURL() + "/publishers";
+        const url = api.getBaseURL() + "/publishers";
         return fetch(url, {
             method: 'PUT',
             headers: api.headers,
@@ -25,7 +25,7 @@ class PublisherService {
     }
 
     deletePublisher(id) {
-        const url =  api.getBaseURL() + "/publishers/" + id;
+        const url = api.getBaseURL() + "/publishers/" + id;
         return fetch(url, {
             method: 'DELETE',
             headers: api.headers,

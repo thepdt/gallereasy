@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import PaginationComponent from "react-reactstrap-pagination";
 import PublisherService from './PublisherService';
 import './../style.css';
@@ -30,7 +30,7 @@ class Publishers extends Component {
             videoCount: "",
             followerCount: "",
             ordinal: "",
-            kindTexts: [{ key: -1, value: '--Chọn loại đầu báo--' }, { key: 0, value: 'Báo lớn' }, { key: 1, value: 'Báo địa phương' }]
+            kindTexts: [{ key: 0, value: 'Báo lớn' }, { key: 1, value: 'Báo địa phương' }]
         };
         this.showPublisherDetail = this.showPublisherDetail.bind(this);
 
@@ -109,6 +109,7 @@ class Publishers extends Component {
         this.setState({
             modal: !this.state.modal,
         });
+
     }
 
     // Show detail Publisher
@@ -138,8 +139,8 @@ class Publishers extends Component {
             Title: this.state.title,
             Code: this.state.code,
             Description: this.state.description,
-            Kind: Number(this.state.kind),
-            LogoUrl: this.state.logoUrl,
+            Kind: this.state.kind,
+            LogoUrl: Number(this.state.logoUrl),
             Ordinal: Number(this.state.ordinal)
         }
 
@@ -326,7 +327,8 @@ class Publishers extends Component {
                                     <Label htmlFor="title-input" className="title-required">Tên đầu báo:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
+                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""} />
+                                    <FormFeedback invalid>Tên đầu báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -334,7 +336,8 @@ class Publishers extends Component {
                                     <Label htmlFor="code-input" className="title-required">Mã đầu báo:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
+                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} invalid={this.state.code === ""} />
+                                    <FormFeedback invalid>Mã đầu báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -342,7 +345,8 @@ class Publishers extends Component {
                                     <Label htmlFor="ordinal-input" className="title-required">Độ ưu tiên:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} />
+                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} invalid={(Number(this.state.ordinal) < 0) || this.state.ordinal === ""} />
+                                    <FormFeedback invalid>Độ ưu tiên không được bỏ trống và nhỏ hơn 0</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -350,7 +354,8 @@ class Publishers extends Component {
                                     <Label htmlFor="logoUrl-input" className="title-required">Logo đầu báo:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="text" id="logoUrl-input" name="logoUrl-input" value={this.state.logoUrl} onChange={(e) => this.getLogoUrl(e)} />
+                                    <Input type="text" id="logoUrl-input" name="logoUrl-input" value={this.state.logoUrl} onChange={(e) => this.getLogoUrl(e)} invalid={this.state.logoUrl === ""} />
+                                    <FormFeedback invalid>Logo đầu báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -358,13 +363,15 @@ class Publishers extends Component {
                                     <Label htmlFor="kind-input" className="title-required">Loại đầu báo:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="select" id="kind-input" name="kind-input" value={this.state.kind} onChange={(e) => this.getKind(e)}>
+                                    <Input type="select" id="kind-input" name="kind-input" value={this.state.kind} onChange={(e) => this.getKind(e)} invalid={(this.state.kind) === ""}>
+                                        <option key='-1' value=''>--Chọn loại đầu báo--</option>
                                         {this.state.kindTexts.map((kind, index) =>
                                             (
                                                 <option key={kind.key} value={kind.key}>{kind.value}</option>
                                             )
                                         )}
                                     </Input>
+                                    <FormFeedback invalid>Hãy chọn loại đầu báo</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -485,9 +492,9 @@ class Publishers extends Component {
                         </ModalBody>
                         <ModalFooter>
                             {this.state.createModalMode ?
-                                <Button color="primary" onClick={this.createPublisher.bind(this)}>Thêm mới</Button>
+                                <Button color="primary" onClick={this.createPublisher.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (Number(this.state.ordinal) < 0) || (this.state.ordinal === "") || (this.state.logoUrl === "") || (this.state.kind) === ""}>Thêm mới</Button>
                                 :
-                                <Button color="primary" onClick={this.updatePublisher.bind(this)}>Cập nhật</Button>
+                                <Button color="primary" onClick={this.updatePublisher.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (Number(this.state.ordinal) < 0) || (this.state.ordinal === "") || (this.state.logoUrl === "") || (this.state.kind) === ""}>Cập nhật</Button>
                             }
                             <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                         </ModalFooter>

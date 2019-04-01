@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, Input, Label } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label } from 'reactstrap';
 import PaginationComponent from "react-reactstrap-pagination";
 import CategoryService from './CategoryService';
 import './../style.css';
@@ -75,24 +75,24 @@ class Categories extends Component {
             Description: this.state.description,
             Ordinal: Number(this.state.ordinal)
         }
-        if (data.Title !== null && data.Code !== null && data.Description !== null) {
-            this._categoryService.createCategory(data)
-                .then((result) => {
-                    console.log(result);
-                    if (result.StatusCode === 200 && result.Data !== null) {
-                        result.Data.checked = false;
-                        this.setState({
-                            categories: this.state.categories.concat(result.Data)
-                        })
-                    }
-                }).catch((err) => {
-                    console.log("err: " + err);
-                });
 
-            this.setState({
-                modal: !this.state.modal,
+        this._categoryService.createCategory(data)
+            .then((result) => {
+                console.log(result);
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.checked = false;
+                    this.setState({
+                        categories: this.state.categories.concat(result.Data)
+                    })
+                }
+            }).catch((err) => {
+                console.log("err: " + err);
             });
-        }
+
+        this.setState({
+            modal: !this.state.modal,
+        });
+
     }
 
     // Show detail category
@@ -333,7 +333,8 @@ class Categories extends Component {
                                     <Label htmlFor="title-input" className="title-required">Tên chuyên mục:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} />
+                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""} />
+                                    <FormFeedback invalid>Tên chuyên mục không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -341,7 +342,8 @@ class Categories extends Component {
                                     <Label htmlFor="code-input" className="title-required">Mã chuyên mục:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} />
+                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} invalid={this.state.code === ""} />
+                                    <FormFeedback invalid>Mã chuyên mục không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -349,7 +351,8 @@ class Categories extends Component {
                                     <Label htmlFor="ordinal-input" className="title-required">Độ ưu tiên:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} />
+                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} invalid={Number(this.state.ordinal) < 1} />
+                                    <FormFeedback invalid>Độ ưu tiên không được bỏ trống và nhỏ hơn 0</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -360,13 +363,12 @@ class Categories extends Component {
                                     <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescription(e)} />
                                 </Col>
                             </FormGroup>
-
                         </ModalBody>
                         <ModalFooter>
                             {this.state.createModalMode ?
-                                <Button color="primary" onClick={this.createCategory.bind(this)}>Thêm mới</Button>
+                                <Button color="primary" onClick={this.createCategory.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (this.state.ordinal === "") || (Number(this.state.ordinal) < 1)}>Thêm mới</Button>
                                 :
-                                <Button color="primary" onClick={this.updateCategory.bind(this)}>Cập nhật</Button>
+                                <Button color="primary" onClick={this.updateCategory.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (this.state.ordinal === "") || (Number(this.state.ordinal) < 1)}>Cập nhật</Button>
                             }
                             <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                         </ModalFooter>
