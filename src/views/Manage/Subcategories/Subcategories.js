@@ -52,6 +52,7 @@ class Subcategories extends Component {
     getSubcategories() {
         this._subcategoryService.getSubcategories()
             .then((result) => {
+                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -366,7 +367,7 @@ class Subcategories extends Component {
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""}/>
-                                    <FormFeedback invalid>Tên chuyên mục con không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Tên chuyên mục con không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -375,7 +376,7 @@ class Subcategories extends Component {
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} invalid={this.state.code === ""}/>
-                                    <FormFeedback invalid>Mã chuyên mục con không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Mã chuyên mục con không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -384,7 +385,7 @@ class Subcategories extends Component {
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} invalid={(Number(this.state.ordinal) < 1) || this.state.ordinal === "" }/>
-                                    <FormFeedback invalid>Độ ưu tiên không được bỏ trống và phải lớn hơn 0</FormFeedback>
+                                    <FormFeedback valid={false}>Độ ưu tiên không được bỏ trống và phải lớn hơn 0</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -400,7 +401,7 @@ class Subcategories extends Component {
                                             )
                                         )}
                                     </Input>
-                                    <FormFeedback invalid>Hãy chọn chuyên mục cha</FormFeedback>
+                                    <FormFeedback valid={false}>Hãy chọn chuyên mục cha</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>

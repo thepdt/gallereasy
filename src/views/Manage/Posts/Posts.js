@@ -497,7 +497,7 @@ class Posts extends Component {
                                 </Col>
                                 <Col xs="12" md="10">
                                     <Input type="text" id="publisher-input" name="publisher-input" value={this.state.publisher} onChange={(e) => this.getPublisher(e)} invalid={this.state.publisher === ""} />
-                                    <FormFeedback invalid>Nguồn báo không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Nguồn báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             {this.state.createModalMode ?
@@ -537,7 +537,7 @@ class Posts extends Component {
                                         </Col>
                                         <Col xs="12" md="10">
                                             <Input type="text" id="category-input" name="category-input" value={this.state.category} onChange={(e) => this.getCategory(e)} invalid={this.state.category === ""} />
-                                            <FormFeedback invalid>Chuyên mục không được bỏ trống</FormFeedback>
+                                            <FormFeedback valid={false}>Chuyên mục không được bỏ trống</FormFeedback>
                                         </Col>
                                     </FormGroup>
                                     <FormGroup row>
@@ -546,7 +546,7 @@ class Posts extends Component {
                                         </Col>
                                         <Col xs="12" md="10">
                                             <Input type="text" id="categorySubLevel1-input" name="categorySubLevel1-input" value={this.state.categorySubLevel1} onChange={(e) => this.getCategorySubLevel1(e)} invalid={this.state.categorySubLevel1 === ""} />
-                                            <FormFeedback invalid>Chuyên mục con không được bỏ trống</FormFeedback>
+                                            <FormFeedback valid={false}>Chuyên mục con không được bỏ trống</FormFeedback>
                                         </Col>
                                     </FormGroup>
                                     <FormGroup row>
@@ -607,7 +607,7 @@ class Posts extends Component {
                                 </Col>
                                 <Col xs="12" md="10">
                                     <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""} />
-                                    <FormFeedback invalid>Tiêu đề không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Tiêu đề không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -616,7 +616,7 @@ class Posts extends Component {
                                 </Col>
                                 <Col xs="12" md="10">
                                     <Input type="textarea" name="abstract-input" id="abstract-input" rows="5" value={this.state.abstract} onChange={(e) => this.getAbstract(e)} invalid={this.state.abstract === ""} />
-                                    <FormFeedback invalid>Abstract không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Abstract không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -652,7 +652,7 @@ class Posts extends Component {
                                             </div>
                                         )
                                     })}
-                                    <FormFeedback invalid>Nội dung không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Nội dung không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                         </div>
@@ -670,7 +670,7 @@ class Posts extends Component {
                                 </Col>
                                 <Col xs="12" md="10">
                                     <Input type="text" id="tag-input" name="tag-input" value={this.state.tags} onChange={(e) => this.getTags(e)} invalid={this.state.tags.length === []} />
-                                    <FormFeedback invalid>Tags không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Tags không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                         </div>

@@ -36,6 +36,7 @@ class Categories extends Component {
     getCategories() {
         this._categoryService.getCategories()
             .then((result) => {
+                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -333,8 +334,8 @@ class Categories extends Component {
                                     <Label htmlFor="title-input" className="title-required">Tên chuyên mục:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""} />
-                                    <FormFeedback invalid>Tên chuyên mục không được bỏ trống</FormFeedback>
+                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={ this.state.title === ""}/>
+                                    <FormFeedback valid={false}>Tên chuyên mục không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -342,8 +343,8 @@ class Categories extends Component {
                                     <Label htmlFor="code-input" className="title-required">Mã chuyên mục:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} invalid={this.state.code === ""} />
-                                    <FormFeedback invalid>Mã chuyên mục không được bỏ trống</FormFeedback>
+                                    <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} invalid={ this.state.code === ""}/>
+                                    <FormFeedback valid={false}>Mã chuyên mục không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -351,8 +352,8 @@ class Categories extends Component {
                                     <Label htmlFor="ordinal-input" className="title-required">Độ ưu tiên:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} invalid={Number(this.state.ordinal) < 1} />
-                                    <FormFeedback invalid>Độ ưu tiên không được bỏ trống và nhỏ hơn 0</FormFeedback>
+                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} invalid={(Number(this.state.ordinal) < 1) || (this.state.ordinal === "")}/>
+                                    <FormFeedback valid={false}>Độ ưu tiên không được bỏ trống và nhỏ hơn 0</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>

@@ -328,7 +328,7 @@ class Publishers extends Component {
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""} />
-                                    <FormFeedback invalid>Tên đầu báo không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Tên đầu báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -337,7 +337,7 @@ class Publishers extends Component {
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="code-input" name="code-input" value={this.state.code} onChange={(e) => this.getCode(e)} invalid={this.state.code === ""} />
-                                    <FormFeedback invalid>Mã đầu báo không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Mã đầu báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -345,8 +345,8 @@ class Publishers extends Component {
                                     <Label htmlFor="ordinal-input" className="title-required">Độ ưu tiên:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} invalid={(Number(this.state.ordinal) < 0) || this.state.ordinal === ""} />
-                                    <FormFeedback invalid>Độ ưu tiên không được bỏ trống và nhỏ hơn 0</FormFeedback>
+                                    <Input type="number" id="ordinal-input" name="ordinal-input" value={this.state.ordinal} onChange={(e) => this.getOrdinal(e)} invalid={(Number(this.state.ordinal) < 1) || this.state.ordinal === ""} />
+                                    <FormFeedback valid={false}>Độ ưu tiên không được bỏ trống và nhỏ hơn 0</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -355,7 +355,7 @@ class Publishers extends Component {
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="logoUrl-input" name="logoUrl-input" value={this.state.logoUrl} onChange={(e) => this.getLogoUrl(e)} invalid={this.state.logoUrl === ""} />
-                                    <FormFeedback invalid>Logo đầu báo không được bỏ trống</FormFeedback>
+                                    <FormFeedback  valid={false}>Logo đầu báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -371,7 +371,7 @@ class Publishers extends Component {
                                             )
                                         )}
                                     </Input>
-                                    <FormFeedback invalid>Hãy chọn loại đầu báo</FormFeedback>
+                                    <FormFeedback valid={false}>Hãy chọn loại đầu báo</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -492,9 +492,9 @@ class Publishers extends Component {
                         </ModalBody>
                         <ModalFooter>
                             {this.state.createModalMode ?
-                                <Button color="primary" onClick={this.createPublisher.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (Number(this.state.ordinal) < 0) || (this.state.ordinal === "") || (this.state.logoUrl === "") || (this.state.kind) === ""}>Thêm mới</Button>
+                                <Button color="primary" onClick={this.createPublisher.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (Number(this.state.ordinal) < 1) || (this.state.ordinal === "") || (this.state.logoUrl === "") || (this.state.kind) === ""}>Thêm mới</Button>
                                 :
-                                <Button color="primary" onClick={this.updatePublisher.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (Number(this.state.ordinal) < 0) || (this.state.ordinal === "") || (this.state.logoUrl === "") || (this.state.kind) === ""}>Cập nhật</Button>
+                                <Button color="primary" onClick={this.updatePublisher.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (Number(this.state.ordinal) < 1) || (this.state.ordinal === "") || (this.state.logoUrl === "") || (this.state.kind) === ""}>Cập nhật</Button>
                             }
                             <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                         </ModalFooter>

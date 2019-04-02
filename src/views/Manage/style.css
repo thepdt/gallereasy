@@ -16,7 +16,6 @@ input[type="checkbox"]{
 input[type="checkbox"] + .label-text:before{
 	content: "\f096";
 	font-family: "FontAwesome";
-	speak: none;
 	font-style: normal;
 	/* font-weight: no  rmal; */
 	font-variant: normal;
