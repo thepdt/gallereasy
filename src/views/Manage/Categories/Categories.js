@@ -326,7 +326,7 @@ class Categories extends Component {
                             </Card>
                         </Col>
                     </Row>
-                    <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
+                    <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
                         <ModalHeader toggle={this.closeModal.bind(this)}>Chuyên mục</ModalHeader>
                         <ModalBody className="modal-body">
                             <FormGroup row>
@@ -334,7 +334,7 @@ class Categories extends Component {
                                     <Label htmlFor="title-input" className="title-required">Tên chuyên mục:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={ this.state.title === ""}/>
+                                    <Input type="text" id="title-input" name="title-input" autoFocus value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={ this.state.title === ""}/>
                                     <FormFeedback valid={false}>Tên chuyên mục không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>

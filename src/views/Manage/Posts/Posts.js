@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import MultiSelectReact from 'multi-select-react';
 import PaginationComponent from "react-reactstrap-pagination";
+import Textarea from 'react-textarea-autosize';
 import PostService from './PostService';
 import './../style.css';
 import Widget04 from './../../Widgets/Widget04';
@@ -496,7 +497,7 @@ class Posts extends Component {
                                     <Label htmlFor="publisher-input" className="title-required">Nguồn báo</Label>
                                 </Col>
                                 <Col xs="12" md="10">
-                                    <Input type="text" id="publisher-input" name="publisher-input" value={this.state.publisher} onChange={(e) => this.getPublisher(e)} invalid={this.state.publisher === ""} />
+                                    <Input type="text" id="publisher-input" name="publisher-input" autoFocus value={this.state.publisher} onChange={(e) => this.getPublisher(e)} invalid={this.state.publisher === ""} />
                                     <FormFeedback valid={false}>Nguồn báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
@@ -606,7 +607,7 @@ class Posts extends Component {
                                     <Label htmlFor="title-input" className="title-required">Tiêu đề</Label>
                                 </Col>
                                 <Col xs="12" md="10">
-                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""} />
+                                    <Input type="textarea" id="title-input" name="title-input" rows="2" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""} />
                                     <FormFeedback valid={false}>Tiêu đề không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
@@ -615,7 +616,7 @@ class Posts extends Component {
                                     <Label htmlFor="abstract-input" className="title-required">Abstract</Label>
                                 </Col>
                                 <Col xs="12" md="10">
-                                    <Input type="textarea" name="abstract-input" id="abstract-input" rows="5" value={this.state.abstract} onChange={(e) => this.getAbstract(e)} invalid={this.state.abstract === ""} />
+                                    <Input type="textarea" name="abstract-input" id="abstract-input" rows="4" value={this.state.abstract} onChange={(e) => this.getAbstract(e)} invalid={this.state.abstract === ""} />
                                     <FormFeedback valid={false}>Abstract không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
@@ -627,7 +628,7 @@ class Posts extends Component {
                                     {this.state.contents.map((content, index) => {
                                         if (content.hasOwnProperty('Text')) {
                                             return (
-                                                <Input key={content.SubId.toString()} type="textarea" name="contents-input" id={content.SubId} rows="5" value={content.Text} onChange={(e) => this.getContent(e, index)} invalid={this.state.contents.lenth === 0} />
+                                                <Textarea className="col-md-12" minRows={1} key={content.SubId.toString()} name="contents-input" id={content.SubId} value={content.Text} onChange={(e) => this.getContent(e, index)} />
                                             )
                                         }
                                         return (
@@ -638,7 +639,7 @@ class Posts extends Component {
                                                     </Col>
                                                     <Col xs="12" md="10">
                                                         <img className="image" src={content.ImageUrl} alt={content.ImageCaption} />
-                                                        <Input type="textarea" name="imageUrl-input" id={"imageUrl" + content.SubId} rows="2" value={content.ImageUrl} onChange={(e) => this.getContentImageUrl(e, index)} />
+                                                        <Textarea className="col-md-12" minRows={1} name="imageUrl-input" id={"imageUrl" + content.SubId} value={content.ImageUrl} onChange={(e) => this.getContentImageUrl(e, index)} />
                                                     </Col>
                                                 </FormGroup>
                                                 <FormGroup row>
@@ -646,7 +647,7 @@ class Posts extends Component {
                                                         <Label htmlFor="imageUrl-input">Caption ảnh</Label>
                                                     </Col>
                                                     <Col xs="12" md="10">
-                                                        <Input type="textarea" name="contents-input" id={"caption " + content.SubId} rows="2" value={content.ImageCaption} onChange={(e) => this.getContentImageCaption(e, index)} />
+                                                        <Textarea className="col-md-12" minRows={1} name="contents-input" id={"caption " + content.SubId} value={content.ImageCaption} onChange={(e) => this.getContentImageCaption(e, index)} />
                                                     </Col>
                                                 </FormGroup>
                                             </div>
@@ -794,8 +795,8 @@ class Posts extends Component {
                                                     <span className="title" onClick={() => this.showPostDetail(post.Id)}>{post.Title}</span>
                                                 </td>
                                                 <td>{post.Category}</td>
-                                                <td>{post.CategoryAI}</td>
-                                                <td>{post.SubcategoryAI}</td>
+                                                <td>{post.CategoryAi}</td>
+                                                <td>{post.SubcategoryAi}</td>
                                                 <td>{post.CreatedAt}</td>
                                                 <td>{post.statusText}</td>
                                             </tr>)
@@ -807,7 +808,7 @@ class Posts extends Component {
                         </Card>
                     </Col>
                 </Row>
-                <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
+                <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
                     <ModalHeader toggle={this.closeModal.bind(this)}>Bài đăng</ModalHeader>
                     <ModalBody>
                         <Nav tabs>
@@ -846,7 +847,7 @@ class Posts extends Component {
                         {this.state.createModalMode ?
                             <Button color="primary" onClick={this.createPost.bind(this)} >Thêm mới</Button>
                             :
-                            <Button color="primary" onClick={this.updatePost.bind(this)} disabled={(this.state.publisher === "") || (this.state.category === "") || (this.state.categorySubLevel1 === "") || (this.state.title === "") || (this.state.abstract === "") || (this.state.contents.length === 0) || (this.state.tags.length === 0)}>Cập nhật</Button>
+                            <Button color="primary" onClick={this.updatePost.bind(this)} disabled={(this.state.publisher === "") || (this.state.category === "") || (this.state.categorySubLevel1 === "") || (this.state.title === "") || (this.state.abstract === "") || (this.state.tags.length === 0)}>Cập nhật</Button>
                         }
                         <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                     </ModalFooter>

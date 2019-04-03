@@ -358,7 +358,7 @@ class Subcategories extends Component {
                             </Card>
                         </Col>
                     </Row>
-                    <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className}>
+                    <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
                         <ModalHeader toggle={this.closeModal.bind(this)}>Chuyên mục con</ModalHeader>
                         <ModalBody className="modal-body">
                             <FormGroup row>
@@ -366,7 +366,7 @@ class Subcategories extends Component {
                                     <Label htmlFor="title-input" className="title-required">Tên chuyên mục con:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="text" id="title-input" name="title-input" value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""}/>
+                                    <Input type="text" id="title-input" name="title-input" autoFocus value={this.state.title} onChange={(e) => this.getTitle(e)} invalid={this.state.title === ""}/>
                                     <FormFeedback valid={false}>Tên chuyên mục con không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
