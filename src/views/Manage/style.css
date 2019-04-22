@@ -60,7 +60,7 @@ input[type="checkbox"]:disabled + .label-text:before{
     color: #1fa7d8; /* Change the value to with anchors hover color*/
 }
 
-.image {
+.image, .thumbImage {
 	width: 50%
 }
 
@@ -72,30 +72,39 @@ input[type="checkbox"]:disabled + .label-text:before{
 	right: 50px;
   }
   
-  .modal-content {
+.modal-content {
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	width: 100%; /* can use left: 0; right: 0; as well */
-  }
+}
   
-  .modal-dialog .modal-header {
+.modal-dialog .modal-header {
 	width: 100%; 
 	height: 58px;
-  }
+}
   
-  .modal-content .modal-body {
+.modal-content .modal-body {
 	position: absolute;
 	top: 58px;
 	bottom: 65px;
 	width: 100%; 
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch; 
-  }
+}
   
-  .modal-content .modal-footer {
+.modal-content .modal-footer {
 	position: absolute;
 	bottom: 0;
 	width: 100%; 
 	height: 65px;
-  }
+}
+
+.react-datetime-picker {
+	height: 52px;
+}
+
+.pagination{
+	display: inline-flex;
+	padding-left: 15px;
+}

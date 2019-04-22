@@ -1,25 +1,31 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table, Pagination, PaginationItem, PaginationLink, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import MultiSelectReact from 'multi-select-react';
-import PaginationComponent from "react-reactstrap-pagination";
 import Textarea from 'react-textarea-autosize';
 import PostService from './PostService';
+import PaginationComponent from "react-reactstrap-pagination";
+import PublisherService from './../Publishers/PublisherService';
 import './../style.css';
 import Widget04 from './../../Widgets/Widget04';
-const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
 
+import DateTimePicker from 'react-datetime-picker';
+const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
 class Posts extends Component {
     _postService = new PostService();
+    _publisherService = new PublisherService();
 
     constructor(props) {
         super(props);
 
         this.state = {
             posts: [],
+            publishers: [],
             checkedPosts: [],
             checkedAll: false,
-            selectedPage: 1,
-            modal: false,
+            searchSelectedPage: 1,
+            searchMode: false,
+            postDetailModal: false,
+            postPreviewModal: false,
             activeTab: ['general', 'seo', 'tags', 'media', 'statistics'],
             createModalMode: Boolean,
             id: "",
@@ -51,6 +57,8 @@ class Posts extends Component {
             categoryAi: "",
             subcategoryAi: "",
 
+            previousDatePicked: Number,
+            datePicked: new Date(),
             subCategorySelects: [],
         };
         this.showPostDetail = this.showPostDetail.bind(this);
@@ -58,9 +66,95 @@ class Posts extends Component {
 
     componentWillMount() {
         this.getPosts()
+        // console.log(this.state.datePicked);
+        // console.log(this.state.datePicked.getTime());
     }
 
-    //get all posts
+    dateChange = date => {
+        this.setState({
+            datePicked: date,
+        })
+    }
+
+    nextPage() {
+        console.log("next");
+        if (this.state.datePicked !== this.state.previousDatePicked) {
+            console.log("khac nhau: " + this.state.datePicked);
+            this.getNextPostsWithDate(this.state.datePicked.getTime());
+            this.setState({
+                previousDatePicked: this.state.datePicked
+            })
+        } else {
+            if (this.state.posts.length === 20) {
+                const date = new Date(this.state.posts[0].CreatedAt)
+                console.log(this.state.posts[19].CreatedAt);
+                console.log("giong nhau: " + date.getTime());
+                this.getNextPostsWithDate(date.getTime());
+            } else {
+                console.log("Het roi");
+            }
+        }
+
+    }
+
+    previousPage() {
+        console.log("previous");
+        if (this.state.datePicked !== this.state.previousDatePicked) {
+            console.log("khac nhau");
+            this.getPreviousPostsWithDate(this.state.datePicked.getTime());
+            this.setState({
+                previousDatePicked: this.state.datePicked
+            })
+        } else {
+            if (this.state.posts.length === 20) {
+                const date = new Date(this.state.posts[19].CreatedAt)
+                console.log(this.state.posts[0].CreatedAt);
+                console.log("giong nhau" + date.getTime());
+                this.getPreviousPostsWithDate(date.getTime());
+            } else {
+                console.log("Het roi");
+            }
+        }
+    }
+
+    getNextPostsWithDate(date) {
+        this._postService.getNextPostsWithDate(date)
+            .then((result) => {
+                console.log(result);
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.forEach(element => {
+                        element.checked = false
+                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
+                    });
+                    this.setState({
+                        posts: result.Data
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
+
+    getPreviousPostsWithDate(date) {
+        this._postService.getPreviousPostsWithDate(date)
+            .then((result) => {
+                console.log(result);
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    // result.Data.reverse();
+                    result.Data.forEach(element => {
+                        element.checked = false
+                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
+                    });
+                    this.setState({
+                        posts: result.Data
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
+
+    //get posts
     getPosts() {
         this._postService.getPosts()
             .then((result) => {
@@ -79,18 +173,64 @@ class Posts extends Component {
             });
     }
 
-    //Close modal 
-    closeModal() {
+    //get posts by publisher
+    getPostsByPublisher(publisherId) {
+        this._postService.getPostsByPublisher(publisherId)
+            .then((result) => {
+                console.log(result);
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.forEach(element => {
+                        element.checked = false
+                    });
+                    this.setState({
+                        posts: result.Data
+                    })
+                } else if (result.StatusCode === 200 && result.Data === null) {
+                    console.log("NULL");
+                    this.setState({
+                        posts: []
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
+
+    //get publishers
+    getPublishers() {
+        this._publisherService.getPublishers()
+            .then((result) => {
+                console.log(result);
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    this.setState({
+                        publishers: result.Data
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
+
+    //Close postDetailModal 
+    closePostDetailModal() {
         this.setState({
-            modal: !this.state.modal,
+            postDetailModal: !this.state.postDetailModal,
             activeTab: ['general']
+        });
+    }
+
+
+    //Close postPreviewModal 
+    closePostPreviewModal() {
+        this.setState({
+            postPreviewModal: false,
         });
     }
 
     //Add a new  post
     openCreateModal() {
         this.setState({
-            modal: !this.state.modal,
+            postDetailModal: !this.state.postDetailModal,
             createModalMode: true,
             publisher: "",
             title: "",
@@ -153,7 +293,7 @@ class Posts extends Component {
             });
 
         this.setState({
-            modal: !this.state.modal,
+            postDetailModal: !this.state.postDetailModal,
         });
     }
 
@@ -162,7 +302,7 @@ class Posts extends Component {
         if (id !== null) {
             const postSelected = this.state.posts.find(element => element.Id === id)
             this.setState({
-                modal: !this.state.modal,
+                postDetailModal: !this.state.postDetailModal,
                 createModalMode: false,
                 id: postSelected.Id,
                 publisher: postSelected.Publisher,
@@ -230,7 +370,7 @@ class Posts extends Component {
             });
 
         this.setState({
-            modal: !this.state.modal,
+            postDetailModal: !this.state.postDetailModal,
         });
     }
 
@@ -367,7 +507,19 @@ class Posts extends Component {
     }
 
     searchPost(e) {
-        console.log(e);
+        console.log(e.value);
+        this.getPostsByPublisher(e.value)
+        this.setState({
+            searchMode: true,
+        })
+    }
+
+    onClearSearchBox() {
+        console.log("clear");
+        this.getPosts();
+        this.setState({
+            searchMode: false
+        })
     }
 
     getPublisher(event) {
@@ -426,7 +578,6 @@ class Posts extends Component {
     }
 
     getContentImageUrl(event, index) {
-        console.log(event.target.value);
         const _contents = this.state.contents
         _contents[index].ImageUrl = event.target.value
         this.setState({
@@ -437,6 +588,30 @@ class Posts extends Component {
     getContentImageCaption(event, index) {
         const _contents = this.state.contents
         _contents[index].ImageCaption = event.target.value
+        this.setState({
+            contents: _contents
+        })
+    }
+
+    getContentThumbImageUrl(event, index) {
+        const _contents = this.state.contents
+        _contents[index].ThumbImageUrl = event.target.value
+        this.setState({
+            contents: _contents
+        })
+    }
+
+    getContentVideoUrl(event, index) {
+        const _contents = this.state.contents
+        _contents[index].VideoUrl = event.target.value
+        this.setState({
+            contents: _contents
+        })
+    }
+
+    getContentVideoCaption(event, index) {
+        const _contents = this.state.contents
+        _contents[index].VideoCaption = event.target.value
         this.setState({
             contents: _contents
         })
@@ -466,8 +641,11 @@ class Posts extends Component {
         })
     }
 
-    selectePage(selectedPage) {
-        this.setState({ selectedPage: selectedPage });
+    selecteSearchPage(searchSelectedPage) {
+        console.log(searchSelectedPage);
+        this.setState({
+            searchSelectedPage: searchSelectedPage
+        });
     }
 
     selectedTab(tabPane, tab) {
@@ -626,31 +804,63 @@ class Posts extends Component {
                                 </Col>
                                 <Col xs="12" md="10">
                                     {this.state.contents.map((content, index) => {
-                                        if (content.hasOwnProperty('Text')) {
+                                        if (content.hasOwnProperty('ImageUrl')) {
                                             return (
-                                                <Textarea className="col-md-12" minRows={1} key={content.SubId.toString()} name="contents-input" id={content.SubId} value={content.Text} onChange={(e) => this.getContent(e, index)} />
+                                                <div key={content.SubId.toString()}>
+                                                    <FormGroup row>
+                                                        <Col md="2">
+                                                            <Label htmlFor="imageUrl-input">Link ảnh</Label>
+                                                        </Col>
+                                                        <Col xs="12" md="10">
+                                                            <img className="image" src={content.ImageUrl} alt={content.ImageCaption} />
+                                                            <Textarea className="col-md-12" minRows={1} name="imageUrl-input" id={"imageUrl" + content.SubId} value={content.ImageUrl} onChange={(e) => this.getContentImageUrl(e, index)} />
+                                                        </Col>
+                                                    </FormGroup>
+                                                    <FormGroup row>
+                                                        <Col md="2">
+                                                            <Label htmlFor="imageCaption-input">Caption ảnh</Label>
+                                                        </Col>
+                                                        <Col xs="12" md="10">
+                                                            <Textarea className="col-md-12" minRows={1} name="imageCaption-input" id={"captionImage" + content.SubId} value={content.ImageCaption} onChange={(e) => this.getContentImageCaption(e, index)} />
+                                                        </Col>
+                                                    </FormGroup>
+                                                </div>
+                                            )
+                                        } else if (content.hasOwnProperty('VideoUrl')) {
+                                            return (
+                                                <div key={content.SubId.toString()}>
+                                                    <FormGroup row>
+                                                        <Col md="2">
+                                                            <Label htmlFor="thumbImageUrl-input">Link ảnh thumbnail</Label>
+                                                        </Col>
+                                                        <Col xs="12" md="10">
+                                                            <img className="thumbImage" src={content.ThumbImageUrl} alt={content.ThumbImageUrl} />
+                                                            <Textarea className="col-md-12" minRows={1} name="thumbImageUrl-input" id={"thumbImageUrl" + content.SubId} value={content.ThumbImageUrl} onChange={(e) => this.getContentThumbImageUrl(e, index)} />
+                                                        </Col>
+                                                    </FormGroup>
+                                                    <FormGroup row>
+                                                        <Col md="2">
+                                                            <Label htmlFor="videoUrl-input">Link video</Label>
+                                                        </Col>
+                                                        <Col xs="12" md="10">
+                                                            <video src={content.VideoUrl} />
+                                                            {/* <img className="video" src={content.VideoUrl} alt={content.VideoCaption} /> */}
+                                                            <Textarea className="col-md-12" minRows={1} name="videoUrl-input" id={"videoUrl" + content.SubId} value={content.VideoUrl} onChange={(e) => this.getContentVideoUrl(e, index)} />
+                                                        </Col>
+                                                    </FormGroup>
+                                                    <FormGroup row>
+                                                        <Col md="2">
+                                                            <Label htmlFor="videoCaption-input">Caption video</Label>
+                                                        </Col>
+                                                        <Col xs="12" md="10">
+                                                            <Textarea className="col-md-12" minRows={1} name="videoCaption-input" id={"captionVideo" + content.SubId} value={content.VideoCaption} onChange={(e) => this.getContentVideoCaption(e, index)} />
+                                                        </Col>
+                                                    </FormGroup>
+                                                </div>
                                             )
                                         }
                                         return (
-                                            <div key={content.SubId.toString()}>
-                                                <FormGroup row>
-                                                    <Col md="2">
-                                                        <Label htmlFor="imageUrl-input">Link ảnh</Label>
-                                                    </Col>
-                                                    <Col xs="12" md="10">
-                                                        <img className="image" src={content.ImageUrl} alt={content.ImageCaption} />
-                                                        <Textarea className="col-md-12" minRows={1} name="imageUrl-input" id={"imageUrl" + content.SubId} value={content.ImageUrl} onChange={(e) => this.getContentImageUrl(e, index)} />
-                                                    </Col>
-                                                </FormGroup>
-                                                <FormGroup row>
-                                                    <Col md="2">
-                                                        <Label htmlFor="imageUrl-input">Caption ảnh</Label>
-                                                    </Col>
-                                                    <Col xs="12" md="10">
-                                                        <Textarea className="col-md-12" minRows={1} name="contents-input" id={"caption " + content.SubId} value={content.ImageCaption} onChange={(e) => this.getContentImageCaption(e, index)} />
-                                                    </Col>
-                                                </FormGroup>
-                                            </div>
+                                            <Textarea className="col-md-12" minRows={1} key={content.SubId.toString()} name="contents-input" id={content.SubId} value={content.Text} onChange={(e) => this.getContent(e, index)} />
                                         )
                                     })}
                                     <FormFeedback valid={false}>Nội dung không được bỏ trống</FormFeedback>
@@ -748,6 +958,69 @@ class Posts extends Component {
         );
     }
 
+    openPostPreviewModal() {
+        this.setState({
+            postPreviewModal: true
+        })
+    }
+
+    showPreview() {
+        return (
+            <div className="container">
+                <Row>
+                    <ul className="breadCrumbs">
+                        {(this.state.category !== "") && (
+                            <li><p>{this.state.category}</p></li>
+                        )}
+                        {(this.state.categorySubLevel1 !== "") && (
+                            <li><p>{this.state.categorySubLevel1}</p></li>
+                        )}
+                        {(this.state.categorySubLevel2 !== "") && (
+                            <li><p>{this.state.categorySubLevel2}</p></li>
+                        )}
+                    </ul>
+                </Row>
+                <p id="preview_postedAt">{(new Date(this.state.postedAt * 1000)).toLocaleString()}</p>
+                <h2 id="preview_title">{this.state.title}</h2>
+                <h5 id="preview_abstract">{this.state.abstract}</h5>
+                {
+                    this.state.contents.map((content, index) => {
+                        if (content.Tag === "image") {
+                            return (
+                                <div key={content.SubId.toString()}>
+                                    <img id={"preview_content_image_" + content.SubId} className="preview_content_image" src={content.ImageUrl} alt={content.ImageCaption} />
+                                    <p id={"preview_content_captionImage_" + content.SubId} className="media-caption">{content.ImageCaption}</p>
+                                </div>
+                            )
+                        } else if (content.Tag === "video") {
+                            return (
+                                <div key={content.SubId.toString()}>
+
+                                    <img id={"preview_content_thumbImage_" + content.SubId} className="preview_content_thumbImage" src={content.ThumbImageUrl} alt={content.ThumbImageUrl} />
+
+                                    <video src={content.VideoUrl} />
+                                    <p id={"preview_content_captionVideo_" + content.SubId} className="media-caption">{content.VideoCaption}</p>
+
+                                </div>
+                            )
+                        } else if (content.Tag === "p") {
+                            return (
+                                <div key={content.SubId.toString()}>
+                                    <p id={"preview_content_paragraph_" + content.SubId}>{content.Text} </p>
+                                </div>
+                            )
+                        }
+                        return (
+                            <div key={content.SubId.toString()} className="author">
+                                <p id={"preview_content_author_" + content.SubId}>{content.Text} </p>
+                            </div>
+                        )
+                    })
+                }
+            </div >
+        )
+    }
+
     render() {
 
         return (
@@ -757,14 +1030,38 @@ class Posts extends Component {
                         <Toolbars
                             onDelete={e => this.deletePost(e)}
                             onOpenCreateModal={e => this.openCreateModal(e)}
+                            onShowSearchBox={e => this.getPublishers()}
                             onSearch={e => this.searchPost(e)}
-                            searchPlaceholder1={'Tìm kiếm theo tiêu đề'}
-                            searchPlaceholder2={'Tìm kiếm theo trạng thái'} />
+                            onClearSearchBox={e => this.onClearSearchBox()}
+                            publishers={this.state.publishers}
+                            searchPlaceholder={'Tìm kiếm theo đầu báo'} />
                         <Card>
                             <CardHeader>
                                 <i className="fa fa-align-justify"></i> Bài đăng
                             </CardHeader>
                             <CardBody>
+                                {this.state.searchMode ?
+                                    <Row className="right">
+                                        <PaginationComponent totalItems={100} pageSize={10} onSelect={this.selecteSearchPage.bind(this)} />
+                                    </Row> :
+                                    <Row>
+                                        <Col md="12" className="pagination">
+                                            {/* <Row> */}
+                                            <DateTimePicker onChange={this.dateChange} value={this.state.datePicked} />
+                                            <Pagination size="lg" aria-label="Page navigation example">
+                                                <PaginationItem>
+                                                    <PaginationLink previous onClick={this.previousPage.bind(this)} />
+                                                </PaginationItem>
+
+                                                <PaginationItem>
+                                                    <PaginationLink next onClick={this.nextPage.bind(this)} />
+                                                </PaginationItem>
+
+                                            </Pagination>
+                                            {/* </Row> */}
+                                        </Col>
+                                    </Row>
+                                }
                                 <Table responsive hover bordered striped>
                                     <thead>
                                         <tr>
@@ -774,11 +1071,11 @@ class Posts extends Component {
                                                     <span className="label-text"></span>
                                                 </label>
                                             </th>
-                                            <th scope="col" width="30%" className="centered">Tiêu đề</th>
+                                            <th scope="col" width="45%" className="centered">Tiêu đề</th>
                                             <th scope="col" width="10%" className="centered">Chuyên mục</th>
                                             <th scope="col" width="10%" className="centered">Chuyên mục AI</th>
                                             <th scope="col" width="10%" className="centered">Chuyên mục con AI</th>
-                                            <th scope="col" width="27%" className="centered">Ngày tạo</th>
+                                            <th scope="col" width="12%" className="centered">Ngày tạo</th>
                                             <th scope="col" width="10%" className="centered">Trạng thái</th>
                                         </tr>
                                     </thead>
@@ -797,19 +1094,18 @@ class Posts extends Component {
                                                 <td>{post.Category}</td>
                                                 <td>{post.CategoryAi}</td>
                                                 <td>{post.SubcategoryAi}</td>
-                                                <td>{post.CreatedAt}</td>
+                                                <td>{(new Date(post.CreatedAt * 1000)).toLocaleString()}</td>
                                                 <td>{post.statusText}</td>
                                             </tr>)
                                         )}
                                     </tbody>
                                 </Table>
-                                <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectePage.bind(this)} />
                             </CardBody>
                         </Card>
                     </Col>
                 </Row>
-                <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
-                    <ModalHeader toggle={this.closeModal.bind(this)}>Bài đăng</ModalHeader>
+                <Modal isOpen={this.state.postDetailModal} toggle={this.closePostDetailModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
+                    <ModalHeader toggle={this.closePostDetailModal.bind(this)}>Bài đăng</ModalHeader>
                     <ModalBody>
                         <Nav tabs>
                             <NavItem>
@@ -844,13 +1140,20 @@ class Posts extends Component {
 
                     </ModalBody>
                     <ModalFooter>
+                        <Button className="left" color="success" onClick={this.openPostPreviewModal.bind(this)}>Preview</Button>
                         {this.state.createModalMode ?
                             <Button color="primary" onClick={this.createPost.bind(this)} >Thêm mới</Button>
                             :
                             <Button color="primary" onClick={this.updatePost.bind(this)} disabled={(this.state.publisher === "") || (this.state.category === "") || (this.state.categorySubLevel1 === "") || (this.state.title === "") || (this.state.abstract === "") || (this.state.tags.length === 0)}>Cập nhật</Button>
                         }
-                        <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
+                        <Button color="secondary" onClick={this.closePostDetailModal.bind(this)}>Hủy</Button>
                     </ModalFooter>
+                </Modal>
+                <Modal isOpen={this.state.postPreviewModal} toggle={this.closePostPreviewModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
+                    <ModalHeader toggle={this.closePostPreviewModal.bind(this)}>Bài đăng</ModalHeader>
+                    <ModalBody>
+                        {this.showPreview()}
+                    </ModalBody>
                 </Modal>
             </div>
         )

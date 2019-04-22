@@ -1,39 +1,31 @@
 import React, { Component } from 'react';
-import { Col, Row, Button, Input } from 'reactstrap';
+import { Col, Row, Button } from 'reactstrap';
+import Select from "react-select";
 
 class ToolBars extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            titleSearch: "",
-            statusSearch: "",
+            searchText: "",
             showSearchBox: false,
         };
     }
 
     showSearchBox() {
+        this.props.onShowSearchBox()
         this.setState({
             showSearchBox: !this.state.showSearchBox
         })
     }
 
-    clearSearchBox() {
+    getSearchText = searchText => value => {
+        console.log(value);
+        if(value === null) {
+            this.props.onClearSearchBox()
+        }
         this.setState({
-            titleSearch: "",
-            statusSearch: ""
-        })
-    }
-    
-    getTitle(event){
-        this.setState({
-            titleSearch: event.target.value
-        })
-    }
-
-    getStatus(event){
-        this.setState({
-            statusSearch: event.target.value
+            [searchText]: value
         })
     }
 
@@ -56,16 +48,20 @@ class ToolBars extends Component {
                     </Col>
                 </Row>
                 {this.state.showSearchBox ?
-                    <Row className="text-right searchbox">                        
-                        <div className="input-group">
-                            <Input type="text" id="searchByTitle-input" name="searchByTitle-input" placeholder={this.props.searchPlaceholder1} value={this.state.titleSearch} onChange={(e) => this.getTitle(e)}/>
-                            <div className="input-group-append">
-                                <Button color="primary" onClick={() => this.props.onSearch(this.state.titleSearch)}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
-                                <Button color="secondary" onClick={() => this.clearSearchBox()}><i className="fa fa-eraser"></i>&nbsp;Xóa</Button>
-                            </div>
-                        </div>
+                    <Row className="searchbox">
+                        <Select
+                            options={this.props.publishers.map(publisher => ({
+                                value: publisher.Id,
+                                label: publisher.Title
+                            }))}
+                            value={this.state.searchText}
+                            onChange={this.getSearchText("searchText")}
+                            placeholder={this.props.searchPlaceholder}
+                            isClearable
+                        />
+                        <Button color="primary" onClick={() => this.props.onSearch(this.state.searchText)} disabled={this.state.searchText ===""}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
                     </Row>
-                : null}
+                    : null}
             </div>
         )
     }

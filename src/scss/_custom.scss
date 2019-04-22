@@ -63,6 +63,112 @@
     text-align: center;
 }
 
-.input-group {
-    width: 500px;
+.left {
+    position: absolute;
+    float: left;
+}
+
+.preview-btn {
+    left: 16px;
+}
+
+.right {
+    float: right;
+}
+
+// .input-group {
+//     width: 600px;
+// }
+
+.preview_content_thumbImage, .preview_content_image {
+    width: 100%
+}
+
+.media-caption {
+    background-color: #eee;
+    font-style: italic;
+}
+
+.author {
+    text-align: right;
+    font-weight: bold;
+}
+
+#preview_title, #preview_abstract {
+    margin-bottom: 20px;
+}
+
+#preview_abstract {
+    font-weight: 600;
+}
+  
+.breadCrumbs {
+    position: relative;
+    padding-left: 15px; 
+    margin-bottom: 0;
+}
+  
+.breadCrumbs li {
+    position: relative;
+    float: left;
+    list-style: none;
+}
+  
+.breadCrumbs li p {
+    display: block;
+    padding: 0 10px 0 30px;
+    line-height: 40px;
+    color: #3fabba !important;
+}
+  
+.breadCrumbs li:first-child p {
+    padding: 0 10px 0 20px;  
+}
+  
+.breadCrumbs li:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -20px;
+    display: block;
+    width: 0; 
+    height: 0; 
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left: 20px solid #eceeed;
+    z-index: 10;
+}
+  
+/* GIVE EVERY CHILD A DIFFERENT COLOR */
+.breadCrumbs li:nth-child(1) p {
+    background: #eceeed;
+    border-left: 4px solid #3fabba;
+}
+  
+.breadCrumbs li:nth-child(1):after {
+    border-left: 20px solid #eceeed;
+}
+  
+.breadCrumbs li:nth-child(2) p {
+    background: #e2e2e2;
+}
+  
+.breadCrumbs li:nth-child(2):after {
+    border-left: 20px solid #e2e2e2;
+}
+  
+.breadCrumbs li:nth-child(3) p {
+    background: #dbdada;
+}
+  
+.breadCrumbs li:nth-child(3):after {
+    border-left: 20px solid #dbdada;
+}
+  
+.css-1pcexqc-container {
+    width: 400px;
+}
+
+.pagination {
+    padding-right: 15px
 }
