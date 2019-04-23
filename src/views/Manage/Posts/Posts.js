@@ -300,34 +300,69 @@ class Posts extends Component {
     // Show detail post
     showPostDetail(id) {
         if (id !== null) {
-            const postSelected = this.state.posts.find(element => element.Id === id)
-            this.setState({
-                postDetailModal: !this.state.postDetailModal,
-                createModalMode: false,
-                id: postSelected.Id,
-                publisher: postSelected.Publisher,
-                category: postSelected.Category,
-                categorySubLevel1: postSelected.CategorySubLevel1,
-                categorySubLevel2: postSelected.CategorySubLevel2,
-                categoryAi: postSelected.CategoryAi,
-                subcategoryAi: postSelected.SubcategoryAi,
-                title: postSelected.Title,
-                abstract: postSelected.Abstract,
-                contents: postSelected.Contents,
-                tags: postSelected.Tags,
-                imageThumbUrl: postSelected.ImageThumbUrl,
-                imageUrls: postSelected.ImageUrls,
-                videoUrls: postSelected.VideoUrls,
-                viewCount: postSelected.ViewCount,
-                quickViewCount: postSelected.QuickViewCount,
-                commentCount: postSelected.CommentCount,
-                likeCount: postSelected.LikeCount,
-                dislikeCount: postSelected.DislikeCount,
-                shareCount: postSelected.ShareCount,
-                saveCount: postSelected.SaveCount,
-                postedAt: postSelected.PostedAt,
-                status: postSelected.Status
-            });
+            console.log(id);
+            if (this.state.searchMode) {
+                this._postService.getPostDetailById(id)
+                    .then((result) => {
+                        console.log(result.Data);
+                        this.setState({
+                            postDetailModal: !this.state.postDetailModal,
+                            createModalMode: false,
+                            id: result.Data.Id,
+                            publisher: result.Data.Publisher,
+                            category: "",
+                            categorySubLevel1: "",
+                            categorySubLevel2: "",
+                            categoryAi: "",
+                            subcategoryAi: "",
+                            title: result.Data.Title,
+                            abstract: result.Data.Abstract,
+                            contents: result.Data.Contents,
+                            tags: [],
+                            imageThumbUrl: "",
+                            imageUrls: "",
+                            videoUrls: "",
+                            viewCount: "",
+                            quickViewCount: "",
+                            commentCount: result.Data.CommentCount,
+                            likeCount: "",
+                            dislikeCount: "",
+                            shareCount: "",
+                            saveCount: "",
+                            postedAt: "",
+                            status: ""
+                        })
+                    })
+            } else {
+                const postSelected = this.state.posts.find(element => element.Id === id)
+                this.setState({
+                    postDetailModal: !this.state.postDetailModal,
+                    createModalMode: false,
+                    id: postSelected.Id,
+                    publisher: postSelected.Publisher,
+                    category: postSelected.Category,
+                    categorySubLevel1: postSelected.CategorySubLevel1,
+                    categorySubLevel2: postSelected.CategorySubLevel2,
+                    categoryAi: postSelected.CategoryAi,
+                    subcategoryAi: postSelected.SubcategoryAi,
+                    title: postSelected.Title,
+                    abstract: postSelected.Abstract,
+                    contents: postSelected.Contents,
+                    tags: postSelected.Tags,
+                    imageThumbUrl: postSelected.ImageThumbUrl,
+                    imageUrls: postSelected.ImageUrls,
+                    videoUrls: postSelected.VideoUrls,
+                    viewCount: postSelected.ViewCount,
+                    quickViewCount: postSelected.QuickViewCount,
+                    commentCount: postSelected.CommentCount,
+                    likeCount: postSelected.LikeCount,
+                    dislikeCount: postSelected.DislikeCount,
+                    shareCount: postSelected.ShareCount,
+                    saveCount: postSelected.SaveCount,
+                    postedAt: postSelected.PostedAt,
+                    status: postSelected.Status
+                });
+            }
         }
     }
 
@@ -843,7 +878,9 @@ class Posts extends Component {
                                                             <Label htmlFor="videoUrl-input">Link video</Label>
                                                         </Col>
                                                         <Col xs="12" md="10">
-                                                            <video src={content.VideoUrl} />
+                                                            <video width="400" controls>
+                                                                <source src={content.VideoUrl} type="video/mp4" />
+                                                            </video>
                                                             {/* <img className="video" src={content.VideoUrl} alt={content.VideoCaption} /> */}
                                                             <Textarea className="col-md-12" minRows={1} name="videoUrl-input" id={"videoUrl" + content.SubId} value={content.VideoUrl} onChange={(e) => this.getContentVideoUrl(e, index)} />
                                                         </Col>
@@ -996,9 +1033,11 @@ class Posts extends Component {
                             return (
                                 <div key={content.SubId.toString()}>
 
-                                    <img id={"preview_content_thumbImage_" + content.SubId} className="preview_content_thumbImage" src={content.ThumbImageUrl} alt={content.ThumbImageUrl} />
+                                    {/* <img id={"preview_content_thumbImage_" + content.SubId} className="preview_content_thumbImage" src={content.ThumbImageUrl} alt={content.ThumbImageUrl} /> */}
 
-                                    <video src={content.VideoUrl} />
+                                    <video className="preview_content_video" controls>
+                                        <source src={content.VideoUrl} type="video/mp4" />
+                                    </video>
                                     <p id={"preview_content_captionVideo_" + content.SubId} className="media-caption">{content.VideoCaption}</p>
 
                                 </div>
@@ -1140,7 +1179,7 @@ class Posts extends Component {
 
                     </ModalBody>
                     <ModalFooter>
-                        <Button className="left" color="success" onClick={this.openPostPreviewModal.bind(this)}>Preview</Button>
+                        <Button className="left preview-btn" color="success" onClick={this.openPostPreviewModal.bind(this)}>Preview</Button>
                         {this.state.createModalMode ?
                             <Button color="primary" onClick={this.createPost.bind(this)} >Thêm mới</Button>
                             :

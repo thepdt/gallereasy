@@ -80,13 +80,14 @@
 //     width: 600px;
 // }
 
-.preview_content_thumbImage, .preview_content_image {
+.preview_content_thumbImage, .preview_content_image, .preview_content_video {
     width: 100%
 }
 
 .media-caption {
     background-color: #eee;
     font-style: italic;
+    padding: 10px 0 10px 0
 }
 
 .author {

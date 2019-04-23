@@ -12,6 +12,11 @@ class PostService {
         return fetch(url).then(res => res.json())
     }
 
+    getPostDetailById = (postId) => {
+        const url = "http://18.136.201.129:9092/api/v1.0/post/" + postId
+        return fetch(url).then(res => res.json())
+    }
+
     getNextPostsWithDate(date){
         const url = api.getBaseURL() + "/posts/next?nextIndex=" + date
         console.log("url: " + url);

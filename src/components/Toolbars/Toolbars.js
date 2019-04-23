@@ -21,12 +21,16 @@ class ToolBars extends Component {
 
     getSearchText = searchText => value => {
         console.log(value);
-        if(value === null) {
+        if (value === null) {
             this.props.onClearSearchBox()
+            this.setState({
+                searchText: ""
+            })
+        } else {
+            this.setState({
+                [searchText]: value
+            })
         }
-        this.setState({
-            [searchText]: value
-        })
     }
 
     render() {
@@ -47,8 +51,8 @@ class ToolBars extends Component {
                         </Row >
                     </Col>
                 </Row>
-                {this.state.showSearchBox ?
-                    <Row className="searchbox">
+                {this.state.showSearchBox &&
+                    (<Row className="searchbox">
                         <Select
                             options={this.props.publishers.map(publisher => ({
                                 value: publisher.Id,
@@ -59,9 +63,9 @@ class ToolBars extends Component {
                             placeholder={this.props.searchPlaceholder}
                             isClearable
                         />
-                        <Button color="primary" onClick={() => this.props.onSearch(this.state.searchText)} disabled={this.state.searchText ===""}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
-                    </Row>
-                    : null}
+                        <Button color="primary" onClick={() => this.props.onSearch(this.state.searchText)} disabled={this.state.searchText === ""}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
+                    </Row>)
+                }
             </div>
         )
     }
