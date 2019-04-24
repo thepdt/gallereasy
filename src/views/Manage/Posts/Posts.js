@@ -24,6 +24,7 @@ class Posts extends Component {
             checkedAll: false,
             searchSelectedPage: 1,
             searchMode: false,
+            searchText: "",
             postDetailModal: false,
             postPreviewModal: false,
             activeTab: ['general', 'seo', 'tags', 'media', 'statistics'],
@@ -174,8 +175,8 @@ class Posts extends Component {
     }
 
     //get posts by publisher
-    getPostsByPublisher(publisherId) {
-        this._postService.getPostsByPublisher(publisherId)
+    getPostsByPublisher(publisherId, paggeIndex) {
+        this._postService.getPostsByPublisher(publisherId, paggeIndex)
             .then((result) => {
                 console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
@@ -543,14 +544,25 @@ class Posts extends Component {
 
     searchPost(e) {
         console.log(e.value);
-        this.getPostsByPublisher(e.value)
+        this.getPostsByPublisher(e.value, 1)
         this.setState({
             searchMode: true,
+            searchText: e.value
         })
     }
 
+    onShowSearchBox(e) {
+        if(e) {
+            this.getPublishers()
+        } else {
+            this.getPosts()
+            this.setState({
+                searchMode: false
+            })
+        }
+    }
+
     onClearSearchBox() {
-        console.log("clear");
         this.getPosts();
         this.setState({
             searchMode: false
@@ -614,7 +626,7 @@ class Posts extends Component {
 
     getContentImageUrl(event, index) {
         const _contents = this.state.contents
-        _contents[index].ImageUrl = event.target.value
+        _contents[index].Url = event.target.value
         this.setState({
             contents: _contents
         })
@@ -630,7 +642,7 @@ class Posts extends Component {
 
     getContentThumbImageUrl(event, index) {
         const _contents = this.state.contents
-        _contents[index].ThumbImageUrl = event.target.value
+        _contents[index].S3ThumbUrl = event.target.value
         this.setState({
             contents: _contents
         })
@@ -638,7 +650,7 @@ class Posts extends Component {
 
     getContentVideoUrl(event, index) {
         const _contents = this.state.contents
-        _contents[index].VideoUrl = event.target.value
+        _contents[index].Url = event.target.value
         this.setState({
             contents: _contents
         })
@@ -678,6 +690,7 @@ class Posts extends Component {
 
     selecteSearchPage(searchSelectedPage) {
         console.log(searchSelectedPage);
+        this.getPostsByPublisher(this.state.searchText, searchSelectedPage)
         this.setState({
             searchSelectedPage: searchSelectedPage
         });
@@ -839,7 +852,7 @@ class Posts extends Component {
                                 </Col>
                                 <Col xs="12" md="10">
                                     {this.state.contents.map((content, index) => {
-                                        if (content.hasOwnProperty('ImageUrl')) {
+                                        if (content.Tag === "image") {
                                             return (
                                                 <div key={content.SubId.toString()}>
                                                     <FormGroup row>
@@ -847,8 +860,8 @@ class Posts extends Component {
                                                             <Label htmlFor="imageUrl-input">Link ảnh</Label>
                                                         </Col>
                                                         <Col xs="12" md="10">
-                                                            <img className="image" src={content.ImageUrl} alt={content.ImageCaption} />
-                                                            <Textarea className="col-md-12" minRows={1} name="imageUrl-input" id={"imageUrl" + content.SubId} value={content.ImageUrl} onChange={(e) => this.getContentImageUrl(e, index)} />
+                                                            <img className="image" src={content.Url} alt={content.ImageCaption} />
+                                                            <Textarea className="col-md-12" minRows={1} name="imageUrl-input" id={"imageUrl" + content.SubId} value={content.Url} onChange={(e) => this.getContentImageUrl(e, index)} />
                                                         </Col>
                                                     </FormGroup>
                                                     <FormGroup row>
@@ -856,12 +869,12 @@ class Posts extends Component {
                                                             <Label htmlFor="imageCaption-input">Caption ảnh</Label>
                                                         </Col>
                                                         <Col xs="12" md="10">
-                                                            <Textarea className="col-md-12" minRows={1} name="imageCaption-input" id={"captionImage" + content.SubId} value={content.ImageCaption} onChange={(e) => this.getContentImageCaption(e, index)} />
+                                                            <Textarea className="col-md-12" minRows={1} name="imageCaption-input" id={"captionImage" + content.SubId} value={content.Caption} onChange={(e) => this.getContentImageCaption(e, index)} />
                                                         </Col>
                                                     </FormGroup>
                                                 </div>
                                             )
-                                        } else if (content.hasOwnProperty('VideoUrl')) {
+                                        } else if (content.Tag === "video") {
                                             return (
                                                 <div key={content.SubId.toString()}>
                                                     <FormGroup row>
@@ -869,8 +882,8 @@ class Posts extends Component {
                                                             <Label htmlFor="thumbImageUrl-input">Link ảnh thumbnail</Label>
                                                         </Col>
                                                         <Col xs="12" md="10">
-                                                            <img className="thumbImage" src={content.ThumbImageUrl} alt={content.ThumbImageUrl} />
-                                                            <Textarea className="col-md-12" minRows={1} name="thumbImageUrl-input" id={"thumbImageUrl" + content.SubId} value={content.ThumbImageUrl} onChange={(e) => this.getContentThumbImageUrl(e, index)} />
+                                                            <img className="thumbImage" src={content.S3ThumbUrl} alt={content.S3ThumbUrl} />
+                                                            <Textarea className="col-md-12" minRows={1} name="thumbImageUrl-input" id={"thumbImageUrl" + content.SubId} value={content.S3ThumbUrl} onChange={(e) => this.getContentThumbImageUrl(e, index)} />
                                                         </Col>
                                                     </FormGroup>
                                                     <FormGroup row>
@@ -879,10 +892,9 @@ class Posts extends Component {
                                                         </Col>
                                                         <Col xs="12" md="10">
                                                             <video width="400" controls>
-                                                                <source src={content.VideoUrl} type="video/mp4" />
+                                                                <source src={content.Url} type="video/mp4" />
                                                             </video>
-                                                            {/* <img className="video" src={content.VideoUrl} alt={content.VideoCaption} /> */}
-                                                            <Textarea className="col-md-12" minRows={1} name="videoUrl-input" id={"videoUrl" + content.SubId} value={content.VideoUrl} onChange={(e) => this.getContentVideoUrl(e, index)} />
+                                                            <Textarea className="col-md-12" minRows={1} name="videoUrl-input" id={"videoUrl" + content.SubId} value={content.Url} onChange={(e) => this.getContentVideoUrl(e, index)} />
                                                         </Col>
                                                     </FormGroup>
                                                     <FormGroup row>
@@ -890,7 +902,7 @@ class Posts extends Component {
                                                             <Label htmlFor="videoCaption-input">Caption video</Label>
                                                         </Col>
                                                         <Col xs="12" md="10">
-                                                            <Textarea className="col-md-12" minRows={1} name="videoCaption-input" id={"captionVideo" + content.SubId} value={content.VideoCaption} onChange={(e) => this.getContentVideoCaption(e, index)} />
+                                                            <Textarea className="col-md-12" minRows={1} name="videoCaption-input" id={"captionVideo" + content.SubId} value={content.Caption} onChange={(e) => this.getContentVideoCaption(e, index)} />
                                                         </Col>
                                                     </FormGroup>
                                                 </div>
@@ -1025,21 +1037,20 @@ class Posts extends Component {
                         if (content.Tag === "image") {
                             return (
                                 <div key={content.SubId.toString()}>
-                                    <img id={"preview_content_image_" + content.SubId} className="preview_content_image" src={content.ImageUrl} alt={content.ImageCaption} />
-                                    <p id={"preview_content_captionImage_" + content.SubId} className="media-caption">{content.ImageCaption}</p>
+                                    <img id={"preview_content_image_" + content.SubId} className="preview_content_image" src={content.Url} alt={content.ImageCaption} />
+                                    <p id={"preview_content_captionImage_" + content.SubId} className="media-caption">{content.Caption}</p>
                                 </div>
                             )
                         } else if (content.Tag === "video") {
                             return (
                                 <div key={content.SubId.toString()}>
 
-                                    {/* <img id={"preview_content_thumbImage_" + content.SubId} className="preview_content_thumbImage" src={content.ThumbImageUrl} alt={content.ThumbImageUrl} /> */}
+                                    {/* <img id={"preview_content_thumbImage_" + content.SubId} className="preview_content_thumbImage" src={content.S3ThumbUrl} alt={content.S3ThumbUrl} /> */}
 
                                     <video className="preview_content_video" controls>
-                                        <source src={content.VideoUrl} type="video/mp4" />
+                                        <source src={content.Url} type="video/mp4" />
                                     </video>
-                                    <p id={"preview_content_captionVideo_" + content.SubId} className="media-caption">{content.VideoCaption}</p>
-
+                                    <p id={"preview_content_captionVideo_" + content.SubId} className="media-caption">{content.Caption}</p>
                                 </div>
                             )
                         } else if (content.Tag === "p") {
@@ -1069,7 +1080,7 @@ class Posts extends Component {
                         <Toolbars
                             onDelete={e => this.deletePost(e)}
                             onOpenCreateModal={e => this.openCreateModal(e)}
-                            onShowSearchBox={e => this.getPublishers()}
+                            onShowSearchBox={e => this.onShowSearchBox(e)}
                             onSearch={e => this.searchPost(e)}
                             onClearSearchBox={e => this.onClearSearchBox()}
                             publishers={this.state.publishers}

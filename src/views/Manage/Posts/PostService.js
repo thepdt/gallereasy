@@ -7,8 +7,8 @@ class PostService {
         return fetch(url).then(res => res.json())
     }
 
-    getPostsByPublisher = (publisherId) => {
-        const url = "http://18.136.201.129:9092/api/v1.0/post/publisher?pageSize=30&pageIndex=1&id=" + publisherId
+    getPostsByPublisher = (publisherId, pageIndex) => {
+        const url = "http://18.136.201.129:9092/api/v1.0/post/publisher?pageSize=30&pageIndex=" + pageIndex + "&id=" + publisherId
         return fetch(url).then(res => res.json())
     }
 

@@ -13,9 +13,10 @@ class ToolBars extends Component {
     }
 
     showSearchBox() {
-        this.props.onShowSearchBox()
         this.setState({
             showSearchBox: !this.state.showSearchBox
+        }, () =>{
+            this.props.onShowSearchBox(this.state.showSearchBox)
         })
     }
 
