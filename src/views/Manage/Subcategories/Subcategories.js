@@ -52,7 +52,6 @@ class Subcategories extends Component {
     getSubcategories() {
         this._subcategoryService.getSubcategories()
             .then((result) => {
-                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -95,7 +94,6 @@ class Subcategories extends Component {
         if (data.Title !== null && data.Code !== null && data.Description !== null && data.ParentId !== null) {
             this._subcategoryService.createSubcategory(data)
                 .then((result) => {
-                    console.log(result);
                     if (result.StatusCode === 200 && result.Data !== null) {
                         result.Data.checked = false;
                         result.Data.parentCategory = this.state.parentCategories.find(el => el.Id === result.Data.ParentId).Title

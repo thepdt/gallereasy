@@ -19,13 +19,11 @@ class PostService {
 
     getNextPostsWithDate(date){
         const url = api.getBaseURL() + "/posts/next?nextIndex=" + date
-        console.log("url: " + url);
         return fetch(url).then(res => res.json())
     }
 
     getPreviousPostsWithDate(date){
         const url = api.getBaseURL() + "/posts/previous?previousIndex=" + date
-        console.log("url: " + url);
         return fetch(url).then(res => res.json())
     }
 

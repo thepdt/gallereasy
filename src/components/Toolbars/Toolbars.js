@@ -21,7 +21,6 @@ class ToolBars extends Component {
     }
 
     getSearchText = searchText => value => {
-        console.log(value);
         if (value === null) {
             this.props.onClearSearchBox()
             this.setState({

@@ -44,7 +44,6 @@ class Publishers extends Component {
     getPublishers() {
         this._publisherService.getPublishers()
             .then((result) => {
-                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false

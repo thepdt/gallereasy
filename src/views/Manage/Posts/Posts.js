@@ -159,7 +159,6 @@ class Posts extends Component {
     getPosts() {
         this._postService.getPosts()
             .then((result) => {
-                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -178,7 +177,6 @@ class Posts extends Component {
     getPostsByPublisher(publisherId, paggeIndex) {
         this._postService.getPostsByPublisher(publisherId, paggeIndex)
             .then((result) => {
-                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -187,7 +185,6 @@ class Posts extends Component {
                         posts: result.Data
                     })
                 } else if (result.StatusCode === 200 && result.Data === null) {
-                    console.log("NULL");
                     this.setState({
                         posts: []
                     })
@@ -201,7 +198,6 @@ class Posts extends Component {
     getPublishers() {
         this._publisherService.getPublishers()
             .then((result) => {
-                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     this.setState({
                         publishers: result.Data
@@ -301,11 +297,9 @@ class Posts extends Component {
     // Show detail post
     showPostDetail(id) {
         if (id !== null) {
-            console.log(id);
             if (this.state.searchMode) {
                 this._postService.getPostDetailById(id)
                     .then((result) => {
-                        console.log(result.Data);
                         this.setState({
                             postDetailModal: !this.state.postDetailModal,
                             createModalMode: false,
@@ -527,7 +521,6 @@ class Posts extends Component {
         if (this.state.checkedPosts.length !== 0) {
             this._postService.deletePost(this.state.checkedPosts[0])
                 .then((result) => {
-                    console.log(result);
                     if (result.StatusCode === 200) {
                         const _posts = this.state.posts
                         const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0])
@@ -543,7 +536,6 @@ class Posts extends Component {
     }
 
     searchPost(e) {
-        console.log(e.value);
         this.getPostsByPublisher(e.value, 1)
         this.setState({
             searchMode: true,
@@ -689,7 +681,6 @@ class Posts extends Component {
     }
 
     selecteSearchPage(searchSelectedPage) {
-        console.log(searchSelectedPage);
         this.getPostsByPublisher(this.state.searchText, searchSelectedPage)
         this.setState({
             searchSelectedPage: searchSelectedPage

@@ -47,7 +47,7 @@
     "react-scripts": "^2.1.8"
   },
   "scripts": {
-    "start": "PORT=9009 react-scripts start",
+    "start": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:cov": "react-scripts test --coverage",

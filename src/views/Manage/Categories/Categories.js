@@ -36,7 +36,6 @@ class Categories extends Component {
     getCategories() {
         this._categoryService.getCategories()
             .then((result) => {
-                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -79,7 +78,6 @@ class Categories extends Component {
 
         this._categoryService.createCategory(data)
             .then((result) => {
-                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.checked = false;
                     this.setState({
