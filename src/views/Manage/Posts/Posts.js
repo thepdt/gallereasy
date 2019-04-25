@@ -355,6 +355,7 @@ class Posts extends Component {
                     shareCount: postSelected.ShareCount,
                     saveCount: postSelected.SaveCount,
                     postedAt: postSelected.PostedAt,
+                    postedUrl: postSelected.PostedUrl,
                     status: postSelected.Status
                 });
             }
@@ -544,7 +545,7 @@ class Posts extends Component {
     }
 
     onShowSearchBox(e) {
-        if(e) {
+        if (e) {
             this.getPublishers()
         } else {
             this.getPosts()
@@ -564,6 +565,12 @@ class Posts extends Component {
     getPublisher(event) {
         this.setState({
             publisher: event.target.value
+        })
+    }
+
+    getPostedUrl(event) {
+        this.setState({
+            postedUrl: event.target.value
         })
     }
 
@@ -749,6 +756,15 @@ class Posts extends Component {
                                 </>
                                 :
                                 <>
+                                    <FormGroup row>
+                                        <Col md="2">
+                                            <Label htmlFor="postedUrl-input" >Link bài báo</Label>
+                                        </Col>
+                                        <Col xs="12" md="10">
+                                            {/* <Input type="text" id="postedUrl-input" name="postedUrl-input" value={this.state.postedUrl} onChange={(e) => this.getPostedUrl(e)}/> */}
+                                            <a href={this.state.postedUrl} target="_blank">{this.state.postedUrl}</a>
+                                        </Col>
+                                    </FormGroup>
                                     <FormGroup row>
                                         <Col md="2">
                                             <Label htmlFor="category-input" className="title-required">Chuyên mục</Label>
@@ -1113,9 +1129,9 @@ class Posts extends Component {
                                                 </label>
                                             </th>
                                             <th scope="col" width="45%" className="centered">Tiêu đề</th>
+                                            <th scope="col" width="10%" className="centered">Đầu báo</th>
                                             <th scope="col" width="10%" className="centered">Chuyên mục</th>
                                             <th scope="col" width="10%" className="centered">Chuyên mục AI</th>
-                                            <th scope="col" width="10%" className="centered">Chuyên mục con AI</th>
                                             <th scope="col" width="12%" className="centered">Ngày tạo</th>
                                             <th scope="col" width="10%" className="centered">Trạng thái</th>
                                         </tr>
@@ -1132,9 +1148,9 @@ class Posts extends Component {
                                                 <td>
                                                     <span className="title" onClick={() => this.showPostDetail(post.Id)}>{post.Title}</span>
                                                 </td>
+                                                <td>{post.Publisher}</td>
                                                 <td>{post.Category}</td>
                                                 <td>{post.CategoryAi}</td>
-                                                <td>{post.SubcategoryAi}</td>
                                                 <td>{(new Date(post.CreatedAt * 1000)).toLocaleString()}</td>
                                                 <td>{post.statusText}</td>
                                             </tr>)
