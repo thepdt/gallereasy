@@ -762,7 +762,7 @@ class Posts extends Component {
                                         </Col>
                                         <Col xs="12" md="10">
                                             {/* <Input type="text" id="postedUrl-input" name="postedUrl-input" value={this.state.postedUrl} onChange={(e) => this.getPostedUrl(e)}/> */}
-                                            <a href={this.state.postedUrl} target="_blank">{this.state.postedUrl}</a>
+                                            <a href={this.state.postedUrl} rel="noopener noreferrer" target="_blank">{this.state.postedUrl}</a>
                                         </Col>
                                     </FormGroup>
                                     <FormGroup row>
