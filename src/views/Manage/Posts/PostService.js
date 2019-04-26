@@ -2,18 +2,19 @@ import api from './../../../Environment'
 
 class PostService {
 
-    getPosts = () => {
-        const url = api.getBaseURL() + "/posts"
+    getPosts = (fromDate, toDate, pageIndex) => {
+        const url = api.getBaseURL() + "/posts?pageSize=10&pageIndex=" + pageIndex + "&from=" + fromDate + "&to=" + toDate
+        console.log(url);
         return fetch(url).then(res => res.json())
     }
 
     getPostsByPublisher = (publisherId, pageIndex) => {
-        const url = "http://18.136.201.129:9092/api/v1.0/post/publisher?pageSize=30&pageIndex=" + pageIndex + "&id=" + publisherId
+        const url =api.getBaseURL() + "/posts/publisher?pageSize=10&pageIndex=" + pageIndex + "&publisherId=" + publisherId
         return fetch(url).then(res => res.json())
     }
 
-    getPostDetailById = (postId) => {
-        const url = "http://18.136.201.129:9092/api/v1.0/post/" + postId
+    getPostByTitle = (title) => {
+        const url =api.getBaseURL() + "/posts/publisher?search=" + title
         return fetch(url).then(res => res.json())
     }
 

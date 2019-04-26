@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Col, Row, Button } from 'reactstrap';
+import { Input, Col, Row, Button, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Select from "react-select";
 
 class ToolBars extends Component {
@@ -9,13 +9,19 @@ class ToolBars extends Component {
         this.state = {
             searchText: "",
             showSearchBox: false,
+            searchOptionOpen: false,
+            searchOption: 0,
+            searchOptionValue: "Chế độ tìm kiếm"
         };
+
+        this.searchOptionToggle = this.searchOptionToggle.bind(this);
+        this.changeSearchOptionValue = this.changeSearchOptionValue.bind(this);
     }
 
     showSearchBox() {
         this.setState({
             showSearchBox: !this.state.showSearchBox
-        }, () =>{
+        }, () => {
             this.props.onShowSearchBox(this.state.showSearchBox)
         })
     }
@@ -31,6 +37,27 @@ class ToolBars extends Component {
                 [searchText]: value
             })
         }
+    }
+
+    searchOptionToggle() {
+        this.setState({
+            searchOptionOpen: !this.state.searchOptionOpen
+        });
+    }
+
+    changeSearchOptionValue(event) {
+        this.setState({
+            searchText: "",
+            searchOptionOpen: !this.state.searchOptionOpen,
+            searchOptionValue: event.target.innerText,
+            searchOption: Number(event.currentTarget.getAttribute("id"))
+        });
+    }
+
+    getSearchTextOption2(event) {
+        this.setState({
+            searchText: event.target.value
+        })
     }
 
     render() {
@@ -53,17 +80,36 @@ class ToolBars extends Component {
                 </Row>
                 {this.state.showSearchBox &&
                     (<Row className="searchbox">
-                        <Select
-                            options={this.props.publishers.map(publisher => ({
-                                value: publisher.Id,
-                                label: publisher.Title
-                            }))}
-                            value={this.state.searchText}
-                            onChange={this.getSearchText("searchText")}
-                            placeholder={this.props.searchPlaceholder}
-                            isClearable
-                        />
-                        <Button color="primary" onClick={() => this.props.onSearch(this.state.searchText)} disabled={this.state.searchText === ""}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
+                        <ButtonDropdown isOpen={this.state.searchOptionOpen} toggle={this.searchOptionToggle}>
+                            <DropdownToggle caret>{this.state.searchOptionValue}</DropdownToggle>
+                            <DropdownMenu>
+                                {this.props.searchOptions.map(option =>
+                                    <DropdownItem id={option.value} key={option.value} onClick={this.changeSearchOptionValue}>{option.text}</DropdownItem>
+                                )}
+                            </DropdownMenu>
+                        </ButtonDropdown>
+                        {this.state.searchOption === 1 &&
+                            <Select
+                                options={this.props.valueOptions.map(option => ({
+                                    value: option.Id,
+                                    label: option.Title
+                                }))}
+                                value={this.state.searchText}
+                                onChange={this.getSearchText("searchText")}
+                                placeholder={this.props.searchPlaceholder1}
+                                isClearable
+                            />
+                        }
+                        {this.state.searchOption === 2 &&
+                            <Input 
+                                type="text" 
+                                id="inputSearchOption_2" 
+                                value={this.state.searchText} 
+                                onChange={(e) => this.getSearchTextOption2(e)} 
+                                placeholder={this.props.searchPlaceholder2}
+                            />
+                        }
+                        <Button color="primary" onClick={() => this.props.onSearch(this.state.searchOption, this.state.searchText)} disabled={this.state.searchText === ""}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
                     </Row>)
                 }
             </div>

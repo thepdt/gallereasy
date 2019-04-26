@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Table, Pagination, PaginationItem, PaginationLink, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import MultiSelectReact from 'multi-select-react';
 import Textarea from 'react-textarea-autosize';
 import PostService from './PostService';
@@ -23,6 +23,7 @@ class Posts extends Component {
             checkedPosts: [],
             checkedAll: false,
             searchSelectedPage: 1,
+            selectedPage: 1,
             searchMode: false,
             searchText: "",
             postDetailModal: false,
@@ -58,107 +59,51 @@ class Posts extends Component {
             categoryAi: "",
             subcategoryAi: "",
 
-            previousDatePicked: Number,
-            datePicked: new Date(),
+            fromDatePicked: new Date(),
+            toDatePicked: new Date(),
             subCategorySelects: [],
         };
-        this.showPostDetail = this.showPostDetail.bind(this);
+        this.showPostPreview = this.showPostPreview.bind(this);
     }
 
     componentWillMount() {
-        this.getPosts()
+        var date = this.state.fromDatePicked
+        console.log(date.getDate() + 6 );
+        // console.log(this.state.fromDatePicked.setDate(this.state.fromDatePicked.getDate() - 1));
+        this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage)
         // console.log(this.state.datePicked);
         // console.log(this.state.datePicked.getTime());
     }
 
-    dateChange = date => {
+    fromDateChange = date => {
+        console.log(date);
         this.setState({
-            datePicked: date,
+            fromDatePicked: date,
+        }, () => {
+            if(this.state.fromDatePicked !== null) {
+                this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage)
+            }
         })
     }
 
-    nextPage() {
-        console.log("next");
-        if (this.state.datePicked !== this.state.previousDatePicked) {
-            console.log("khac nhau: " + this.state.datePicked);
-            this.getNextPostsWithDate(this.state.datePicked.getTime());
-            this.setState({
-                previousDatePicked: this.state.datePicked
-            })
-        } else {
-            if (this.state.posts.length === 20) {
-                const date = new Date(this.state.posts[0].CreatedAt)
-                console.log(this.state.posts[19].CreatedAt);
-                console.log("giong nhau: " + date.getTime());
-                this.getNextPostsWithDate(date.getTime());
-            } else {
-                console.log("Het roi");
+    toDateChange = date => {
+        console.log(date.getTime());
+        this.setState({
+            toDatePicked: date,
+        }, () => {
+            if(this.state.toDatePicked !== null) {
+                this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage)
             }
-        }
-
-    }
-
-    previousPage() {
-        console.log("previous");
-        if (this.state.datePicked !== this.state.previousDatePicked) {
-            console.log("khac nhau");
-            this.getPreviousPostsWithDate(this.state.datePicked.getTime());
-            this.setState({
-                previousDatePicked: this.state.datePicked
-            })
-        } else {
-            if (this.state.posts.length === 20) {
-                const date = new Date(this.state.posts[19].CreatedAt)
-                console.log(this.state.posts[0].CreatedAt);
-                console.log("giong nhau" + date.getTime());
-                this.getPreviousPostsWithDate(date.getTime());
-            } else {
-                console.log("Het roi");
-            }
-        }
-    }
-
-    getNextPostsWithDate(date) {
-        this._postService.getNextPostsWithDate(date)
-            .then((result) => {
-                console.log(result);
-                if (result.StatusCode === 200 && result.Data !== null) {
-                    result.Data.forEach(element => {
-                        element.checked = false
-                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
-                    });
-                    this.setState({
-                        posts: result.Data
-                    })
-                }
-            }).catch((err) => {
-                console.log("error: " + err);
-            });
-    }
-
-    getPreviousPostsWithDate(date) {
-        this._postService.getPreviousPostsWithDate(date)
-            .then((result) => {
-                console.log(result);
-                if (result.StatusCode === 200 && result.Data !== null) {
-                    // result.Data.reverse();
-                    result.Data.forEach(element => {
-                        element.checked = false
-                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
-                    });
-                    this.setState({
-                        posts: result.Data
-                    })
-                }
-            }).catch((err) => {
-                console.log("error: " + err);
-            });
+        })
     }
 
     //get posts
-    getPosts() {
-        this._postService.getPosts()
+    getPosts(fromDate, toDate, paggeIndex) {
+        console.log((fromDate.getTime()));
+        console.log(String(fromDate.getTime()).slice(0, 10));
+        this._postService.getPosts(String(fromDate.getTime()).slice(0, 10), String(toDate.getTime()).slice(0, 10), paggeIndex)
             .then((result) => {
+                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -166,6 +111,32 @@ class Posts extends Component {
                     });
                     this.setState({
                         posts: result.Data
+                    })
+                } else if(result.StatusCode === 200 && result.Data == null) {
+                    this.setState({
+                        posts: []
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
+
+    getPostByTitle(text) {
+        this._postService.getPostByTitle(text)
+            .then((result) => {
+                console.log(result);
+                if (result.StatusCode === 200 && result.Data !== null) {
+                    result.Data.forEach(element => {
+                        element.checked = false
+                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
+                    });
+                    this.setState({
+                        posts: result.Data
+                    })
+                } else if (result.StatusCode === 200 && result.Data === null) {
+                    this.setState({
+                        posts: []
                     })
                 }
             }).catch((err) => {
@@ -177,9 +148,11 @@ class Posts extends Component {
     getPostsByPublisher(publisherId, paggeIndex) {
         this._postService.getPostsByPublisher(publisherId, paggeIndex)
             .then((result) => {
+                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
+                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
                     });
                     this.setState({
                         posts: result.Data
@@ -294,72 +267,46 @@ class Posts extends Component {
         });
     }
 
-    // Show detail post
-    showPostDetail(id) {
+    showDetailPost() {
+        this.setState({
+            postDetailModal: true,
+            postPreviewModal: false
+        })
+    }
+    // Show preview post
+    showPostPreview(id) {
         if (id !== null) {
-            if (this.state.searchMode) {
-                this._postService.getPostDetailById(id)
-                    .then((result) => {
-                        this.setState({
-                            postDetailModal: !this.state.postDetailModal,
-                            createModalMode: false,
-                            id: result.Data.Id,
-                            publisher: result.Data.Publisher,
-                            category: "",
-                            categorySubLevel1: "",
-                            categorySubLevel2: "",
-                            categoryAi: "",
-                            subcategoryAi: "",
-                            title: result.Data.Title,
-                            abstract: result.Data.Abstract,
-                            contents: result.Data.Contents,
-                            tags: [],
-                            imageThumbUrl: "",
-                            imageUrls: "",
-                            videoUrls: "",
-                            viewCount: "",
-                            quickViewCount: "",
-                            commentCount: result.Data.CommentCount,
-                            likeCount: "",
-                            dislikeCount: "",
-                            shareCount: "",
-                            saveCount: "",
-                            postedAt: "",
-                            status: ""
-                        })
-                    })
-            } else {
-                const postSelected = this.state.posts.find(element => element.Id === id)
-                this.setState({
-                    postDetailModal: !this.state.postDetailModal,
-                    createModalMode: false,
-                    id: postSelected.Id,
-                    publisher: postSelected.Publisher,
-                    category: postSelected.Category,
-                    categorySubLevel1: postSelected.CategorySubLevel1,
-                    categorySubLevel2: postSelected.CategorySubLevel2,
-                    categoryAi: postSelected.CategoryAi,
-                    subcategoryAi: postSelected.SubcategoryAi,
-                    title: postSelected.Title,
-                    abstract: postSelected.Abstract,
-                    contents: postSelected.Contents,
-                    tags: postSelected.Tags,
-                    imageThumbUrl: postSelected.ImageThumbUrl,
-                    imageUrls: postSelected.ImageUrls,
-                    videoUrls: postSelected.VideoUrls,
-                    viewCount: postSelected.ViewCount,
-                    quickViewCount: postSelected.QuickViewCount,
-                    commentCount: postSelected.CommentCount,
-                    likeCount: postSelected.LikeCount,
-                    dislikeCount: postSelected.DislikeCount,
-                    shareCount: postSelected.ShareCount,
-                    saveCount: postSelected.SaveCount,
-                    postedAt: postSelected.PostedAt,
-                    postedUrl: postSelected.PostedUrl,
-                    status: postSelected.Status
-                });
-            }
+            const postSelected = this.state.posts.find(element => element.Id === id)
+            this.setState({
+                postPreviewModal: true,
+                createModalMode: false,
+                id: postSelected.Id,
+                publisher: postSelected.Publisher,
+                category: postSelected.Category,
+                categorySubLevel1: postSelected.CategorySubLevel1,
+                categorySubLevel2: postSelected.CategorySubLevel2,
+                categoryAi: postSelected.CategoryAi,
+                subcategoryAi: postSelected.SubcategoryAi,
+                title: postSelected.Title,
+                abstract: postSelected.Abstract,
+                contents: postSelected.Contents,
+                tags: postSelected.Tags,
+                imageThumbUrl: postSelected.ImageThumbUrl,
+                imageUrls: postSelected.ImageUrls,
+                videoUrls: postSelected.VideoUrls,
+                viewCount: postSelected.ViewCount,
+                quickViewCount: postSelected.QuickViewCount,
+                commentCount: postSelected.CommentCount,
+                likeCount: postSelected.LikeCount,
+                dislikeCount: postSelected.DislikeCount,
+                shareCount: postSelected.ShareCount,
+                saveCount: postSelected.SaveCount,
+                postedAt: postSelected.PostedAt,
+                postedUrl: postSelected.PostedUrl,
+                status: postSelected.Status
+            });
         }
+
     }
 
     updatePost() {
@@ -401,7 +348,7 @@ class Posts extends Component {
             });
 
         this.setState({
-            postDetailModal: !this.state.postDetailModal,
+            postDetailModal: false,
         });
     }
 
@@ -536,19 +483,24 @@ class Posts extends Component {
         }
     }
 
-    searchPost(e) {
-        this.getPostsByPublisher(e.value, 1)
-        this.setState({
-            searchMode: true,
-            searchText: e.value
-        })
+    searchPost(opt, text) {
+        if (opt === 1) {
+            this.getPostsByPublisher(text.value, 1)
+            this.setState({
+                searchMode: true,
+                searchText: text.value
+            })
+        } else if (opt === 2) {
+            console.log(text);
+            this.getPostByTitle(text)
+        }
     }
 
     onShowSearchBox(e) {
         if (e) {
             this.getPublishers()
         } else {
-            this.getPosts()
+            this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage)
             this.setState({
                 searchMode: false
             })
@@ -556,7 +508,7 @@ class Posts extends Component {
     }
 
     onClearSearchBox() {
-        this.getPosts();
+        this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage);
         this.setState({
             searchMode: false
         })
@@ -691,6 +643,13 @@ class Posts extends Component {
         this.getPostsByPublisher(this.state.searchText, searchSelectedPage)
         this.setState({
             searchSelectedPage: searchSelectedPage
+        });
+    }
+
+    selectedPage(selectedPage) {
+        this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, selectedPage)
+        this.setState({
+            selectedPage: selectedPage
         });
     }
 
@@ -1014,11 +973,6 @@ class Posts extends Component {
         );
     }
 
-    openPostPreviewModal() {
-        this.setState({
-            postPreviewModal: true
-        })
-    }
 
     showPreview() {
         return (
@@ -1088,10 +1042,13 @@ class Posts extends Component {
                             onDelete={e => this.deletePost(e)}
                             onOpenCreateModal={e => this.openCreateModal(e)}
                             onShowSearchBox={e => this.onShowSearchBox(e)}
-                            onSearch={e => this.searchPost(e)}
+                            onSearch={(opt, text) => this.searchPost(opt, text)}
                             onClearSearchBox={e => this.onClearSearchBox()}
-                            publishers={this.state.publishers}
-                            searchPlaceholder={'Tìm kiếm theo đầu báo'} />
+                            valueOptions={this.state.publishers}
+                            searchOptions={[{ value: 1, text: "Theo đầu báo" }, { value: 2, text: "Theo tên bài báo" }]}
+                            searchPlaceholder1={'Tìm kiếm theo đầu báo'}
+                            searchPlaceholder2={'Tìm kiếm theo tên bài báo'}
+                        />
                         <Card>
                             <CardHeader>
                                 <i className="fa fa-align-justify"></i> Bài đăng
@@ -1104,17 +1061,10 @@ class Posts extends Component {
                                     <Row>
                                         <Col md="12" className="pagination">
                                             {/* <Row> */}
-                                            <DateTimePicker onChange={this.dateChange} value={this.state.datePicked} />
-                                            <Pagination size="lg" aria-label="Page navigation example">
-                                                <PaginationItem>
-                                                    <PaginationLink previous onClick={this.previousPage.bind(this)} />
-                                                </PaginationItem>
+                                            <DateTimePicker onChange={this.fromDateChange} value={this.state.fromDatePicked} />
+                                            <DateTimePicker onChange={this.toDateChange} value={this.state.toDatePicked} />
+                                            <PaginationComponent totalItems={100} pageSize={10} onSelect={this.selectedPage.bind(this)} />
 
-                                                <PaginationItem>
-                                                    <PaginationLink next onClick={this.nextPage.bind(this)} />
-                                                </PaginationItem>
-
-                                            </Pagination>
                                             {/* </Row> */}
                                         </Col>
                                     </Row>
@@ -1146,7 +1096,7 @@ class Posts extends Component {
                                                     </label>
                                                 </td>
                                                 <td>
-                                                    <span className="title" onClick={() => this.showPostDetail(post.Id)}>{post.Title}</span>
+                                                    <span className="title" onClick={() => this.showPostPreview(post.Id)}>{post.Title}</span>
                                                 </td>
                                                 <td>{post.Publisher}</td>
                                                 <td>{post.Category}</td>
@@ -1197,7 +1147,6 @@ class Posts extends Component {
 
                     </ModalBody>
                     <ModalFooter>
-                        <Button className="left preview-btn" color="success" onClick={this.openPostPreviewModal.bind(this)}>Preview</Button>
                         {this.state.createModalMode ?
                             <Button color="primary" onClick={this.createPost.bind(this)} >Thêm mới</Button>
                             :
@@ -1211,6 +1160,9 @@ class Posts extends Component {
                     <ModalBody>
                         {this.showPreview()}
                     </ModalBody>
+                    <ModalFooter>
+                        <Button className="left preview-btn" color="success" onClick={this.showDetailPost.bind(this)}>Sửa</Button>
+                    </ModalFooter>
                 </Modal>
             </div>
         )

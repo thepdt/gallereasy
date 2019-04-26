@@ -58,6 +58,19 @@ class Publishers extends Component {
             });
     }
 
+    onShowSearchBox(e) {
+        this.setState({
+            searchMode: e
+        })
+    }
+
+    onClearSearchBox() {
+        this.getPublishers();
+        this.setState({
+            searchMode: false
+        })
+    }
+
     //Close modal 
     closeModal() {
         this.setState({
@@ -354,7 +367,7 @@ class Publishers extends Component {
                                 </Col>
                                 <Col xs="12" md="8">
                                     <Input type="text" id="logoUrl-input" name="logoUrl-input" value={this.state.logoUrl} onChange={(e) => this.getLogoUrl(e)} invalid={this.state.logoUrl === ""} />
-                                    <FormFeedback  valid={false}>Logo đầu báo không được bỏ trống</FormFeedback>
+                                    <FormFeedback valid={false}>Logo đầu báo không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -414,9 +427,11 @@ class Publishers extends Component {
                 <Toolbars
                     onDelete={e => this.deletePublisher(e)}
                     onOpenCreateModal={e => this.openCreateModal(e)}
+                    onShowSearchBox={e => this.onShowSearchBox(e)}
                     onSearch={e => this.searchPublisher(e)}
-                    searchPlaceholder1={'Tìm kiếm theo tên đầu báo'}
-                    searchPlaceholder2={'Tìm kiếm theo mã đầu báo '} />
+                    onClearSearchBox={e => this.onClearSearchBox()}
+                    valueOptions={this.state.publishers}
+                    searchPlaceholder={'Tìm kiếm theo tên đầu báo'} />
                 <div className="animated fadeIn">
                     <Row>
                         <Col>
