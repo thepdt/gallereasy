@@ -95,7 +95,7 @@
     font-weight: bold;
 }
 
-#preview_title, #preview_abstract {
+#preview_title, #preview_abstract, #preview_tags {
     margin-bottom: 20px;
 }
 
@@ -172,4 +172,9 @@
 
 .pagination {
     padding-right: 15px
+}
+
+.publisher_badge {
+    line-height: 3;
+    font-size: 14px;
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
+import { Badge, Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import MultiSelectReact from 'multi-select-react';
 import Textarea from 'react-textarea-autosize';
 import PostService from './PostService';
@@ -68,7 +68,7 @@ class Posts extends Component {
 
     componentWillMount() {
         var date = this.state.fromDatePicked
-        console.log(date.getDate() + 6 );
+        console.log(date.getDate() + 6);
         // console.log(this.state.fromDatePicked.setDate(this.state.fromDatePicked.getDate() - 1));
         this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage)
         // console.log(this.state.datePicked);
@@ -80,7 +80,7 @@ class Posts extends Component {
         this.setState({
             fromDatePicked: date,
         }, () => {
-            if(this.state.fromDatePicked !== null) {
+            if (this.state.fromDatePicked !== null) {
                 this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage)
             }
         })
@@ -91,7 +91,7 @@ class Posts extends Component {
         this.setState({
             toDatePicked: date,
         }, () => {
-            if(this.state.toDatePicked !== null) {
+            if (this.state.toDatePicked !== null) {
                 this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage)
             }
         })
@@ -112,7 +112,7 @@ class Posts extends Component {
                     this.setState({
                         posts: result.Data
                     })
-                } else if(result.StatusCode === 200 && result.Data == null) {
+                } else if (result.StatusCode === 200 && result.Data == null) {
                     this.setState({
                         posts: []
                     })
@@ -976,21 +976,40 @@ class Posts extends Component {
 
     showPreview() {
         return (
-            <div className="container">
+            <div className="container container-fluid">
                 <Row>
-                    <ul className="breadCrumbs">
-                        {(this.state.category !== "") && (
-                            <li><p>{this.state.category}</p></li>
-                        )}
-                        {(this.state.categorySubLevel1 !== "") && (
-                            <li><p>{this.state.categorySubLevel1}</p></li>
-                        )}
-                        {(this.state.categorySubLevel2 !== "") && (
-                            <li><p>{this.state.categorySubLevel2}</p></li>
-                        )}
-                    </ul>
+                    <Col md="6" className="pl-0">
+                        <ul className="breadCrumbs">
+                            {(this.state.category !== "") && (
+                                <li><p>{this.state.category}</p></li>
+                            )}
+                            {(this.state.categorySubLevel1 !== "") && (
+                                <li><p>{this.state.categorySubLevel1}</p></li>
+                            )}
+                            {(this.state.categorySubLevel2 !== "") && (
+                                <li><p>{this.state.categorySubLevel2}</p></li>
+                            )}
+                        </ul>
+                    </Col>
+                    <Col md="6">
+                        <Row className="text-right">
+                            <Col md="12">
+                                <Badge className="publisher_badge text-right" color="primary">{this.state.publisher}</Badge>
+                            </Col>
+                        </Row>
+                    </Col>
                 </Row>
                 <p id="preview_postedAt">{(new Date(this.state.postedAt * 1000)).toLocaleString()}</p>
+                <div id="preview_tags">
+                    <strong>{"Tags: "}</strong>
+                    {
+                        this.state.tags.map((tag, index) => {
+                            return (
+                                <span key={index}>{tag + ", "}</span>
+                            )
+                        })
+                    }
+                </div>
                 <h2 id="preview_title">{this.state.title}</h2>
                 <h5 id="preview_abstract">{this.state.abstract}</h5>
                 {
@@ -1018,6 +1037,12 @@ class Posts extends Component {
                             return (
                                 <div key={content.SubId.toString()}>
                                     <p id={"preview_content_paragraph_" + content.SubId}>{content.Text} </p>
+                                </div>
+                            )
+                        } else if (content.Tag === "strong") {
+                            return (
+                                <div key={content.SubId.toString()}>
+                                    <strong id={"preview_content_strong_" + content.SubId}><p>{content.Text}</p></strong>
                                 </div>
                             )
                         }
