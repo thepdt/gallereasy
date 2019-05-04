@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import PaginationComponent from "react-reactstrap-pagination";
 import PublisherService from './PublisherService';
-import './../style.css';
 import Widget04 from './../../Widgets/Widget04';
 const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
 

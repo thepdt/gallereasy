@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label } from 'reactstrap';
 import PaginationComponent from "react-reactstrap-pagination";
 import CategoryService from './CategoryService';
-import './../style.css';
 const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
 
 class Categories extends Component {

@@ -5,7 +5,6 @@ import Textarea from 'react-textarea-autosize';
 import PostService from './PostService';
 import PaginationComponent from "react-reactstrap-pagination";
 import PublisherService from './../Publishers/PublisherService';
-import './../style.css';
 import Widget04 from './../../Widgets/Widget04';
 
 import DateTimePicker from 'react-datetime-picker';
@@ -273,6 +272,14 @@ class Posts extends Component {
             postPreviewModal: false
         })
     }
+
+    backToPreviewPost() {
+        this.setState({
+            postDetailModal: false,
+            postPreviewModal: true
+        })
+    }
+
     // Show preview post
     showPostPreview(id) {
         if (id !== null) {
@@ -1053,6 +1060,11 @@ class Posts extends Component {
                         )
                     })
                 }
+
+                <p> Link gốc bài viết:
+                    <a href={this.state.postedUrl} rel="noopener noreferrer" target="_blank">{this.state.postedUrl}</a>
+                </p>
+
             </div >
         )
     }
@@ -1172,6 +1184,7 @@ class Posts extends Component {
 
                     </ModalBody>
                     <ModalFooter>
+                        <Button className="left preview-btn" color="danger" onClick={this.backToPreviewPost.bind(this)}>Quay lại</Button>
                         {this.state.createModalMode ?
                             <Button color="primary" onClick={this.createPost.bind(this)} >Thêm mới</Button>
                             :
