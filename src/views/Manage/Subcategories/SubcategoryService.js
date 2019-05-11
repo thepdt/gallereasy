@@ -3,17 +3,17 @@ import api from './../../../Environment'
 class SubcategoryService {
 
     getSubcategories = () => {
-        const url = api.getBaseURL() + "/subcategories"
+        const url = api.apiManage.getBaseURL() + "/subcategories"
         return fetch(url).then(res => res.json())
     }
 
     getParentCategories() {
-        const url = api.getBaseURL() + "/categories"
+        const url = api.apiManage.getBaseURL() + "/categories"
         return fetch(url).then(res => res.json())
     }
 
     createSubcategory(subcategory) {
-        const url =  api.getBaseURL() + "/subcategories";
+        const url =  api.apiManage.getBaseURL() + "/subcategories";
         return fetch(url, {
             method: 'POST',
             headers: api.headers,
@@ -22,7 +22,7 @@ class SubcategoryService {
     }
 
     updateSubcategory(subcategory) {
-        const url =  api.getBaseURL() + "/subcategories";
+        const url =  api.apiManage.getBaseURL() + "/subcategories";
         return fetch(url, {
             method: 'PUT',
             headers: api.headers,
@@ -31,7 +31,7 @@ class SubcategoryService {
     }
 
     deleteSubcategory(id) {
-        const url =  api.getBaseURL() + "/subcategories/" + id;
+        const url =  api.apiManage.getBaseURL() + "/subcategories/" + id;
         return fetch(url, {
             method: 'DELETE',
             headers: api.headers,

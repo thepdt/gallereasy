@@ -96,6 +96,13 @@
     float: left;
 }
 
+.right-emerged {
+    position: absolute !important;
+    z-index: 1;
+    top: 60px;
+    right: 10px;
+}
+
 .preview-btn {
     left: 16px;
 }
@@ -280,3 +287,4 @@ input[type="checkbox"]:disabled + .label-text:before{
 	width: 50%
 }
   
+

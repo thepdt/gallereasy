@@ -2,12 +2,12 @@ import api from './../../../Environment'
 
 class CategoryService {
     getCategories = () => {
-        const url = api.getBaseURL() + "/categories"
+        const url = api.apiManage.getBaseURL() + "/categories"
         return fetch(url).then(res => res.json())
     }
 
     createCategory(category) {
-        const url =  api.getBaseURL() + "/categories";
+        const url =  api.apiManage.getBaseURL() + "/categories";
         return fetch(url, {
             method: 'POST',
             headers: api.headers,
@@ -16,7 +16,7 @@ class CategoryService {
     }
 
     updateCategory(category) {
-        const url =  api.getBaseURL() + "/categories";
+        const url =  api.apiManage.getBaseURL() + "/categories";
         return fetch(url, {
             method: 'PUT',
             headers: api.headers,
@@ -25,7 +25,7 @@ class CategoryService {
     }
 
     deleteCategory(id) {
-        const url =  api.getBaseURL() + "/categories/" + id;
+        const url =  api.apiManage.getBaseURL() + "/categories/" + id;
         return fetch(url, {
             method: 'DELETE',
             headers: api.headers,

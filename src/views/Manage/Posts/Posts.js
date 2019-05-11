@@ -6,9 +6,30 @@ import PostService from './PostService';
 import PaginationComponent from "react-reactstrap-pagination";
 import PublisherService from './../Publishers/PublisherService';
 import Widget04 from './../../Widgets/Widget04';
+import Notifications from './../../../components/Notifications'
 
 import DateTimePicker from 'react-datetime-picker';
+
 const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
+function addDays(date, amount) {
+    var tzOff = date.getTimezoneOffset() * 60 * 1000,
+        t = date.getTime(),
+        d = new Date(),
+        tzOff2;
+
+    t += (1000 * 60 * 60 * 24) * amount;
+    d.setTime(t);
+
+    tzOff2 = d.getTimezoneOffset() * 60 * 1000;
+    if (tzOff !== tzOff2) {
+        var diff = tzOff2 - tzOff;
+        t += diff;
+        d.setTime(t);
+    }
+
+    return d;
+} 
+
 class Posts extends Component {
     _postService = new PostService();
     _publisherService = new PublisherService();
@@ -58,7 +79,7 @@ class Posts extends Component {
             categoryAi: "",
             subcategoryAi: "",
 
-            fromDatePicked: new Date(),
+            fromDatePicked: addDays(new Date(), -1),
             toDatePicked: new Date(),
             subCategorySelects: [],
         };
@@ -66,16 +87,10 @@ class Posts extends Component {
     }
 
     componentWillMount() {
-        var date = this.state.fromDatePicked
-        console.log(date.getDate() + 6);
-        // console.log(this.state.fromDatePicked.setDate(this.state.fromDatePicked.getDate() - 1));
         this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage)
-        // console.log(this.state.datePicked);
-        // console.log(this.state.datePicked.getTime());
     }
 
     fromDateChange = date => {
-        console.log(date);
         this.setState({
             fromDatePicked: date,
         }, () => {
@@ -86,7 +101,6 @@ class Posts extends Component {
     }
 
     toDateChange = date => {
-        console.log(date.getTime());
         this.setState({
             toDatePicked: date,
         }, () => {
@@ -98,11 +112,8 @@ class Posts extends Component {
 
     //get posts
     getPosts(fromDate, toDate, paggeIndex) {
-        console.log((fromDate.getTime()));
-        console.log(String(fromDate.getTime()).slice(0, 10));
         this._postService.getPosts(String(fromDate.getTime()).slice(0, 10), String(toDate.getTime()).slice(0, 10), paggeIndex)
             .then((result) => {
-                console.log(result);
                 if (result.StatusCode === 200 && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -112,6 +123,7 @@ class Posts extends Component {
                         posts: result.Data
                     })
                 } else if (result.StatusCode === 200 && result.Data == null) {
+                    this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
                     this.setState({
                         posts: []
                     })
@@ -134,6 +146,7 @@ class Posts extends Component {
                         posts: result.Data
                     })
                 } else if (result.StatusCode === 200 && result.Data === null) {
+                    this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
                     this.setState({
                         posts: []
                     })
@@ -157,6 +170,7 @@ class Posts extends Component {
                         posts: result.Data
                     })
                 } else if (result.StatusCode === 200 && result.Data === null) {
+                    this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
                     this.setState({
                         posts: []
                     })
@@ -1073,6 +1087,7 @@ class Posts extends Component {
 
         return (
             <div className="animated fadeIn">
+                <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
                 <Row>
                     <Col>
                         <Toolbars
@@ -1093,14 +1108,14 @@ class Posts extends Component {
                             <CardBody>
                                 {this.state.searchMode ?
                                     <Row className="right">
-                                        <PaginationComponent totalItems={100} pageSize={10} onSelect={this.selecteSearchPage.bind(this)} />
+                                        <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selecteSearchPage.bind(this)} />
                                     </Row> :
                                     <Row>
                                         <Col md="12" className="pagination">
                                             {/* <Row> */}
                                             <DateTimePicker onChange={this.fromDateChange} value={this.state.fromDatePicked} />
                                             <DateTimePicker onChange={this.toDateChange} value={this.state.toDatePicked} />
-                                            <PaginationComponent totalItems={100} pageSize={10} onSelect={this.selectedPage.bind(this)} />
+                                            <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} />
 
                                             {/* </Row> */}
                                         </Col>
