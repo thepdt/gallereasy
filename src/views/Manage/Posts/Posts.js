@@ -1021,16 +1021,6 @@ class Posts extends Component {
                     </Col>
                 </Row>
                 <p id="preview_postedAt">{(new Date(this.state.postedAt * 1000)).toLocaleString()}</p>
-                <div id="preview_tags">
-                    <strong>{"Tags: "}</strong>
-                    {
-                        this.state.tags.map((tag, index) => {
-                            return (
-                                <span key={index}>{tag + ", "}</span>
-                            )
-                        })
-                    }
-                </div>
                 <h2 id="preview_title">{this.state.title}</h2>
                 <h5 id="preview_abstract">{this.state.abstract}</h5>
                 {
@@ -1074,7 +1064,16 @@ class Posts extends Component {
                         )
                     })
                 }
-
+                <div id="preview_tags">
+                    <strong>{"Tags: "}</strong>
+                    {
+                        this.state.tags.map((tag, index) => {
+                            return (
+                                <span key={index}>{tag + ", "}</span>
+                            )
+                        })
+                    }
+                </div> 
                 <p> Link gốc bài viết:
                     <a href={this.state.postedUrl} rel="noopener noreferrer" target="_blank">{this.state.postedUrl}</a>
                 </p>
