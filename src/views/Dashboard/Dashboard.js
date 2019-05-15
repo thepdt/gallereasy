@@ -173,8 +173,8 @@ class Dashboard extends Component {
     }
 
     compare(a, b) {
-        const A = a.TotalByStatus[5]
-        const B = b.TotalByStatus[5]
+        const A = a.TotalByStatus[6]
+        const B = b.TotalByStatus[6]
 
         if (A > B) {
             return -1;
