@@ -38,6 +38,8 @@ class Dashboard extends Component {
             downloadHTMLCompletedStatusStatistic: [],
             etlErrorStatusStatistic: [],
             etlCompletedStatusStatistic: [],
+            downloadMediaErrorStatusStatistic: [],
+            downloadMediaCompleteStatusStatistic: [],
         };
     }
 
@@ -58,13 +60,17 @@ class Dashboard extends Component {
                     const downloadHTMLCompletedStatus = []
                     const etlErrorStatus = []
                     const etlCompletedStatus = []
+                    const downloadMediaErrorStatus = []
+                    const downloadMediaCompleteStatus = []
 
                     result.Data.forEach(element => {
                         publishers.push(element.Publisher)
-                        downloadHTMLErrorStatus.push(element.TotalByStatus[3])
-                        downloadHTMLCompletedStatus.push(element.TotalByStatus[5])
-                        etlErrorStatus.push(element.TotalByStatus[7])
-                        etlCompletedStatus.push(element.TotalByStatus[8])
+                        downloadHTMLErrorStatus.push(element.TotalByStatus[2])
+                        downloadHTMLCompletedStatus.push(element.TotalByStatus[4])
+                        etlErrorStatus.push(element.TotalByStatus[6])
+                        etlCompletedStatus.push(element.TotalByStatus[7])
+                        downloadMediaErrorStatus.push(element.TotalByStatus[9])
+                        downloadMediaCompleteStatus.push(element.TotalByStatus[11])
                     });
 
                     this.setState({
@@ -74,8 +80,8 @@ class Dashboard extends Component {
                         downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
                         etlErrorStatusStatistic: etlErrorStatus,
                         etlCompletedStatusStatistic: etlCompletedStatus,
-                    }, () => {
-                        console.log(this.state.downloadHTMLCompletedStatusStatistic);
+                        downloadMediaErrorStatusStatistic: downloadMediaErrorStatus,
+                        downloadMediaCompleteStatusStatistic: downloadMediaCompleteStatus
                     })
                 } else if (result.Message === "Success" && result.Data === null) {
                     this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
@@ -86,6 +92,9 @@ class Dashboard extends Component {
                         downloadHTMLCompletedStatusStatistic: [],
                         etlErrorStatusStatistic: [],
                         etlCompletedStatusStatistic: [],
+                        downloadMediaErrorStatus: [],
+                        downloadMediaCompleteStatus: []
+
                     })
                 }
             }).catch((err) => {
@@ -133,7 +142,7 @@ class Dashboard extends Component {
                 },
                 itemMarginBottom: 5
             },
-            colors: ['#00ff59', '#ff0300', '#00c6ff', '#ffbf00'],
+            colors: [ '#0900ff', '#000000', '#00ff59', '#ff0300', '#00c6ff', '#ffbf00'],
             credits: {
                 enabled: false
             },
@@ -143,6 +152,12 @@ class Dashboard extends Component {
                 }
             },
             series: [{
+                name: 'Download media completed',
+                data: this.state.downloadMediaCompleteStatusStatistic
+            },{
+                name: 'Download media error',
+                data: this.state.downloadMediaErrorStatusStatistic
+            },{
                 name: 'ETL completed',
                 data: this.state.etlCompletedStatusStatistic
             }, {
