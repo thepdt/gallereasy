@@ -49,7 +49,8 @@ class Dashboard extends Component {
         let fromDate = fromDatePicked.getFullYear() + "-" + (fromDatePicked.getMonth() + 1) + "-" + fromDatePicked.getDate();
         this._dashboardService.getCrawlStatusStatistic(fromDate)
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
+                console.log(result);
+                if (result.Message === "Success" && result.Data !== null) {
                     result.Data.sort(this.compare);
 
                     const publishers = []
@@ -60,10 +61,10 @@ class Dashboard extends Component {
 
                     result.Data.forEach(element => {
                         publishers.push(element.Publisher)
-                        downloadHTMLErrorStatus.push(element.TotalGroupByStatus[2])
-                        downloadHTMLCompletedStatus.push(element.TotalGroupByStatus[3])
-                        etlErrorStatus.push(element.TotalGroupByStatus[5])
-                        etlCompletedStatus.push(element.TotalGroupByStatus[6])
+                        downloadHTMLErrorStatus.push(element.TotalByStatus[3])
+                        downloadHTMLCompletedStatus.push(element.TotalByStatus[5])
+                        etlErrorStatus.push(element.TotalByStatus[7])
+                        etlCompletedStatus.push(element.TotalByStatus[8])
                     });
 
                     this.setState({
@@ -73,8 +74,10 @@ class Dashboard extends Component {
                         downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
                         etlErrorStatusStatistic: etlErrorStatus,
                         etlCompletedStatusStatistic: etlCompletedStatus,
+                    }, () => {
+                        console.log(this.state.downloadHTMLCompletedStatusStatistic);
                     })
-                } else if (result.StatusCode === 200 && result.Data === null) {
+                } else if (result.Message === "Success" && result.Data === null) {
                     this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
                     this.setState({
                         heightChart: 0,
@@ -162,8 +165,8 @@ class Dashboard extends Component {
     }
 
     compare(a, b) {
-        const A = a.TotalGroupByStatus[5]
-        const B = b.TotalGroupByStatus[5]
+        const A = a.TotalByStatus[5]
+        const B = b.TotalByStatus[5]
 
         if (A > B) {
             return -1;
