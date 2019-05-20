@@ -103,6 +103,13 @@
     right: 10px;
 }
 
+.left-emerged {
+    position: absolute !important;
+    z-index: 1;
+    top: 60px;
+    left: 310px;
+}
+
 .preview-btn {
     left: 16px;
 }

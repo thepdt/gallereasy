@@ -136,7 +136,6 @@ class Posts extends Component {
     getPostByTitle(text) {
         this._postService.getPostByTitle(text)
             .then((result) => {
-                console.log(result);
                 if (result.Message === "Success" && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false

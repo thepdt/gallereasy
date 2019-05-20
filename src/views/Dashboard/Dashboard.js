@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+
 import DashboardService from './DashboardService'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import DateTimePicker from 'react-datetime-picker';
 import Notifications from './../../components/Notifications'
+
+import constant from './../../Constant'
 
 function addDays(date, amount) {
     var tzOff = date.getTimezoneOffset() * 60 * 1000,
@@ -22,7 +26,7 @@ function addDays(date, amount) {
     }
 
     return d;
-} 
+}
 
 class Dashboard extends Component {
     _dashboardService = new DashboardService();
@@ -40,7 +44,21 @@ class Dashboard extends Component {
             etlCompletedStatusStatistic: [],
             downloadMediaErrorStatusStatistic: [],
             allCompleteStatusStatistic: [],
+
+            orderOptions: [
+                { value: 1, text: "Sắp xếp theo tên đầu báo" },
+                { value: 2, text: "Sắp xếp theo Download HTML Error" },
+                { value: 3, text: "Sắp xếp theo Download HTML Completed" },
+                { value: 4, text: "Sắp xếp theo ETL Error" },
+                { value: 5, text: "Sắp xếp theo ETL Completed" },
+                { value: 6, text: "Sắp xếp theo All Completed" }
+            ],
+            orderOptionOpen: false,
+            orderOption: 4,
+            orderOptionValue: "Sắp xếp theo ETL Error"
         };
+
+        this.orderOptionToggle = this.orderOptionToggle.bind(this);
     }
 
     componentWillMount() {
@@ -53,8 +71,9 @@ class Dashboard extends Component {
             .then((result) => {
                 console.log(result);
                 if (result.Message === "Success" && result.Data !== null) {
+                    console.log(this.state.orderOption);
                     result.Data.sort(this.compare);
-
+                    console.log(result.Data);
                     const publishers = []
                     const downloadHTMLErrorStatus = []
                     const downloadHTMLCompletedStatus = []
@@ -97,7 +116,7 @@ class Dashboard extends Component {
                 console.log("error: " + err);
             });
     }
-    
+
     fromDateChange = date => {
         if (date !== null) {
             this.getCrawlStatusStatistic(date)
@@ -138,7 +157,7 @@ class Dashboard extends Component {
                 },
                 itemMarginBottom: 5
             },
-            colors: [ '#0900ff', '#00ff59', '#ff0300', '#00c6ff', '#ffbf00'],
+            colors: ['#0900ff', '#00ff59', '#ff0300', '#00c6ff', '#ffbf00'],
             credits: {
                 enabled: false
             },
@@ -150,7 +169,7 @@ class Dashboard extends Component {
             series: [{
                 name: 'All completed',
                 data: this.state.allCompleteStatusStatistic
-            },{
+            }, {
                 name: 'ETL completed',
                 data: this.state.etlCompletedStatusStatistic
             }, {
@@ -172,9 +191,44 @@ class Dashboard extends Component {
         )
     }
 
+    orderOptionToggle() {
+        this.setState({
+            orderOptionOpen: !this.state.orderOptionOpen
+        });
+    }
+
+    changeOrderOptionValue(value, text) {
+        this.setState({
+            orderOptionOpen: !this.state.searchOptionOpen,
+            orderOptionValue: text,
+            orderOption: value
+        });
+    }
+
     compare(a, b) {
-        const A = a.TotalByStatus[6]
-        const B = b.TotalByStatus[6]
+        // const orderOpt = this.state.orderOption
+        const orderOpt = 4
+
+        var A, B
+
+        if (orderOpt === 1) {
+
+        } else if (orderOpt === 2) {
+            A = a.TotalByStatus[constant.StatusCrawlError]
+            B = b.TotalByStatus[constant.StatusCrawlError]
+        } else if (orderOpt === 3) {
+            A = a.TotalByStatus[constant.StatusCrawlCompleted - 5]
+            B = b.TotalByStatus[constant.StatusCrawlCompleted - 5]
+        } else if (orderOpt === 4) {
+            A = a.TotalByStatus[constant.StatusETLError - 5]
+            B = b.TotalByStatus[constant.StatusETLError - 5]
+        } else if (orderOpt === 5) {
+            A = a.TotalByStatus[constant.StatusETLCompleted - 12]
+            B = b.TotalByStatus[constant.StatusETLCompleted - 12]
+        } else if (orderOpt === 6) {
+            A = a.TotalByStatus[constant.StatusAllCompleted - 18]
+            B = b.TotalByStatus[constant.StatusAllCompleted - 18]
+        }
 
         if (A > B) {
             return -1;
@@ -189,7 +243,15 @@ class Dashboard extends Component {
         return (
             <div className="animated fadeIn">
                 <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
-                <DateTimePicker className="right-emerged" onChange={this.fromDateChange} value={this.state.fromDatePicked} />
+                <DateTimePicker className="left-emerged" onChange={this.fromDateChange} value={this.state.fromDatePicked} />
+                <ButtonDropdown className="right-emerged" isOpen={this.state.orderOptionOpen} toggle={this.orderOptionToggle}>
+                    <DropdownToggle caret>{this.state.orderOptionValue}</DropdownToggle>
+                    <DropdownMenu>
+                        {this.state.orderOptions.map(option =>
+                            <DropdownItem id={option.value} key={option.value} onClick={() => this.changeOrderOptionValue(option.value, option.text)}>{option.text}</DropdownItem>
+                        )}
+                    </DropdownMenu>
+                </ButtonDropdown>
                 {this.showCrawlStatusStatisticChart()}
             </div>
         );
