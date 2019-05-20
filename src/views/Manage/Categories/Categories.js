@@ -35,12 +35,28 @@ class Categories extends Component {
     getCategories() {
         this._categoryService.getCategories()
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success") {
                     result.Data.forEach(element => {
                         element.checked = false
                     });
                     this.setState({
                         categories: result.Data
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
+
+    //get all categories
+    getCategoryById(id) {
+        this._categoryService.getCategoryById(id)
+            .then((result) => {
+                if (result.Message === "Success") {
+                    const element = result.Data
+                    element.checked = false
+                    this.setState({
+                        categories: [element]
                     })
                 }
             }).catch((err) => {
@@ -77,11 +93,8 @@ class Categories extends Component {
 
         this._categoryService.createCategory(data)
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
-                    result.Data.checked = false;
-                    this.setState({
-                        categories: this.state.categories.concat(result.Data)
-                    })
+                if (result.Message === "Success") {
+                    this.getCategories()
                 }
             }).catch((err) => {
                 console.log("err: " + err);
@@ -118,15 +131,8 @@ class Categories extends Component {
 
         this._categoryService.updateCategory(data)
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
-                    result.Data.checked = false;
-                    const _categories = this.state.categories
-                    const index = _categories.findIndex(el => el.Id === result.Data.Id)
-                    _categories[index] = result.Data
-
-                    this.setState({
-                        categories: _categories
-                    })
+                if (result.Message === "Success") {
+                    this.getCategories()
                 }
             }).catch((err) => {
                 console.log("error: " + err);
@@ -216,13 +222,8 @@ class Categories extends Component {
         if (this.state.checkedCategories.length !== 0) {
             this._categoryService.deleteCategory(this.state.checkedCategories[0])
                 .then((result) => {
-                    if (result.StatusCode === 200) {
-                        const _categories = this.state.categories
-                        const index = _categories.findIndex(el => el.Id === this.state.checkedCategories[0])
-                        _categories.splice(index, 1);
-                        this.setState({
-                            categories: _categories
-                        })
+                    if (result.Message === "Success") {
+                        this.getCategories()
                     }
                 }).catch((err) => {
                     console.log(err);
@@ -232,6 +233,16 @@ class Categories extends Component {
 
     searchCategory(e) {
         console.log(e);
+    }
+
+    onShowSearchBox(e) {
+        if (e === false){
+            this.getPublishers();
+        }
+    }
+
+    onClearSearchBox() {
+        this.getPublishers();
     }
 
     getId(event) {
@@ -274,7 +285,11 @@ class Categories extends Component {
                 <Toolbars className="toolbar"
                     onDelete={e => this.deleteCategory(e)}
                     onOpenCreateModal={e => this.openCreateModal(e)}
-                    onSearch={e => this.searchCategory(e)}
+                    onShowSearchBox={e => this.onShowSearchBox(e)}
+                    onSearch={(opt, text) => this.searchCategory(text)}
+                    onClearSearchBox={e => this.onClearSearchBox()}
+                    valueOptions={this.state.categories}
+                    searchOptions={[{ value: 1, text: "Theo tên chuyên mục" }]}
                     searchPlaceholder1={'Tìm kiếm theo tên chuyên mục'} />
                 <div className="animated fadeIn">
                     <Row>

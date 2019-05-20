@@ -26,11 +26,25 @@ const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
 class DefaultLayout extends Component {
+    componentWillMount(){
+        const isLogged = localStorage.getItem('logged')
+        if (isLogged === null || isLogged === "false") {
+            this.props.history.push('/login')
+        }
+    }
+
+    componentDidMount() {
+        const isLogged = localStorage.getItem('logged')
+        if (isLogged === null || isLogged === "false") {
+            this.props.history.push('/login')
+        }
+    }
     loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
     signOut(e) {
         e.preventDefault()
         this.props.history.push('/login')
+        localStorage.setItem('logged', false);
     }
 
     render() {

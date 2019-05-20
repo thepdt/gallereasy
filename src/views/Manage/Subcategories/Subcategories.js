@@ -36,7 +36,7 @@ class Subcategories extends Component {
     getParentCategories() {
         this._subcategoryService.getParentCategories()
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success") {
                     this.setState({
                         parentCategories: result.Data
                     }, () => {
@@ -51,7 +51,7 @@ class Subcategories extends Component {
     getSubcategories() {
         this._subcategoryService.getSubcategories()
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success") {
                     result.Data.forEach(element => {
                         element.checked = false
                         element.parentCategory = this.state.parentCategories.find(el => el.Id === element.ParentId).Title
@@ -93,13 +93,8 @@ class Subcategories extends Component {
         if (data.Title !== null && data.Code !== null && data.Description !== null && data.ParentId !== null) {
             this._subcategoryService.createSubcategory(data)
                 .then((result) => {
-                    if (result.StatusCode === 200 && result.Data !== null) {
-                        result.Data.checked = false;
-                        result.Data.parentCategory = this.state.parentCategories.find(el => el.Id === result.Data.ParentId).Title
-
-                        this.setState({
-                            subcategories: this.state.subcategories.concat(result.Data)
-                        })
+                    if (result.Message === "Success") {
+                        this.getSubcategories();
                     }
                 }).catch((err) => {
                     console.log("err: " + err);
@@ -137,15 +132,9 @@ class Subcategories extends Component {
         }
         this._subcategoryService.updateSubcategory(data)
             .then((result) => {
-                result.Data.checked = false;
-                result.Data.parentCategory = this.state.parentCategories.find(el => el.Id === result.Data.ParentId).Title
-                const _subcategories = this.state.subcategories
-                const index = _subcategories.findIndex(el => el.Id === result.Data.Id)
-                _subcategories[index] = result.Data
-
-                this.setState({
-                    subcategories: _subcategories
-                })
+                if (result.Message === "Success") {
+                    this.getSubcategories();
+                }
             }).catch((err) => {
                 console.log("error: " + err);
             });
@@ -235,13 +224,8 @@ class Subcategories extends Component {
         if (this.state.checkedSubcategories.length !== 0) {
             this._subcategoryService.deleteSubcategory(this.state.checkedSubcategories[0])
                 .then((result) => {
-                    if (result.StatusCode === 200) {
-                        const _subcategories = this.state.subcategories
-                        const index = _subcategories.findIndex(el => el.Id === this.state.checkedSubcategories[0])
-                        _subcategories.splice(index, 1);
-                        this.setState({
-                            subcategories: _subcategories
-                        })
+                    if (result.Message === "Success") {
+                        this.getSubcategories();
                     }
                 }).catch((err) => {
                     console.log(err);

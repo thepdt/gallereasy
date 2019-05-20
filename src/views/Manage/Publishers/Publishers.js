@@ -39,11 +39,11 @@ class Publishers extends Component {
         this.getPublishers()
     }
 
-    //get all categories
+    //get all Publishers
     getPublishers() {
         this._publisherService.getPublishers()
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success") {
                     result.Data.forEach(element => {
                         element.checked = false
                         element.kindText = this.state.kindTexts.find(el => el.key === element.Kind).value
@@ -57,17 +57,32 @@ class Publishers extends Component {
             });
     }
 
+    //get Publisher by ID
+    getPublisherById(id) {
+        this._publisherService.getPublisherById(id)
+            .then((result) => {
+                if (result.Message === "Success") {
+                    const element = result.Data
+                    element.checked = false
+                    element.kindText = this.state.kindTexts.find(el => el.key === element.Kind).value
+
+                    this.setState({
+                        publishers: [element]
+                    })
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
+
     onShowSearchBox(e) {
-        this.setState({
-            searchMode: e
-        })
+        if (e === false){
+            this.getPublishers();
+        }
     }
 
     onClearSearchBox() {
         this.getPublishers();
-        this.setState({
-            searchMode: false
-        })
     }
 
     //Close modal 
@@ -106,12 +121,8 @@ class Publishers extends Component {
         }
         this._publisherService.createPublisher(data)
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
-                    result.Data.checked = false;
-                    result.Data.kindText = this.state.kindTexts.find(el => el.key === result.Data.Kind).value
-                    this.setState({
-                        publishers: this.state.publishers.concat(result.Data)
-                    })
+                if (result.Message === "Success") {
+                    this.getPublishers()
                 }
             }).catch((err) => {
                 console.log("err: " + err);
@@ -151,22 +162,14 @@ class Publishers extends Component {
             Code: this.state.code,
             Description: this.state.description,
             Kind: this.state.kind,
-            LogoUrl: Number(this.state.logoUrl),
+            LogoUrl: this.state.logoUrl,
             Ordinal: Number(this.state.ordinal)
         }
 
         this._publisherService.updatePublisher(data)
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
-                    result.Data.checked = false;
-                    result.Data.kindText = this.state.kindTexts.find(el => el.key === result.Data.Kind).value
-                    const _publishers = this.state.publishers
-                    const index = _publishers.findIndex(el => el.Id === result.Data.Id)
-                    _publishers[index] = result.Data
-
-                    this.setState({
-                        publishers: _publishers
-                    })
+                if (result.Message === "Success") {
+                    this.getPublishers()
                 }
             }).catch((err) => {
                 console.log("error: " + err);
@@ -256,13 +259,8 @@ class Publishers extends Component {
         if (this.state.checkedPublishers.length !== 0) {
             this._publisherService.deletePublisher(this.state.checkedPublishers[0])
                 .then((result) => {
-                    if (result.StatusCode === 200) {
-                        const _publishers = this.state.publishers
-                        const index = _publishers.findIndex(el => el.Id === this.state.checkedPublishers[0])
-                        _publishers.splice(index, 1);
-                        this.setState({
-                            publishers: _publishers
-                        })
+                    if (result.Message === "Success") {
+                        this.getPublishers()
                     }
                 }).catch((err) => {
                     console.log(err);
@@ -270,8 +268,8 @@ class Publishers extends Component {
         }
     }
 
-    searchPublisher(e) {
-        console.log(e);
+    searchPublisher(o, e) {
+        this.getPublisherById(e.value)
     }
 
     selectedTab(tabPane, tab) {
@@ -427,10 +425,11 @@ class Publishers extends Component {
                     onDelete={e => this.deletePublisher(e)}
                     onOpenCreateModal={e => this.openCreateModal(e)}
                     onShowSearchBox={e => this.onShowSearchBox(e)}
-                    onSearch={e => this.searchPublisher(e)}
+                    onSearch={(opt, text) => this.searchPublisher(opt, text)}
                     onClearSearchBox={e => this.onClearSearchBox()}
                     valueOptions={this.state.publishers}
-                    searchPlaceholder={'Tìm kiếm theo tên đầu báo'} />
+                    searchOptions={[{ value: 1, text: "Theo tên đầu báo" }]}
+                    searchPlaceholder1={'Tìm kiếm theo tên đầu báo'} />
                 <div className="animated fadeIn">
                     <Row>
                         <Col>

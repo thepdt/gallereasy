@@ -114,7 +114,7 @@ class Posts extends Component {
     getPosts(fromDate, toDate, paggeIndex) {
         this._postService.getPosts(String(fromDate.getTime()).slice(0, 10), String(toDate.getTime()).slice(0, 10), paggeIndex)
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success" && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
                         element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
@@ -122,7 +122,7 @@ class Posts extends Component {
                     this.setState({
                         posts: result.Data
                     })
-                } else if (result.StatusCode === 200 && result.Data == null) {
+                } else if (result.Message === "Success" && result.Data == null) {
                     this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
                     this.setState({
                         posts: []
@@ -137,7 +137,7 @@ class Posts extends Component {
         this._postService.getPostByTitle(text)
             .then((result) => {
                 console.log(result);
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success" && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
                         element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
@@ -145,7 +145,7 @@ class Posts extends Component {
                     this.setState({
                         posts: result.Data
                     })
-                } else if (result.StatusCode === 200 && result.Data === null) {
+                } else if (result.Message === "Success" && result.Data === null) {
                     this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
                     this.setState({
                         posts: []
@@ -161,7 +161,7 @@ class Posts extends Component {
         this._postService.getPostsByPublisher(publisherId, paggeIndex)
             .then((result) => {
                 console.log(result);
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success" && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
                         element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
@@ -169,7 +169,7 @@ class Posts extends Component {
                     this.setState({
                         posts: result.Data
                     })
-                } else if (result.StatusCode === 200 && result.Data === null) {
+                } else if (result.Message === "Success" && result.Data === null) {
                     this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
                     this.setState({
                         posts: []
@@ -184,7 +184,7 @@ class Posts extends Component {
     getPublishers() {
         this._publisherService.getPublishers()
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success") {
                     this.setState({
                         publishers: result.Data
                     })
@@ -264,7 +264,7 @@ class Posts extends Component {
         }
         this._postService.createPost(data)
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success") {
                     result.Data.checked = false;
                     result.Data.statusText = this.state.statusOptions.find(el => el.key === result.Data.Status).value
                     this.setState({
@@ -353,7 +353,7 @@ class Posts extends Component {
 
         this._postService.updatePost(data)
             .then((result) => {
-                if (result.StatusCode === 200 && result.Data !== null) {
+                if (result.Message === "Success") {
                     result.Data.checked = false;
                     result.Data.statusText = this.state.statusOptions.find(el => el.key === result.Data.Status).value
                     const _posts = this.state.posts
@@ -490,7 +490,7 @@ class Posts extends Component {
         if (this.state.checkedPosts.length !== 0) {
             this._postService.deletePost(this.state.checkedPosts[0])
                 .then((result) => {
-                    if (result.StatusCode === 200) {
+                    if (result.Message === "Success") {
                         const _posts = this.state.posts
                         const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0])
                         _posts.splice(index, 1);
@@ -512,7 +512,6 @@ class Posts extends Component {
                 searchText: text.value
             })
         } else if (opt === 2) {
-            console.log(text);
             this.getPostByTitle(text)
         }
     }
@@ -529,6 +528,7 @@ class Posts extends Component {
     }
 
     onClearSearchBox() {
+        console.log("adsfjsdkl");
         this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage);
         this.setState({
             searchMode: false

@@ -2,33 +2,38 @@ import api from './../../../Environment'
 
 class PublisherService {
     getPublishers = () => {
-        const url = api.apiManage.getBaseURL() + "/publishers"
+        const url = api.apiManage.getBaseURL() + "/news/publisher"
+        return fetch(url).then(res => res.json())
+    }
+
+    getPublisherById = (id) => {
+        const url = api.apiManage.getBaseURL() + "/news/publisher/single/" + id
         return fetch(url).then(res => res.json())
     }
 
     createPublisher(publisher) {
-        const url = api.apiManage.getBaseURL() + "/publishers";
+        const url = api.apiManage.getBaseURL() + "/news/publisher";
         return fetch(url, {
             method: 'POST',
-            headers: api.headers,
+            headers: api.apiManage.headers,
             body: JSON.stringify(publisher)
         }).then(res => res.json());
     }
 
     updatePublisher(publisher) {
-        const url = api.apiManage.getBaseURL() + "/publishers";
+        const url = api.apiManage.getBaseURL() + "/news/publisher";
         return fetch(url, {
             method: 'PUT',
-            headers: api.headers,
+            headers: api.apiManage.headers,
             body: JSON.stringify(publisher)
         }).then(res => res.json());
     }
 
     deletePublisher(id) {
-        const url = api.apiManage.getBaseURL() + "/publishers/" + id;
+        const url = api.apiManage.getBaseURL() + "/news/publisher/" + id;
         return fetch(url, {
             method: 'DELETE',
-            headers: api.headers,
+            headers: api.apiManage.headers,
         }).then(res => res.json());
     }
 }
