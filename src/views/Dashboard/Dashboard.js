@@ -35,6 +35,7 @@ class Dashboard extends Component {
         super(props);
 
         this.state = {
+            statisticData: [],
             fromDatePicked: addDays(new Date(), -1),
             heightChart: 0,
             publishersStatistic: [],
@@ -71,33 +72,9 @@ class Dashboard extends Component {
             .then((result) => {
                 console.log(result);
                 if (result.Message === "Success" && result.Data !== null) {
-                    console.log(this.state.orderOption);
-                    result.Data.sort(this.compare);
-                    console.log(result.Data);
-                    const publishers = []
-                    const downloadHTMLErrorStatus = []
-                    const downloadHTMLCompletedStatus = []
-                    const etlErrorStatus = []
-                    const etlCompletedStatus = []
-                    const allCompleteStatus = []
-
-                    result.Data.forEach(element => {
-                        publishers.push(element.Publisher)
-                        downloadHTMLErrorStatus.push(element.TotalByStatus[2])
-                        downloadHTMLCompletedStatus.push(element.TotalByStatus[4])
-                        etlErrorStatus.push(element.TotalByStatus[6])
-                        etlCompletedStatus.push(element.TotalByStatus[7])
-                        allCompleteStatus.push(element.TotalByStatus[12])
-                    });
-
+                    this.createChart(result.Data)
                     this.setState({
-                        heightChart: 900,
-                        publishersStatistic: publishers,
-                        downloadHTMLErrorStatusStatistic: downloadHTMLErrorStatus,
-                        downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
-                        etlErrorStatusStatistic: etlErrorStatus,
-                        etlCompletedStatusStatistic: etlCompletedStatus,
-                        allCompleteStatusStatistic: allCompleteStatus
+                        statisticData: result.Data
                     })
                 } else if (result.Message === "Success" && result.Data === null) {
                     this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
@@ -115,6 +92,35 @@ class Dashboard extends Component {
             }).catch((err) => {
                 console.log("error: " + err);
             });
+    }
+
+    createChart(data) {
+        const dataSorted = this.sortData(data, this.state.orderOption)
+        const publishers = []
+        const downloadHTMLErrorStatus = []
+        const downloadHTMLCompletedStatus = []
+        const etlErrorStatus = []
+        const etlCompletedStatus = []
+        const allCompleteStatus = []
+
+        dataSorted.forEach(element => {
+            publishers.push(element.Publisher)
+            downloadHTMLErrorStatus.push(element.TotalByStatus[2])
+            downloadHTMLCompletedStatus.push(element.TotalByStatus[4])
+            etlErrorStatus.push(element.TotalByStatus[6])
+            etlCompletedStatus.push(element.TotalByStatus[7])
+            allCompleteStatus.push(element.TotalByStatus[12])
+        });
+
+        this.setState({
+            heightChart: 900,
+            publishersStatistic: publishers,
+            downloadHTMLErrorStatusStatistic: downloadHTMLErrorStatus,
+            downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
+            etlErrorStatusStatistic: etlErrorStatus,
+            etlCompletedStatusStatistic: etlCompletedStatus,
+            allCompleteStatusStatistic: allCompleteStatus
+        })
     }
 
     fromDateChange = date => {
@@ -202,34 +208,81 @@ class Dashboard extends Component {
             orderOptionOpen: !this.state.searchOptionOpen,
             orderOptionValue: text,
             orderOption: value
+        }, () => {
+            this.createChart(this.state.statisticData)
         });
     }
 
-    compare(a, b) {
-        // const orderOpt = this.state.orderOption
-        const orderOpt = 4
-
-        var A, B
-
+    sortData(data, orderOpt) {
+        console.log(data);
         if (orderOpt === 1) {
-
+            return data.sort(this.compareByPublisher)
         } else if (orderOpt === 2) {
-            A = a.TotalByStatus[constant.StatusCrawlError]
-            B = b.TotalByStatus[constant.StatusCrawlError]
+            return data.sort(this.compareByStatusCrawlError)
         } else if (orderOpt === 3) {
-            A = a.TotalByStatus[constant.StatusCrawlCompleted - 5]
-            B = b.TotalByStatus[constant.StatusCrawlCompleted - 5]
+            return data.sort(this.compareByStatusCrawlCompleted)
         } else if (orderOpt === 4) {
-            A = a.TotalByStatus[constant.StatusETLError - 5]
-            B = b.TotalByStatus[constant.StatusETLError - 5]
+            return data.sort(this.compareByStatusETLError)
         } else if (orderOpt === 5) {
-            A = a.TotalByStatus[constant.StatusETLCompleted - 12]
-            B = b.TotalByStatus[constant.StatusETLCompleted - 12]
+            return data.sort(this.compareByStatusETLCompleted)
         } else if (orderOpt === 6) {
-            A = a.TotalByStatus[constant.StatusAllCompleted - 18]
-            B = b.TotalByStatus[constant.StatusAllCompleted - 18]
+            return data.sort(this.compareByStatusAllCompleted)
         }
+    }
 
+    compareByPublisher(a, b) {
+        const A = a.Publisher
+        const B = b.Publisher
+        if (A < B) {
+            return -1;
+        } else if (A > B) {
+            return 1;
+        }
+    }
+
+    compareByStatusCrawlError(a, b) {
+        const A = a.TotalByStatus[constant.StatusCrawlError]
+        const B = b.TotalByStatus[constant.StatusCrawlError]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusCrawlCompleted(a, b) {
+        const A = a.TotalByStatus[constant.StatusCrawlCompleted - 5]
+        const B = b.TotalByStatus[constant.StatusCrawlCompleted - 5]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusETLError(a, b) {
+        const A = a.TotalByStatus[constant.StatusETLError - 5]
+        const B = b.TotalByStatus[constant.StatusETLError - 5]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusETLCompleted(a, b) {
+        const A = a.TotalByStatus[constant.StatusETLCompleted - 12]
+        const B = b.TotalByStatus[constant.StatusETLCompleted - 12]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusAllCompleted(a, b) {
+        const A = a.TotalByStatus[constant.StatusAllCompleted - 18]
+        const B = b.TotalByStatus[constant.StatusAllCompleted - 18]
         if (A > B) {
             return -1;
         } else if (A < B) {
