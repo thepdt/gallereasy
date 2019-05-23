@@ -744,6 +744,14 @@ class Posts extends Component {
                                 <>
                                     <FormGroup row>
                                         <Col md="2">
+                                            <Label htmlFor="postedAt-input" >Ngày đăng</Label>
+                                        </Col>
+                                        <Col xs="12" md="10">
+                                            <Input type="text" id="postedAt-input" name="postedAt-input" value={this.state.postedAt}/>
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        <Col md="2">
                                             <Label htmlFor="postedUrl-input" >Link bài báo</Label>
                                         </Col>
                                         <Col xs="12" md="10">
