@@ -75,7 +75,14 @@ class Posts extends Component {
             postedAt: "",
             postedUrl: "",
             status: Number,
-            statusOptions: [{ key: -1, value: '--Chọn loại đầu báo--' }, { key: 0, value: 'In Trash' }, { key: 1, value: 'Unpublished' }, { key: 2, value: 'In Review' }, { key: 3, value: 'Published' },],
+            statusOptions: [
+                { key: -1, value: '--Chọn trạng thái bài báo--' }, 
+                { key: 0, value: 'In Trash' }, 
+                { key: 1, value: 'Unpublished' }, 
+                { key: 2, value: 'Downloaded' }, 
+                { key: 8, value: 'In Review' }, 
+                { key: 9, value: 'Published' },
+            ],
             categoryAi: "",
             subcategoryAi: "",
 
