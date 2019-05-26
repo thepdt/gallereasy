@@ -2,17 +2,17 @@ import api from './../../../Environment'
 
 class PublisherService {
     getPublishers = () => {
-        const url = api.apiManage.getBaseURL() + "/news/publisher"
+        const url = api.apiManage.getBaseURL() + "/news/publishers"
         return fetch(url).then(res => res.json())
     }
 
     getPublisherById = (id) => {
-        const url = api.apiManage.getBaseURL() + "/news/publisher/single/" + id
+        const url = api.apiManage.getBaseURL() + "/news/publishers/single/" + id
         return fetch(url).then(res => res.json())
     }
 
     createPublisher(publisher) {
-        const url = api.apiManage.getBaseURL() + "/news/publisher";
+        const url = api.apiManage.getBaseURL() + "/news/publishers";
         return fetch(url, {
             method: 'POST',
             headers: api.apiManage.headers,
@@ -21,7 +21,7 @@ class PublisherService {
     }
 
     updatePublisher(publisher) {
-        const url = api.apiManage.getBaseURL() + "/news/publisher";
+        const url = api.apiManage.getBaseURL() + "/news/publishers";
         return fetch(url, {
             method: 'PUT',
             headers: api.apiManage.headers,
@@ -30,7 +30,7 @@ class PublisherService {
     }
 
     deletePublisher(id) {
-        const url = api.apiManage.getBaseURL() + "/news/publisher/" + id;
+        const url = api.apiManage.getBaseURL() + "/news/publishers/" + id;
         return fetch(url, {
             method: 'DELETE',
             headers: api.apiManage.headers,

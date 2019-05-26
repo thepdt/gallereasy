@@ -37,6 +37,11 @@ export default {
                     url: '/manage/posts',
                     icon: 'fa fa-newspaper-o',
                 },
+                {
+                    name: 'Hot News',
+                    url: '/manage/hotNews',
+                    icon: 'fa fa-newspaper-o',
+                },
             ],
         }
     ],

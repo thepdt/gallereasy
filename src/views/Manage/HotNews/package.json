@@ -1,0 +1,7 @@
+{
+    "name": "HotNews",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./HotNews.js"
+}
+  

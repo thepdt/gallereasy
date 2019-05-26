@@ -40,7 +40,7 @@ const Posts = React.lazy(() => import('./views/Manage/Posts'));
 const Categories = React.lazy(() => import('./views/Manage/Categories'));
 const Subcategories = React.lazy(() => import('./views/Manage/Subcategories'));
 const Publishers = React.lazy(() => import('./views/Manage/Publishers/Publishers'));
-
+const HotNews = React.lazy(() => import('./views/Manage/HotNews'));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -90,6 +90,8 @@ const routes = [
     { path: '/manage/categories', exact: true,  name: 'Categories', component: Categories },
     { path: '/manage/subcategories', exact: true,  name: 'Subcategories', component: Subcategories },
     { path: '/manage/publishers', exact: true,  name: 'Publishers', component: Publishers },
+    { path: '/manage/hotNews', exact: true,  name: 'HotNews', component: HotNews },
+
 ];
 
 export default routes;
