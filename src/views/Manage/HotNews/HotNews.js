@@ -567,7 +567,7 @@ class HotNews extends Component {
                                             <th scope="col" width="10%" className="centered">Đầu báo</th>
                                             <th scope="col" width="10%" className="centered">Chuyên mục</th>
                                             <th scope="col" width="10%" className="centered">Chuyên mục AI</th>
-                                            <th scope="col" width="12%" className="centered">Ngày tạo</th>
+                                            <th scope="col" width="12%" className="centered">Posted At</th>
                                             <th scope="col" width="10%" className="centered">Trạng thái</th>
                                         </tr>
                                     </thead>
@@ -586,7 +586,7 @@ class HotNews extends Component {
                                                 <td>{post.Publisher}</td>
                                                 <td>{post.Category}</td>
                                                 <td>{post.CategoryAi}</td>
-                                                <td>{(new Date(post.CreatedAt * 1000)).toLocaleString()}</td>
+                                                <td>{(new Date(post.PostedAt * 1000)).toLocaleString()}</td>
                                                 <td>{post.statusText}</td>
                                             </tr>)
                                         )}
