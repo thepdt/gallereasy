@@ -166,7 +166,6 @@ class Posts extends Component {
     getPostsByPublisher(publisherId, paggeIndex) {
         this._postService.getPostsByPublisher(publisherId, paggeIndex)
             .then((result) => {
-                console.log(result);
                 if (result.Message === "Success" && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
@@ -534,7 +533,6 @@ class Posts extends Component {
     }
 
     onClearSearchBox() {
-        console.log("adsfjsdkl");
         this.getPosts(this.state.fromDatePicked, this.state.toDatePicked, this.state.selectedPage);
         this.setState({
             searchMode: false

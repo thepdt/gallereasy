@@ -278,7 +278,6 @@ class HotNews extends Component {
     }
 
     onClearSearchBox() {
-        console.log("adsfjsdkl");
         this.getHotNews(this.state.selectedPage);
         this.setState({
             searchMode: false
