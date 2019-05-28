@@ -38,7 +38,7 @@ class Dashboard extends Component {
             activeTab: ['1', '2'],
             //For Status Statistic
             statisticByStatusData: [],
-            fromDatePickedByStatus: addDays(new Date(), -1),
+            fromDatePickedByStatus: addDays(new Date(), -5),
             heightChartByStatus: 0,
             publishersStatisticByStatus: [],
             downloadHTMLErrorStatusStatistic: [],
@@ -62,7 +62,7 @@ class Dashboard extends Component {
 
             //For ErrorCode Statistic
             statisticByErrorCodeData: [],
-            fromDatePickedByErrorCode: addDays(new Date(), -1),
+            fromDatePickedByErrorCode: addDays(new Date(), -5),
             heightChartByErrorCode: 0,
             publishersStatisticByErrorCode: [],
             successErrorCodeStatistic: [],
@@ -89,8 +89,6 @@ class Dashboard extends Component {
             orderByErrorCodeOption: 1,
             orderByErrorCodeOptionValue: "Sắp xếp theo tên đầu báo"
         };
-
-        this.chartComponent = React.createRef();
         this.orderByStatusOptionToggle = this.orderByStatusOptionToggle.bind(this);
         this.orderByErrorCodeOptionToggle = this.orderByErrorCodeOptionToggle.bind(this);
 
@@ -98,12 +96,7 @@ class Dashboard extends Component {
 
     componentWillMount() {
         this.getCrawlStatusStatistic(this.state.fromDatePickedByStatus)
-        this.getPostErrorCodeStatistic(this.state.fromDatePickedByErrorCode)
     }
-
-    componentDidMount() {
-    }
-
 
     /////////////////////////////////////////////////////////
     //Build Statistic by Status Chart
@@ -178,7 +171,6 @@ class Dashboard extends Component {
             chart: {
                 type: 'bar',
                 height: this.state.heightChartByStatus,
-                width: 1500
 
             },
             title: {
@@ -236,7 +228,6 @@ class Dashboard extends Component {
             <HighchartsReact
                 highcharts={Highcharts}
                 options={statusStatisticChartcoptions}
-                ref={this.chartComponent}
             />
         )
     }
@@ -418,7 +409,6 @@ class Dashboard extends Component {
             chart: {
                 type: 'bar',
                 height: this.state.heightChartByErrorCode,
-                width: 1500
             },
             title: {
                 text: 'Thống kê bài báo theo Error Code của quá trình crawl'
@@ -484,7 +474,6 @@ class Dashboard extends Component {
             <HighchartsReact
                 highcharts={Highcharts}
                 options={errorCodeStatisticChartcoptions}
-                ref={this.chartComponent}
             />
         )
     }
@@ -611,19 +600,17 @@ class Dashboard extends Component {
 
     loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
     selectedTab(tabPane, tab) {
-        console.log(this.chartComponent);
-        // const container1 = this.chartComponent.current.container.current.firstChild;
-        // console.log(container1);
-        // const container2 = this.chartComponent.current.container.current.firstChild.firstChild;
 
-        // container1.style.width = "100%";
-
-        // container2.style.width = "100%";
-        this.chartComponent.current.chart.reflow();
         const _temp = this.state.activeTab.slice()
         _temp[tabPane] = tab
         this.setState({
             activeTab: _temp,
+        }, () => {
+            if(tab === '1'){
+                this.getCrawlStatusStatistic(this.state.fromDatePickedByStatus)
+            } else if (tab === '2') {
+                this.getPostErrorCodeStatistic(this.state.fromDatePickedByErrorCode)
+            }
         });
     }
 
