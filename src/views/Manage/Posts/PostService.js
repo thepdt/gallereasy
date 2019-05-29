@@ -8,7 +8,7 @@ class PostService {
     }
 
     getPostsByPublisher = (publisherId, pageIndex) => {
-        const url =api.apiManage.getBaseURL() + "/news/posts/search?publisherId" + publisherId+ "&pageSize=10&pageIndex=" + pageIndex
+        const url =api.apiManage.getBaseURL() + "/news/posts/search?publisherId=" + publisherId+ "&pageSize=10&pageIndex=" + pageIndex
         // http://18.136.201.129:9090/api/v1.0/news/posts/search?publisherId=eb10886f-8c0d-4b83-60be-87c1df7c9975&pageSize=10&pageIndex=1
         return fetch(url).then(res => res.json())
     }
