@@ -398,6 +398,8 @@ class Dashboard extends Component {
             cmsApiDuplicateArticleIdExceptionErrorCodeStatistic: cmsApiDuplicateArticleIdExceptionErrorCode,
             cmsApiExceptionErrorCodeStatistic: cmsApiExceptionErrorCode,
             crawlDownloadMediaApiExceptionErrorCodeStatistic: crawlDownloadMediaApiExceptionErrorCode,
+        }, () => {
+            console.log(this.state.crawlDownloadMediaApiExceptionErrorCodeStatistic)
         })
     }
 
@@ -453,7 +455,7 @@ class Dashboard extends Component {
             series: [
                 {
                     name: 'CRAWL_DOWMLOAD_MEDIA_API_EXCEPTION',
-                    data: this.state.crawlDownloadVideoApiExceptionErrorCodeStatistic
+                    data: this.state.crawlDownloadMediaApiExceptionErrorCodeStatistic
                 },
                 {
                     name: 'CMS_API_EXCEPTION',
