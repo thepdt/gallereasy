@@ -47,6 +47,7 @@ class Dashboard extends Component {
             etlCompletedStatusStatistic: [],
             downloadMediaErrorStatusStatistic: [],
             allCompleteStatusStatistic: [],
+            cmsUpdatedStatusStatistic: [],
 
             orderByStatusOptions: [
                 { value: 1, text: "Sắp xếp theo tên đầu báo" },
@@ -54,7 +55,8 @@ class Dashboard extends Component {
                 { value: 3, text: "Sắp xếp theo Download HTML Completed" },
                 { value: 4, text: "Sắp xếp theo ETL Error" },
                 { value: 5, text: "Sắp xếp theo ETL Completed" },
-                { value: 6, text: "Sắp xếp theo All Completed" }
+                { value: 6, text: "Sắp xếp theo All Completed" },
+                { value: 7, text: "Sắp xếp theo CMS Updated" }
             ],
             orderByStatusOptionOpen: false,
             orderByStatusOption: 4,
@@ -121,7 +123,8 @@ class Dashboard extends Component {
                         downloadHTMLCompletedStatusStatistic: [],
                         etlErrorStatusStatistic: [],
                         etlCompletedStatusStatistic: [],
-                        allCompleteStatus: []
+                        allCompleteStatus: [],
+                        cmsUpdatedStatus: []
 
                     })
                 }
@@ -138,6 +141,7 @@ class Dashboard extends Component {
         const etlErrorStatus = []
         const etlCompletedStatus = []
         const allCompleteStatus = []
+        const cmsUpdatedStatus = []
 
         dataSorted.forEach(element => {
             publishers.push(element.Publisher)
@@ -146,6 +150,7 @@ class Dashboard extends Component {
             etlErrorStatus.push(element.TotalByStatus[6])
             etlCompletedStatus.push(element.TotalByStatus[7])
             allCompleteStatus.push(element.TotalByStatus[12])
+            cmsUpdatedStatus.push(element.TotalByStatus[13])
         });
 
         this.setState({
@@ -155,7 +160,8 @@ class Dashboard extends Component {
             downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
             etlErrorStatusStatistic: etlErrorStatus,
             etlCompletedStatusStatistic: etlCompletedStatus,
-            allCompleteStatusStatistic: allCompleteStatus
+            allCompleteStatusStatistic: allCompleteStatus,
+            cmsUpdatedStatusStatistic: cmsUpdatedStatus
         })
     }
 
@@ -200,7 +206,7 @@ class Dashboard extends Component {
                 },
                 itemMarginBottom: 5
             },
-            colors: ['#0900ff', '#00ff59', '#ff0300', '#00c6ff', '#ffbf00'],
+            colors: ['#4dbd74', '#0900ff', '#00ff59', '#ff0300', '#00c6ff', '#ffbf00'],
             credits: {
                 enabled: false
             },
@@ -210,6 +216,9 @@ class Dashboard extends Component {
                 }
             },
             series: [{
+                name: 'CMS updated',
+                data: this.state.cmsUpdatedStatusStatistic
+            },{
                 name: 'All completed',
                 data: this.state.allCompleteStatusStatistic
             }, {
@@ -263,6 +272,8 @@ class Dashboard extends Component {
             return data.sort(this.compareByStatusETLCompleted)
         } else if (orderOpt === 6) {
             return data.sort(this.compareByStatusAllCompleted)
+        } else if (orderOpt === 7) {
+            return data.sort(this.compareByStatusCmsUpdated)
         }
     }
 
@@ -319,6 +330,16 @@ class Dashboard extends Component {
     compareByStatusAllCompleted(a, b) {
         const A = a.TotalByStatus[constant.StatusAllCompleted - 18]
         const B = b.TotalByStatus[constant.StatusAllCompleted - 18]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusCmsUpdated(a, b) {
+        const A = a.TotalByStatus[constant.StatusCmsUpdated - 27]
+        const B = b.TotalByStatus[constant.StatusCmsUpdated - 27]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -398,8 +419,6 @@ class Dashboard extends Component {
             cmsApiDuplicateArticleIdExceptionErrorCodeStatistic: cmsApiDuplicateArticleIdExceptionErrorCode,
             cmsApiExceptionErrorCodeStatistic: cmsApiExceptionErrorCode,
             crawlDownloadMediaApiExceptionErrorCodeStatistic: crawlDownloadMediaApiExceptionErrorCode,
-        }, () => {
-            console.log(this.state.crawlDownloadMediaApiExceptionErrorCodeStatistic)
         })
     }
 

@@ -21,6 +21,9 @@ const constant = {
 	// For post
 	StatusAllCompleted			: 30,
 
+	// For CMS
+	StatusCmsUpdated      		: 40,
+
 	///////////////////////////////////////////////////
 	////Crawl ETL Error Code
 	SUCCESS   								: 810,
