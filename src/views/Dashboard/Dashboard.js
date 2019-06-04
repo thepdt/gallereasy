@@ -69,10 +69,11 @@ class Dashboard extends Component {
             downloadHtmlS3ExceptionErrorCodeStatistic: [],
             etlExceptionErrorCodeStatistic: [],
             aiTaggingApiExceptionErrorCodeStatistic: [],
-            crawlDownloadImageApiExceptionErrorCodeStatistic: [],
-            crawlDownloadVideoApiExceptionErrorCodeStatistic: [],
+            // crawlDownloadImageApiExceptionErrorCodeStatistic: [],
+            // crawlDownloadVideoApiExceptionErrorCodeStatistic: [],
             cmsApiDuplicateArticleIdExceptionErrorCodeStatistic: [],
             cmsApiExceptionErrorCodeStatistic: [],
+            crawlDownloadMediaApiExceptionErrorCodeStatistic: [],
 
             orderByErrorCodeOptions: [
                 { value: 1, text: "Sắp xếp theo tên đầu báo" },
@@ -80,10 +81,11 @@ class Dashboard extends Component {
                 { value: 3, text: "Sắp xếp theo DOWNLOAD_HTML_S3_EXCEPTION" },
                 { value: 4, text: "Sắp xếp theo ETL_EXCEPTION" },
                 { value: 5, text: "Sắp xếp theo AI_TAGGING_API_EXCEPTION" },
-                { value: 6, text: "Sắp xếp theo CRAWL_DOWMLOAD_IMAGE_API_EXCEPTION" },
-                { value: 7, text: "Sắp xếp theo CRAWL_DOWMLOAD_VIDEO_API_EXCEPTION" },
+                // { value: 6, text: "Sắp xếp theo CRAWL_DOWMLOAD_IMAGE_API_EXCEPTION" },
+                // { value: 7, text: "Sắp xếp theo CRAWL_DOWMLOAD_VIDEO_API_EXCEPTION" },
                 { value: 8, text: "Sắp xếp theo CMS_API_DUPLICATE_ARTICLE_ID_EXCEPTION" },
                 { value: 9, text: "Sắp xếp theo CMS_API_EXCEPTION" },
+                { value: 10, text: "Sắp xếp theo CRAWL_DOWMLOAD_MEDIA_API_EXCEPTION" },
             ],
             orderByErrorCodeOptionOpen: false,
             orderByErrorCodeOption: 1,
@@ -346,10 +348,11 @@ class Dashboard extends Component {
                         downloadHtmlS3ExceptionErrorCodeStatistic: [],
                         etlExceptionErrorCodeStatistic: [],
                         aiTaggingApiExceptionErrorCodeStatistic: [],
-                        crawlDownloadImageApiExceptionErrorCodeStatistic: [],
-                        crawlDownloadVideoApiExceptionErrorCodeStatistic: [],
+                        // crawlDownloadImageApiExceptionErrorCodeStatistic: [],
+                        // crawlDownloadVideoApiExceptionErrorCodeStatistic: [],
                         cmsApiDuplicateArticleIdExceptionErrorCodeStatistic: [],
                         cmsApiExceptionErrorCodeStatistic: [],
+                        crawlDownloadMediaApiExceptionErrorCodeStatistic: [],
                     })
                 }
             }).catch((err) => {
@@ -364,10 +367,11 @@ class Dashboard extends Component {
         const downloadHtmlS3ExceptionErrorCode = []
         const etlExceptionErrorCode = []
         const aiTaggingApiExceptionErrorCode = []
-        const crawlDownloadImageApiExceptionErrorCode = []
-        const crawlDownloadVideoApiExceptionErrorCode = []
+        // const crawlDownloadImageApiExceptionErrorCode = []
+        // const crawlDownloadVideoApiExceptionErrorCode = []
         const cmsApiDuplicateArticleIdExceptionErrorCode = []
         const cmsApiExceptionErrorCode = []
+        const crawlDownloadMediaApiExceptionErrorCode = []
 
         dataSorted.forEach(element => {
             publishers.push(element.Publisher)
@@ -375,10 +379,11 @@ class Dashboard extends Component {
             downloadHtmlS3ExceptionErrorCode.push(element.TotalByErrorCode[1])
             etlExceptionErrorCode.push(element.TotalByErrorCode[2])
             aiTaggingApiExceptionErrorCode.push(element.TotalByErrorCode[3])
-            crawlDownloadImageApiExceptionErrorCode.push(element.TotalByErrorCode[4])
-            crawlDownloadVideoApiExceptionErrorCode.push(element.TotalByErrorCode[5])
+            // crawlDownloadImageApiExceptionErrorCode.push(element.TotalByErrorCode[4])
+            // crawlDownloadVideoApiExceptionErrorCode.push(element.TotalByErrorCode[5])
             cmsApiDuplicateArticleIdExceptionErrorCode.push(element.TotalByErrorCode[6])
             cmsApiExceptionErrorCode.push(element.TotalByErrorCode[7])
+            crawlDownloadMediaApiExceptionErrorCode.push(element.TotalByErrorCode[8])
         });
 
         this.setState({
@@ -388,10 +393,11 @@ class Dashboard extends Component {
             downloadHtmlS3ExceptionErrorCodeStatistic: downloadHtmlS3ExceptionErrorCode,
             etlExceptionErrorCodeStatistic: etlExceptionErrorCode,
             aiTaggingApiExceptionErrorCodeStatistic: aiTaggingApiExceptionErrorCode,
-            crawlDownloadImageApiExceptionErrorCodeStatistic: crawlDownloadImageApiExceptionErrorCode,
-            crawlDownloadVideoApiExceptionErrorCodeStatistic: crawlDownloadVideoApiExceptionErrorCode,
+            // crawlDownloadImageApiExceptionErrorCodeStatistic: crawlDownloadImageApiExceptionErrorCode,
+            // crawlDownloadVideoApiExceptionErrorCodeStatistic: crawlDownloadVideoApiExceptionErrorCode,
             cmsApiDuplicateArticleIdExceptionErrorCodeStatistic: cmsApiDuplicateArticleIdExceptionErrorCode,
-            cmsApiExceptionErrorCodeStatistic: cmsApiExceptionErrorCode
+            cmsApiExceptionErrorCodeStatistic: cmsApiExceptionErrorCode,
+            crawlDownloadMediaApiExceptionErrorCodeStatistic: crawlDownloadMediaApiExceptionErrorCode,
         })
     }
 
@@ -435,7 +441,7 @@ class Dashboard extends Component {
                 },
                 itemMarginBottom: 5
             },
-            colors: ['#00c6ff', '#6610f2', '#ff0300', '#ffc107', '#2f353', '#73818f', '#0900ff', '#00ff59'],
+            colors: ['#4dbd74', '#00c6ff', '#6610f2', '#2f353', '#73818f', '#0900ff', '#00ff59', '#ffc107'],
             credits: {
                 enabled: false
             },
@@ -444,31 +450,44 @@ class Dashboard extends Component {
                     stacking: 'normal'
                 }
             },
-            series: [{
-                name: 'CMS_API_EXCEPTION',
-                data: this.state.cmsApiExceptionErrorCodeStatistic
-            }, {
-                name: 'CMS_API_DUPLICATE_ARTICLE_ID_EXCEPTION',
-                data: this.state.cmsApiDuplicateArticleIdExceptionErrorCodeStatistic
-            }, {
-                name: 'CRAWL_DOWMLOAD_VIDEO_API_EXCEPTION',
-                data: this.state.crawlDownloadVideoApiExceptionErrorCodeStatistic
-            }, {
-                name: 'CRAWL_DOWMLOAD_IMAGE_API_EXCEPTION',
-                data: this.state.crawlDownloadImageApiExceptionErrorCodeStatistic
-            }, {
-                name: 'AI_TAGGING_API_EXCEPTION',
-                data: this.state.aiTaggingApiExceptionErrorCodeStatistic
-            }, {
-                name: 'ETL_EXCEPTION',
-                data: this.state.etlExceptionErrorCodeStatistic
-            }, {
-                name: 'DOWNLOAD_HTML_S3_EXCEPTION',
-                data: this.state.downloadHtmlS3ExceptionErrorCodeStatistic
-            }, {
-                name: 'SUCCESS',
-                data: this.state.successErrorCodeStatistic
-            }]
+            series: [
+                {
+                    name: 'CRAWL_DOWMLOAD_MEDIA_API_EXCEPTION',
+                    data: this.state.crawlDownloadVideoApiExceptionErrorCodeStatistic
+                },
+                {
+                    name: 'CMS_API_EXCEPTION',
+                    data: this.state.cmsApiExceptionErrorCodeStatistic
+                },
+                {
+                    name: 'CMS_API_DUPLICATE_ARTICLE_ID_EXCEPTION',
+                    data: this.state.cmsApiDuplicateArticleIdExceptionErrorCodeStatistic
+                },
+                // {
+                //     name: 'CRAWL_DOWMLOAD_VIDEO_API_EXCEPTION',
+                //     data: this.state.crawlDownloadVideoApiExceptionErrorCodeStatistic
+                // },
+                // {
+                //     name: 'CRAWL_DOWMLOAD_IMAGE_API_EXCEPTION',
+                //     data: this.state.crawlDownloadImageApiExceptionErrorCodeStatistic
+                // },
+                {
+                    name: 'AI_TAGGING_API_EXCEPTION',
+                    data: this.state.aiTaggingApiExceptionErrorCodeStatistic
+                },
+                {
+                    name: 'ETL_EXCEPTION',
+                    data: this.state.etlExceptionErrorCodeStatistic
+                },
+                {
+                    name: 'DOWNLOAD_HTML_S3_EXCEPTION',
+                    data: this.state.downloadHtmlS3ExceptionErrorCodeStatistic
+                },
+                {
+                    name: 'SUCCESS',
+                    data: this.state.successErrorCodeStatistic
+                }
+            ]
         }
         return (
             <HighchartsReact
@@ -505,14 +524,16 @@ class Dashboard extends Component {
             return data.sort(this.compareByErrorCodeEtlException)
         } else if (orderOpt === 5) {
             return data.sort(this.compareByErrorCodeAiTaggingApiException)
-        } else if (orderOpt === 6) {
-            return data.sort(this.compareByErrorCodeCrawlDownloadImageApiException)
-        } else if (orderOpt === 7) {
-            return data.sort(this.compareByErrorCodeCrawlDownloadVideoApiException)
+        // } else if (orderOpt === 6) {
+        //     return data.sort(this.compareByErrorCodeCrawlDownloadImageApiException)
+        // } else if (orderOpt === 7) {
+        //     return data.sort(this.compareByErrorCodeCrawlDownloadVideoApiException)
         } else if (orderOpt === 8) {
             return data.sort(this.compareByErrorCodeCmsApiDuplicateArticleIdException)
         } else if (orderOpt === 9) {
             return data.sort(this.compareByErrorCodeCmsApiException)
+        } else if (orderOpt === 10) {
+            return data.sort(this.compareByErrorCodeCrawlDownloadMediaApiException)
         }
     }
 
@@ -595,6 +616,16 @@ class Dashboard extends Component {
             return 1;
         }
     }
+
+    compareByErrorCodeCrawlDownloadMediaApiException(a, b) {
+        const A = a.TotalByErrorCode[constant.CRAWL_DOWMLOAD_MEDIA_API_EXCEPTION - 810]
+        const B = b.TotalByErrorCode[constant.CRAWL_DOWMLOAD_MEDIA_API_EXCEPTION - 810]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
     /////////////////////////////////////////////////////////
     // END Build ErrorCode Statistic Chart 
 
@@ -606,7 +637,7 @@ class Dashboard extends Component {
         this.setState({
             activeTab: _temp,
         }, () => {
-            if(tab === '1'){
+            if (tab === '1') {
                 this.getCrawlStatusStatistic(this.state.fromDatePickedByStatus)
             } else if (tab === '2') {
                 this.getPostErrorCodeStatistic(this.state.fromDatePickedByErrorCode)
@@ -672,8 +703,6 @@ class Dashboard extends Component {
                 <TabContent activeTab={this.state.activeTab[0]}>
                     {this.tabPane()}
                 </TabContent>
-
-
             </div>
         );
     }

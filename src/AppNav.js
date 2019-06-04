@@ -38,6 +38,11 @@ export default {
                     icon: 'fa fa-newspaper-o',
                 },
                 {
+                    name: 'Hot Trends',
+                    url: '/manage/hotTrends',
+                    icon: 'fa fa-newspaper-o',
+                },
+                {
                     name: 'Hot News',
                     url: '/manage/hotNews',
                     icon: 'fa fa-newspaper-o',
