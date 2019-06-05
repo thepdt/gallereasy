@@ -3,15 +3,10 @@ import { Badge, CardBody, Col, Row, Table, Modal, ModalBody, ModalHeader, Input,
 import HotTrendsService from './HotTrendsService';
 import PaginationComponent from "react-reactstrap-pagination";
 import Notifications from './../../../components/Notifications';
-import { css } from '@emotion/core';
 import LoadingOverlay from 'react-loading-overlay'
 import { RingLoader } from 'react-spinners';
 import './Style.scss'
 
-const override = css`
-    margin: 0 auto;
-    border-color: #20a8d8 !important;
-`;
 // const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
 
 class HotTrends extends Component {
@@ -558,7 +553,7 @@ class HotTrends extends Component {
     render() {
         return (
             <div className="animated fadeIn">
-                <LoadingOverlay active={this.state.loading} spinner={<RingLoader css={override} sizeUnit={"px"} size={150} color={'#11c1ff'}/>}>
+                <LoadingOverlay active={this.state.loading} spinner={<RingLoader sizeUnit={"px"} size={150} color={'#11c1ff'}/>}>
                     <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
                     <Nav tabs>
                         {this.state.trendsTitle.map((trendTitle, index) =>
