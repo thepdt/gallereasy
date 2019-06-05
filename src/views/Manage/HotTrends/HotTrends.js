@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
-import { Badge, Card, CardBody, Col, Row, Table, Modal, ModalBody, ModalHeader, Input, TabContent, Nav, NavItem, NavLink } from 'reactstrap';
+import { Badge, CardBody, Col, Row, Table, Modal, ModalBody, ModalHeader, Input, TabContent, Nav, NavItem, NavLink } from 'reactstrap';
 import HotTrendsService from './HotTrendsService';
 import PaginationComponent from "react-reactstrap-pagination";
-import Notifications from './../../../components/Notifications'
+import Notifications from './../../../components/Notifications';
+import { css } from '@emotion/core';
+import LoadingOverlay from 'react-loading-overlay'
+import { RingLoader } from 'react-spinners';
+import './Style.scss'
 
+const override = css`
+    margin: 0 auto;
+    border-color: #20a8d8 !important;
+`;
 // const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
 
 class HotTrends extends Component {
@@ -13,6 +21,7 @@ class HotTrends extends Component {
         super(props);
 
         this.state = {
+            loading: true,
             trendsTitle: [],
 
             posts: [],
@@ -81,8 +90,6 @@ class HotTrends extends Component {
                 if (result.Message === "Success" && result.Data !== null) {
                     this.setState({
                         trendsTitle: result.Data
-                    }, () => {
-                        console.log(this.state.trendsTitle)
                     })
                 } else if (result.Message === "Success" && result.Data == null) {
                     this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
@@ -99,13 +106,13 @@ class HotTrends extends Component {
     getPostsTrend(trendId, paggeIndex) {
         this._hotTrendsService.getPostsTrend(trendId, paggeIndex)
             .then((result) => {
-                console.log(result.Data)
                 if (result.Message === "Success" && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
                         element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
                     });
                     this.setState({
+                        loading: false,
                         posts: result.Data
                     })
                 } else if (result.Message === "Success" && result.Data == null) {
@@ -481,9 +488,9 @@ class HotTrends extends Component {
         const _temp = this.state.activeTab.slice()
         _temp[tabPane] = tab
         this.setState({
+            loading: true,
             activeTab: _temp,
         }, () => {
-            console.log(tab)
             this.getPostsTrend(Number(tab) + 1, this.state.selectedPage)
         });
     }
@@ -491,54 +498,52 @@ class HotTrends extends Component {
     tabPane() {
         return (
             <>
-                <Card>
-                    <CardBody>
-                        <Row>
-                            <Col md="12" className="pagination">
-                                <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} />
-                            </Col>
-                        </Row>
+                <CardBody>
+                    <Row>
+                        <Col md="12" className="pagination">
+                            <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} />
+                        </Col>
+                    </Row>
 
-                        <Table responsive hover bordered striped>
-                            <thead>
-                                <tr>
-                                    <th scope="col" width="3%" className="centered">
-                                        <label className="checkboxLabel">#
+                    <Table responsive hover bordered striped>
+                        <thead>
+                            <tr>
+                                <th scope="col" width="3%" className="centered">
+                                    <label className="checkboxLabel">#
                                                     {/* <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} /> */}
+                                        <span className="label-text"></span>
+                                    </label>
+                                </th>
+                                <th scope="col" width="45%" className="centered">Tiêu đề</th>
+                                <th scope="col" width="10%" className="centered">Đầu báo</th>
+                                <th scope="col" width="10%" className="centered">Chuyên mục</th>
+                                <th scope="col" width="10%" className="centered">Chuyên mục AI</th>
+                                <th scope="col" width="12%" className="centered">Posted At</th>
+                                <th scope="col" width="10%" className="centered">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.posts.map((post, index) =>
+                                (< tr key={post.Id.toString()} >
+                                    <td className="centered">
+                                        <label className="checkboxLabel">
+                                            <Input className="form-check-input" type="checkbox" id={post.Id} name={post.Id} value={post.checked} checked={post.checked} onChange={() => this.checkOne(post.Id)} />
                                             <span className="label-text"></span>
                                         </label>
-                                    </th>
-                                    <th scope="col" width="45%" className="centered">Tiêu đề</th>
-                                    <th scope="col" width="10%" className="centered">Đầu báo</th>
-                                    <th scope="col" width="10%" className="centered">Chuyên mục</th>
-                                    <th scope="col" width="10%" className="centered">Chuyên mục AI</th>
-                                    <th scope="col" width="12%" className="centered">Posted At</th>
-                                    <th scope="col" width="10%" className="centered">Trạng thái</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.state.posts.map((post, index) =>
-                                    (< tr key={post.Id.toString()} >
-                                        <td className="centered">
-                                            <label className="checkboxLabel">
-                                                <Input className="form-check-input" type="checkbox" id={post.Id} name={post.Id} value={post.checked} checked={post.checked} onChange={() => this.checkOne(post.Id)} />
-                                                <span className="label-text"></span>
-                                            </label>
-                                        </td>
-                                        <td>
-                                            <span className="title" onClick={() => this.showPostPreview(post.Id)}>{post.Title}</span>
-                                        </td>
-                                        <td>{post.Publisher}</td>
-                                        <td>{post.Category}</td>
-                                        <td>{post.CategoryAi}</td>
-                                        <td>{(new Date(post.PostedAt * 1000)).toLocaleString()}</td>
-                                        <td>{post.statusText}</td>
-                                    </tr>)
-                                )}
-                            </tbody>
-                        </Table>
-                    </CardBody>
-                </Card>
+                                    </td>
+                                    <td>
+                                        <span className="title" onClick={() => this.showPostPreview(post.Id)}>{post.Title}</span>
+                                    </td>
+                                    <td>{post.Publisher}</td>
+                                    <td>{post.Category}</td>
+                                    <td>{post.CategoryAi}</td>
+                                    <td>{(new Date(post.PostedAt * 1000)).toLocaleString()}</td>
+                                    <td>{post.statusText}</td>
+                                </tr>)
+                            )}
+                        </tbody>
+                    </Table>
+                </CardBody>
 
                 <Modal isOpen={this.state.postPreviewModal} toggle={this.closePostPreviewModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
                     <ModalHeader toggle={this.closePostPreviewModal.bind(this)}>Bài đăng</ModalHeader>
@@ -551,33 +556,25 @@ class HotTrends extends Component {
     }
 
     render() {
-        // let trendNumber = this.state.trendsTitle.length()
         return (
             <div className="animated fadeIn">
-                <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
-                <Nav tabs>
-                    {this.state.trendsTitle.map((trendTitle, index) =>
-                        <NavItem key={index} >
-                            <NavLink active={this.state.activeTab[0] === index.toString()} onClick={() => { this.selectedTab(0, index.toString()); }}>
-                                {trendTitle.TrendTitle}
-                            </NavLink>
-                        </NavItem>
+                <LoadingOverlay active={this.state.loading} spinner={<RingLoader css={override} sizeUnit={"px"} size={150} color={'#11c1ff'}/>}>
+                    <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
+                    <Nav tabs>
+                        {this.state.trendsTitle.map((trendTitle, index) =>
+                            <NavItem key={index} >
+                                <NavLink active={this.state.activeTab[0] === index.toString()} onClick={() => { this.selectedTab(0, index.toString()); }}>
+                                    {trendTitle.TrendTitle}
+                                </NavLink>
+                            </NavItem>
 
-                    )}
-                    {/* <NavItem>
-                        <NavLink active={this.state.activeTab[0] === '1'} onClick={() => { this.selectedTab(0, '1'); }}>
-                            <i className="fa fa-tasks"></i> &nbsp;Thống kê theo Status
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink active={this.state.activeTab[0] === '2'} onClick={() => { this.selectedTab(0, '2'); }}>
-                            <i className="icon-book-open"></i>&nbsp;Thống kê theo Error Code
-                        </NavLink>
-                    </NavItem> */}
-                </Nav>
-                <TabContent activeTab={this.state.activeTab[0]}>
-                    {this.tabPane()}
-                </TabContent>
+                        )}
+                    </Nav>
+                    <TabContent activeTab={this.state.activeTab[0]}>
+                        {this.tabPane()}
+                    </TabContent>
+                </LoadingOverlay>
+
             </div>
         )
     }
