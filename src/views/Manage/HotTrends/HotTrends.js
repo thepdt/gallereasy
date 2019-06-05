@@ -377,16 +377,10 @@ class HotTrends extends Component {
         })
     }
 
-    selecteSearchPage(searchSelectedPage) {
-        this.getPostsByPublisher(this.state.searchText, searchSelectedPage)
-        this.setState({
-            searchSelectedPage: searchSelectedPage
-        });
-    }
-
     selectedPage(selectedPage) {
         this.getPostsTrend(Number(this.state.activeTab[0]) + 1, selectedPage)
         this.setState({
+            loading: true,
             selectedPage: selectedPage
         });
     }
