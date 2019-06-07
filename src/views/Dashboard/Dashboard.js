@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { Card, CardBody, CardHeader, Row, Col, FormGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 
 import DashboardService from './DashboardService'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import DateTimePicker from 'react-datetime-picker';
 import Notifications from './../../components/Notifications'
+import Widget04 from './../Widgets/Widget04';
 
 import constant from './../../Constant'
 
@@ -35,10 +36,18 @@ class Dashboard extends Component {
         super(props);
 
         this.state = {
+            //////////////////////////////////////////////////
+            //For statistic user
+            activeUser: 10,
+            registerUser: 10,
+            onDatePickedUserStatistic: addDays(new Date(), -1),
+
+            //////////////////////////////////////////////////
+            // For  Statistic  Post
             activeTab: ['1', '2'],
             //For Status Statistic
             statisticByStatusData: [],
-            fromDatePickedByStatus: addDays(new Date(), -5),
+            fromDatePickedByStatus: addDays(new Date(), -1),
             heightChartByStatus: 0,
             publishersStatisticByStatus: [],
             downloadHTMLErrorStatusStatistic: [],
@@ -64,7 +73,7 @@ class Dashboard extends Component {
 
             //For ErrorCode Statistic
             statisticByErrorCodeData: [],
-            fromDatePickedByErrorCode: addDays(new Date(), -5),
+            fromDatePickedByErrorCode: addDays(new Date(), -1),
             heightChartByErrorCode: 0,
             publishersStatisticByErrorCode: [],
             successErrorCodeStatistic: [],
@@ -101,6 +110,22 @@ class Dashboard extends Component {
     componentWillMount() {
         this.getCrawlStatusStatistic(this.state.fromDatePickedByStatus)
     }
+
+    /////////////////////////////////////////////////////////
+    //Build Statistic User 
+
+
+    onDateUserStatisticChange = date => {
+        console.log(date);
+        if (date !== null) {
+            // this.getUserStatistic(date)
+            this.setState({
+                onDatePickedUserStatistic: date,
+            })
+        }
+    }
+    // END 
+    /////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////
     //Build Statistic by Status Chart
@@ -154,7 +179,7 @@ class Dashboard extends Component {
         });
 
         this.setState({
-            heightChartByStatus: 850,
+            heightChartByStatus: 1200,
             publishersStatisticByStatus: publishers,
             downloadHTMLErrorStatusStatistic: downloadHTMLErrorStatus,
             downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
@@ -218,7 +243,7 @@ class Dashboard extends Component {
             series: [{
                 name: 'CMS updated',
                 data: this.state.cmsUpdatedStatusStatistic
-            },{
+            }, {
                 name: 'All completed',
                 data: this.state.allCompleteStatusStatistic
             }, {
@@ -346,8 +371,8 @@ class Dashboard extends Component {
             return 1;
         }
     }
-    /////////////////////////////////////////////////////////
     // END Build Status Statistic Chart 
+    /////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////
     // Build ErrorCode Statistic Chart 
@@ -408,7 +433,7 @@ class Dashboard extends Component {
         });
 
         this.setState({
-            heightChartByErrorCode: 850,
+            heightChartByErrorCode: 1200,
             publishersStatisticByErrorCode: publishers,
             successErrorCodeStatistic: successErrorCode,
             downloadHtmlS3ExceptionErrorCodeStatistic: downloadHtmlS3ExceptionErrorCode,
@@ -545,10 +570,10 @@ class Dashboard extends Component {
             return data.sort(this.compareByErrorCodeEtlException)
         } else if (orderOpt === 5) {
             return data.sort(this.compareByErrorCodeAiTaggingApiException)
-        // } else if (orderOpt === 6) {
-        //     return data.sort(this.compareByErrorCodeCrawlDownloadImageApiException)
-        // } else if (orderOpt === 7) {
-        //     return data.sort(this.compareByErrorCodeCrawlDownloadVideoApiException)
+            // } else if (orderOpt === 6) {
+            //     return data.sort(this.compareByErrorCodeCrawlDownloadImageApiException)
+            // } else if (orderOpt === 7) {
+            //     return data.sort(this.compareByErrorCodeCrawlDownloadVideoApiException)
         } else if (orderOpt === 8) {
             return data.sort(this.compareByErrorCodeCmsApiDuplicateArticleIdException)
         } else if (orderOpt === 9) {
@@ -647,8 +672,8 @@ class Dashboard extends Component {
             return 1;
         }
     }
-    /////////////////////////////////////////////////////////
     // END Build ErrorCode Statistic Chart 
+    /////////////////////////////////////////////////////////
 
     loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
     selectedTab(tabPane, tab) {
@@ -709,21 +734,49 @@ class Dashboard extends Component {
         return (
             <div className="animated fadeIn">
                 <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
-                <Nav tabs>
-                    <NavItem>
-                        <NavLink active={this.state.activeTab[0] === '1'} onClick={() => { this.selectedTab(0, '1'); }}>
-                            <i className="fa fa-tasks"></i> &nbsp;Thống kê theo Status
+                <Card>
+                    <CardHeader>
+                        <i className="fa fa-user-o"></i> Thống kê nguời dùng
+                    </CardHeader>
+                    <CardBody>
+                        <Row>
+                            <Col md={{ size: 4, offset: 2 }}>
+                                <DateTimePicker className="" onChange={this.onDateUserStatisticChange} value={this.state.onDatePickedUserStatistic} />
+                            </Col>
+                        </Row>
+                        <FormGroup row>
+                            <Col md={{ size: 4, offset: 2 }}>
+                                <Widget04 icon="icon-people" color="primary" header={this.state.activeUser.toString()} value="100" invert>ACTIVE USERS</Widget04>
+                            </Col>
+                            <Col md={{ size: 4 }}>
+                                <Widget04 icon="icon-user-follow" color="info" header={this.state.registerUser.toString()} value="100" invert>REGISTERED USERS</Widget04>
+                            </Col>
+                        </FormGroup>
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <i className="fa fa-newspaper-o"></i> Thống kê bài đăng
+                    </CardHeader>
+                    <CardBody>
+                        <Nav tabs>
+                            <NavItem>
+                                <NavLink active={this.state.activeTab[0] === '1'} onClick={() => { this.selectedTab(0, '1'); }}>
+                                    <i className="fa fa-tasks"></i> &nbsp;Thống kê theo Status
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink active={this.state.activeTab[0] === '2'} onClick={() => { this.selectedTab(0, '2'); }}>
+                                    <i className="icon-book-open"></i>&nbsp;Thống kê theo Error Code
                         </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink active={this.state.activeTab[0] === '2'} onClick={() => { this.selectedTab(0, '2'); }}>
-                            <i className="icon-book-open"></i>&nbsp;Thống kê theo Error Code
-                        </NavLink>
-                    </NavItem>
-                </Nav>
+                            </NavItem>
+                        </Nav>
+                    </CardBody>
+                </Card>
                 <TabContent activeTab={this.state.activeTab[0]}>
                     {this.tabPane()}
                 </TabContent>
+
             </div>
         );
     }

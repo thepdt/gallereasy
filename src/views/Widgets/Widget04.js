@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardBody, Progress } from 'reactstrap';
+import { Row, Col, Card, CardBody, Progress } from 'reactstrap';
 import classNames from 'classnames';
 import { mapToCssModules } from 'reactstrap/lib/utils';
 
@@ -45,11 +45,17 @@ class Widget04 extends Component {
     return (
       <Card className={classes} {...attributes}>
         <CardBody>
-          <div className="h1 text-muted text-right mb-2">
-            <i className={card.icon}></i>
-          </div>
-          <div className="h4 mb-0">{header}</div>
-          <small className="text-muted text-uppercase font-weight-bold">{children}</small>
+          <Row>
+            <Col md={{ size: 8 }}>
+              <div className="h2 mb-0 font-weight-bold">{header}</div>
+              <small className="text-muted text-uppercase font-weight-bold">{children}</small>
+            </Col>
+            <Col md={{ size: 4 }}>
+              <div className="h2 text-muted text-right mb-0">
+                <i className={card.icon}></i>
+              </div>
+            </Col>
+          </Row>
           <Progress className={progress.style} color={progress.color} value={progress.value} />
         </CardBody>
       </Card>

@@ -28,7 +28,7 @@ function addDays(date, amount) {
     }
 
     return d;
-} 
+}
 
 class Posts extends Component {
     _postService = new PostService();
@@ -76,11 +76,11 @@ class Posts extends Component {
             postedUrl: "",
             status: Number,
             statusOptions: [
-                { key: -1, value: '--Chọn trạng thái bài báo--' }, 
-                { key: 0, value: 'In Trash' }, 
-                { key: 1, value: 'Unpublished' }, 
-                { key: 2, value: 'Downloaded' }, 
-                { key: 8, value: 'In Review' }, 
+                { key: -1, value: '--Chọn trạng thái bài báo--' },
+                { key: 0, value: 'In Trash' },
+                { key: 1, value: 'Unpublished' },
+                { key: 2, value: 'Downloaded' },
+                { key: 8, value: 'In Review' },
                 { key: 9, value: 'Published' },
             ],
             categoryAi: "",
@@ -745,7 +745,7 @@ class Posts extends Component {
                                             <Label htmlFor="postedAt-input" >Ngày đăng</Label>
                                         </Col>
                                         <Col xs="12" md="10">
-                                            <Input type="text" id="postedAt-input" name="postedAt-input" value={this.state.postedAt}/>
+                                            <Input type="text" id="postedAt-input" name="postedAt-input" value={this.state.postedAt} />
                                         </Col>
                                     </FormGroup>
                                     <FormGroup row>
@@ -1085,7 +1085,7 @@ class Posts extends Component {
                             )
                         })
                     }
-                </div> 
+                </div>
                 <p> Link gốc bài viết:
                     <a href={this.state.postedUrl} rel="noopener noreferrer" target="_blank">{this.state.postedUrl}</a>
                 </p>
@@ -1121,17 +1121,23 @@ class Posts extends Component {
                                     <Row className="right">
                                         <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selecteSearchPage.bind(this)} />
                                     </Row> :
-                                    <Row>
-                                        <Col md="12" className="pagination">
+                                    <Row className="pagination">
+                                        <Col md="3">
                                             {/* <Row> */}
                                             <DateTimePicker onChange={this.fromDateChange} value={this.state.fromDatePicked} />
-                                            <DateTimePicker onChange={this.toDateChange} value={this.state.toDatePicked} />
-                                            <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} />
-
-                                            {/* </Row> */}
                                         </Col>
+                                        <Col md="3">
+
+                                            <DateTimePicker onChange={this.toDateChange} value={this.state.toDatePicked} />
+                                        </Col>
+                                        <Col md="6">
+
+                                            <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} />
+                                        </Col>
+                                        {/* </Row> */}
+
                                     </Row>
-                                }
+                            }
                                 <Table responsive hover bordered striped>
                                     <thead>
                                         <tr>

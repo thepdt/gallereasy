@@ -546,7 +546,7 @@ class HotTrends extends Component {
 
     render() {
         return (
-            <div className="animated fadeIn">
+            <div id="hot_trend" className="animated fadeIn">
                 <LoadingOverlay active={this.state.loading} spinner={<RingLoader sizeUnit={"px"} size={150} color={'#11c1ff'}/>}>
                     <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
                     <Nav tabs>
