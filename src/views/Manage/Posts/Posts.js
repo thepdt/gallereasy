@@ -218,7 +218,8 @@ class Posts extends Component {
     //Add a new  post
     openCreateModal() {
         this.setState({
-            postDetailModal: !this.state.postDetailModal,
+            postDetailModal: false,
+            postPreviewModal: false,
             createModalMode: true,
             publisher: "",
             title: "",
@@ -355,7 +356,7 @@ class Posts extends Component {
             Status: this.state.status,
             PostedAt: this.state.postedAt,
         }
-
+        console.log(data)
         this._postService.updatePost(data)
             .then((result) => {
                 if (result.Message === "Success") {

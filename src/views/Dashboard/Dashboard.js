@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Card, CardBody, CardHeader, Row, Col, FormGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { Card, CardBody, CardHeader, Row, Col, Table, FormGroup, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 
 import DashboardService from './DashboardService'
 import Highcharts from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import DateTimePicker from 'react-datetime-picker';
+import PaginationComponent from "react-reactstrap-pagination";
 import Notifications from './../../components/Notifications'
 import Widget04 from './../Widgets/Widget04';
 
@@ -45,6 +46,32 @@ class Dashboard extends Component {
             //////////////////////////////////////////////////
             // For  Statistic  Post
             activeTab: ['1', '2'],
+            activeUserCount: Number,
+            inactiveUserCount: Number,
+
+            hotPosts: [],
+            topReadNews: [],
+            topCommentNews: [],
+            topViewVideos: [],
+            topCommentVideos: [],
+
+            hotPostModeOptions: [{ value: 20, text: "Top 20 bài" }, { value: 50, text: "Top 50 bài" }],
+            topReadNewsMode: 20,
+            topCommentNewsMode: 20,
+            topViewVideosMode: 20,
+            topCommentVideosMode: 20,
+
+            topReadNewsOptionText: "Top 20 bài",
+            topCommentNewsOptionText: "Top 20 bài",
+            topViewVideosOptionText: "Top 20 bài",
+            topCommentVideosOptionText: "Top 20 bài",
+
+            topReadNewsOptionOpen: false,
+            topCommentNewsOptionOpen: false,
+            topViewVideosOptionOpen: false,
+            topCommentVideosOptionOpen: false,
+
+            //////////////////////////////////////////////////
             //For Status Statistic
             statisticByStatusData: [],
             fromDatePickedByStatus: addDays(new Date(), -1),
@@ -71,6 +98,7 @@ class Dashboard extends Component {
             orderByStatusOption: 4,
             orderByStatusOptionValue: "Sắp xếp theo ETL Error",
 
+            //////////////////////////////////////////////////
             //For ErrorCode Statistic
             statisticByErrorCodeData: [],
             fromDatePickedByErrorCode: addDays(new Date(), -1),
@@ -109,11 +137,34 @@ class Dashboard extends Component {
 
     componentWillMount() {
         this.getCrawlStatusStatistic(this.state.fromDatePickedByStatus)
+        this.getHotPostStatistic()
     }
 
+    getHotPostStatistic() {
+        this._dashboardService.getHotPostStatistic()
+            .then((result) => {
+                if (result.Message === "Success" && result.Data !== null) {
+                    console.log(result.Data)
+                    this.setState({
+                        hotPosts: result.Data[0],
+                        activeUserCount: result.Data[0].ActiveUsersCount,
+                        inactiveUserCount: result.Data[0].UnactiveUsersCount,
+                        topReadNews: JSON.parse(result.Data[0].Top20MostReadNews).slice(0, 10),
+                        topCommentNews: JSON.parse(result.Data[0].Top20MostCommentNews).slice(0, 10),
+                        topViewVideos: JSON.parse(result.Data[0].Top20MostViewVideo).slice(0, 10),
+                        topCommentVideos: JSON.parse(result.Data[0].Top20MostCommentVideo).slice(0, 10),
+                    }, () => {
+                        console.log(this.state.hotPosts)
+                    })
+                } else if (result.Message === "Success" && result.Data === null) {
+                    this.addNoti.addNotification("danger", "Không tìm thấy dữ liệu thống kê người dùng và các bài đăng Hot");
+                }
+            }).catch((err) => {
+                console.log("error: " + err);
+            });
+    }
     /////////////////////////////////////////////////////////
-    //Build Statistic User 
-
+    //Build Statistic User & Hot Posts
 
     onDateUserStatisticChange = date => {
         console.log(date);
@@ -124,7 +175,148 @@ class Dashboard extends Component {
             })
         }
     }
-    // END 
+
+    //Top Read News
+    selecteTopReadNewsPage(selectedPage) {
+        if (this.state.topReadNewsMode === 20) {
+            this.setState({
+                topReadNews: JSON.parse(this.state.hotPosts.Top20MostReadNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+            });
+        } else if (this.state.topReadNewsMode === 50) {
+            this.setState({
+                topReadNews: JSON.parse(this.state.hotPosts.Top50MostReadNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+            });
+        }
+    }
+
+    changeTopReadNewsMode(value, text) {
+        if (value === 20) {
+            this.setState({
+                topReadNews: JSON.parse(this.state.hotPosts.Top20MostReadNews).slice(0, 10),
+                topReadNewsMode: value,
+                topReadNewsOptionText: text
+            })
+        } else if (value === 50) {
+            this.setState({
+                topReadNews: JSON.parse(this.state.hotPosts.Top50MostReadNews).slice(0, 10),
+                topReadNewsMode: value,
+                topReadNewsOptionText: text
+            })
+        }
+    }
+
+    topReadNewsOptionToggle() {
+        this.setState({
+            topReadNewsOptionOpen: !this.state.topReadNewsOptionOpen
+        })
+    }
+
+    //Top Comment News
+    selecteTopCommentNewsPage(selectedPage) {
+        if (this.state.topCommentNewsMode === 20) {
+            this.setState({
+                topCommentNews: JSON.parse(this.state.hotPosts.Top20MostCommentNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+            });
+        } else if (this.state.topCommentNewsMode === 50) {
+            this.setState({
+                topCommentNews: JSON.parse(this.state.hotPosts.Top50MostCommentNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+            });
+        }
+    }
+
+    changeTopCommentNewsMode(value, text) {
+        if (value === 20) {
+            this.setState({
+                topCommentNews: JSON.parse(this.state.hotPosts.Top20MostCommentNews).slice(0, 10),
+                topCommentNewsMode: value,
+                topCommentNewsOptionText: text
+            })
+        } else if (value === 50) {
+            this.setState({
+                topCommentNews: JSON.parse(this.state.hotPosts.Top50MostCommentNews).slice(0, 10),
+                topCommentNewsMode: value,
+                topCommentNewsOptionText: text
+            })
+        }
+    }
+
+    topCommentNewsOptionToggle() {
+        this.setState({
+            topCommentNewsOptionOpen: !this.state.topCommentNewsOptionOpen
+        })
+    }
+
+    //Top View Videos
+    selecteTopViewVideosPage(selectedPage) {
+        if (this.state.topViewVideosMode === 20) {
+            this.setState({
+                topViewVideos: JSON.parse(this.state.hotPosts.Top20MostViewVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+            });
+        } else if (this.state.topViewVideosMode === 50) {
+            this.setState({
+                topViewVideos: JSON.parse(this.state.hotPosts.Top50MostViewVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+            });
+        }
+    }
+
+    changeTopViewVideosMode(value, text) {
+        if (value === 20) {
+            this.setState({
+                topViewVideos: JSON.parse(this.state.hotPosts.Top20MostViewVideo).slice(0, 10),
+                topViewVideosMode: value,
+                topViewVideosOptionText: text
+            })
+        } else if (value === 50) {
+            this.setState({
+                topViewVideos: JSON.parse(this.state.hotPosts.Top50MostViewVideo).slice(0, 10),
+                topViewVideosMode: value,
+                topViewVideosOptionText: text
+            })
+        }
+    }
+
+    topViewVideosOptionToggle() {
+        this.setState({
+            topViewVideosOptionOpen: !this.state.topViewVideosOptionOpen
+        })
+    }
+
+    //Top Comment News
+    selecteTopCommentVideosPage(selectedPage) {
+        if (this.state.topCommentVideosMode === 20) {
+            this.setState({
+                topCommentVideos: JSON.parse(this.state.hotPosts.Top20MostCommentVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+            });
+        } else if (this.state.topCommentVideosMode === 50) {
+            this.setState({
+                topCommentVideos: JSON.parse(this.state.hotPosts.Top50MostCommentVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+            });
+        }
+    }
+
+    changeTopCommentVideosMode(value, text) {
+        if (value === 20) {
+            this.setState({
+                topCommentVideos: JSON.parse(this.state.hotPosts.Top20MostCommentVideo).slice(0, 10),
+                topCommentVideosMode: value,
+                topCommentVideosOptionText: text
+            })
+        } else if (value === 50) {
+            this.setState({
+                topCommentVideos: JSON.parse(this.state.hotPosts.Top50MostCommentVideo).slice(0, 10),
+                topCommentVideosMode: value,
+                topCommentVideosOptionText: text
+            })
+        }
+    }
+
+    topCommentVideosOptionToggle() {
+        this.setState({
+            topCommentVideosOptionOpen: !this.state.topCommentVideosOptionOpen
+        })
+    }
+
+    // END Statistic User
     /////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////
@@ -140,7 +332,7 @@ class Dashboard extends Component {
                         statisticByStatusData: result.Data
                     })
                 } else if (result.Message === "Success" && result.Data === null) {
-                    this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
+                    this.addNoti.addNotification("danger", "Không tìm thấy dữ liệu thống kê các trạng thái quá trình Crawl");
                     this.setState({
                         heightChartByStatus: 0,
                         publishersStatisticByStatus: [],
@@ -386,7 +578,7 @@ class Dashboard extends Component {
                         statisticByErrorCodeData: result.Data
                     })
                 } else if (result.Message === "Success" && result.Data === null) {
-                    this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
+                    this.addNoti.addNotification("danger", "Không tìm thấy dữ liệu thống kê các Error Code");
                     this.setState({
                         heightChartByErrorCode: 0,
                         publishersStatisticByErrorCode: [],
@@ -749,14 +941,14 @@ class Dashboard extends Component {
                                 <Widget04 icon="icon-people" color="primary" header={this.state.activeUser.toString()} value="100" invert>ACTIVE USERS</Widget04>
                             </Col>
                             <Col md={{ size: 4 }}>
-                                <Widget04 icon="icon-user-follow" color="info" header={this.state.registerUser.toString()} value="100" invert>REGISTERED USERS</Widget04>
+                                <Widget04 icon="icon-user-follow" color="info" header={this.state.registerUser.toString()} value="100" invert>INACTIVE USERS</Widget04>
                             </Col>
                         </FormGroup>
                     </CardBody>
                 </Card>
                 <Card>
                     <CardHeader>
-                        <i className="fa fa-newspaper-o"></i> Thống kê bài đăng
+                        <i className="fa fa-newspaper-o"></i> Thống kê quá trình Crwal
                     </CardHeader>
                     <CardBody>
                         <Nav tabs>
@@ -771,12 +963,178 @@ class Dashboard extends Component {
                         </NavLink>
                             </NavItem>
                         </Nav>
+                        <TabContent activeTab={this.state.activeTab[0]}>
+                            {this.tabPane()}
+                        </TabContent>
                     </CardBody>
                 </Card>
-                <TabContent activeTab={this.state.activeTab[0]}>
-                    {this.tabPane()}
-                </TabContent>
+                <Row>
+                    <Col md={{ size: 6 }}>
+                        <Card>
+                            <CardHeader>
+                                <i className="fa fa-user-o"></i> Thống kê bài đăng nhiều lượt đọc nhất
+                        </CardHeader>
+                            <CardBody>
+                                <ButtonDropdown className="left-emerged" isOpen={this.state.topReadNewsOptionOpen} toggle={this.topReadNewsOptionToggle.bind(this)}>
+                                    <DropdownToggle caret>{this.state.topReadNewsOptionText}</DropdownToggle>
+                                    <DropdownMenu>
+                                        {this.state.hotPostModeOptions.map(option =>
+                                            <DropdownItem id={option} key={option.value} onClick={() => this.changeTopReadNewsMode(option.value, option.text)}>{option.text}</DropdownItem>
+                                        )}
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                                <Row className="right">
+                                    <PaginationComponent totalItems={this.state.topReadNewsMode} pageSize={10} onSelect={this.selecteTopReadNewsPage.bind(this)} />
+                                </Row>
+                                <Table responsive hover bordered striped>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" width="5%" className="centered">Stt</th>
+                                            <th scope="col" width="95%" className="centered">Tiêu đề</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.topReadNews.map((post, index) =>
+                                            (< tr key={post.Id.toString()} >
+                                                <td className="centered">
+                                                    {index}
+                                                </td>
+                                                <td>
+                                                    <span className="title" onClick={() => this.showPostPreview(post.Id)}>{post.Title}</span>
+                                                </td>
+                                            </tr>)
+                                        )}
+                                    </tbody>
+                                </Table>
+                            </CardBody>
+                        </Card>
+                    </Col>
 
+                    <Col md={{ size: 6 }}>
+                        <Card>
+                            <CardHeader>
+                                <i className="fa fa-user-o"></i> Thống kê bài đăng nhiều lượt comment nhất
+                        </CardHeader>
+                            <CardBody>
+                                <ButtonDropdown className="left-emerged" isOpen={this.state.topCommentNewsOptionOpen} toggle={this.topCommentNewsOptionToggle.bind(this)}>
+                                    <DropdownToggle caret>{this.state.topCommentNewsOptionText}</DropdownToggle>
+                                    <DropdownMenu>
+                                        {this.state.hotPostModeOptions.map(option =>
+                                            <DropdownItem id={option} key={option.value} onClick={() => this.changeTopCommentNewsMode(option.value, option.text)}>{option.text}</DropdownItem>
+                                        )}
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                                <Row className="right">
+                                    <PaginationComponent totalItems={this.state.topCommentNewsMode} pageSize={10} onSelect={this.selecteTopCommentNewsPage.bind(this)} />
+                                </Row>
+                                <Table responsive hover bordered striped>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" width="5%" className="centered">Stt</th>
+                                            <th scope="col" width="95%" className="centered">Tiêu đề</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.topCommentNews.map((post, index) =>
+                                            (< tr key={post.Id.toString()} >
+                                                <td className="centered">
+                                                    {index}
+                                                </td>
+                                                <td>
+                                                    <span className="title" onClick={() => this.showPostPreview(post.Id)}>{post.Title}</span>
+                                                </td>
+                                            </tr>)
+                                        )}
+                                    </tbody>
+                                </Table>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col md={{ size: 6 }}>
+                        <Card>
+                            <CardHeader>
+                                <i className="fa fa-user-o"></i> Thống kê video nhiều lượt xem nhất
+                        </CardHeader>
+                            <CardBody>
+                                <ButtonDropdown className="left-emerged" isOpen={this.state.topViewVideosOptionOpen} toggle={this.topViewVideosOptionToggle.bind(this)}>
+                                    <DropdownToggle caret>{this.state.topViewVideosOptionText}</DropdownToggle>
+                                    <DropdownMenu>
+                                        {this.state.hotPostModeOptions.map(option =>
+                                            <DropdownItem id={option} key={option.value} onClick={() => this.changeTopViewVideosMode(option.value, option.text)}>{option.text}</DropdownItem>
+                                        )}
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                                <Row className="right">
+                                    <PaginationComponent totalItems={this.state.topViewVideosMode} pageSize={10} onSelect={this.selecteTopViewVideosPage.bind(this)} />
+                                </Row>
+                                <Table responsive hover bordered striped>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" width="5%" className="centered">Stt</th>
+                                            <th scope="col" width="95%" className="centered">Tiêu đề</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.topViewVideos.map((post, index) =>
+                                            (< tr key={post.Id.toString()} >
+                                                <td className="centered">
+                                                    {index}
+                                                </td>
+                                                <td>
+                                                    <span className="title" onClick={() => this.showPostPreview(post.Id)}>{post.Title}</span>
+                                                </td>
+                                            </tr>)
+                                        )}
+                                    </tbody>
+                                </Table>
+                            </CardBody>
+                        </Card>
+                    </Col>
+
+                    <Col md={{ size: 6 }}>
+                        <Card>
+                            <CardHeader>
+                                <i className="fa fa-user-o"></i> Thống kê video nhiều lượt comment nhất
+                        </CardHeader>
+                            <CardBody>
+                                <ButtonDropdown className="left-emerged" isOpen={this.state.topCommentVideosOptionOpen} toggle={this.topCommentVideosOptionToggle.bind(this)}>
+                                    <DropdownToggle caret>{this.state.topCommentVideosOptionText}</DropdownToggle>
+                                    <DropdownMenu>
+                                        {this.state.hotPostModeOptions.map(option =>
+                                            <DropdownItem id={option} key={option.value} onClick={() => this.changeTopCommentVideosMode(option.value, option.text)}>{option.text}</DropdownItem>
+                                        )}
+                                    </DropdownMenu>
+                                </ButtonDropdown>
+                                <Row className="right">
+                                    <PaginationComponent totalItems={this.state.topCommentVideosMode} pageSize={10} onSelect={this.selecteTopCommentVideosPage.bind(this)} />
+                                </Row>
+                                <Table responsive hover bordered striped>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" width="5%" className="centered">Stt</th>
+                                            <th scope="col" width="95%" className="centered">Tiêu đề</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.topCommentVideos.map((post, index) =>
+                                            (< tr key={post.Id.toString()} >
+                                                <td className="centered">
+                                                    {index}
+                                                </td>
+                                                <td>
+                                                    <span className="title" onClick={() => this.showPostPreview(post.Id)}>{post.Title}</span>
+                                                </td>
+                                            </tr>)
+                                        )}
+                                    </tbody>
+                                </Table>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
             </div>
         );
     }
