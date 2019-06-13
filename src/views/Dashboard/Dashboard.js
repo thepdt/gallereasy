@@ -39,15 +39,13 @@ class Dashboard extends Component {
         this.state = {
             //////////////////////////////////////////////////
             //For statistic user
-            activeUser: 10,
-            registerUser: 10,
             onDatePickedUserStatistic: addDays(new Date(), -1),
+            activeUserCount: 0,
+            inactiveUserCount: 0,
 
             //////////////////////////////////////////////////
             // For  Statistic  Post
             activeTab: ['1', '2'],
-            activeUserCount: Number,
-            inactiveUserCount: Number,
 
             hotPosts: [],
             topReadNews: [],
@@ -81,9 +79,10 @@ class Dashboard extends Component {
             downloadHTMLCompletedStatusStatistic: [],
             etlErrorStatusStatistic: [],
             etlCompletedStatusStatistic: [],
-            downloadMediaErrorStatusStatistic: [],
+            downloadMediaStatusStatistic: [],
             allCompleteStatusStatistic: [],
             cmsUpdatedStatusStatistic: [],
+            cmsNotFoundStatusStatistic: [],
 
             orderByStatusOptions: [
                 { value: 1, text: "Sắp xếp theo tên đầu báo" },
@@ -91,8 +90,10 @@ class Dashboard extends Component {
                 { value: 3, text: "Sắp xếp theo Download HTML Completed" },
                 { value: 4, text: "Sắp xếp theo ETL Error" },
                 { value: 5, text: "Sắp xếp theo ETL Completed" },
-                { value: 6, text: "Sắp xếp theo All Completed" },
-                { value: 7, text: "Sắp xếp theo CMS Updated" }
+                { value: 6, text: "Sắp xếp theo Download Media" },
+                { value: 7, text: "Sắp xếp theo All Completed" },
+                { value: 8, text: "Sắp xếp theo CMS Updated" },
+                { value: 9, text: "Sắp xếp theo CMS Not Found" }
             ],
             orderByStatusOptionOpen: false,
             orderByStatusOption: 4,
@@ -135,7 +136,7 @@ class Dashboard extends Component {
 
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.getCrawlStatusStatistic(this.state.fromDatePickedByStatus)
         this.getHotPostStatistic()
     }
@@ -144,17 +145,16 @@ class Dashboard extends Component {
         this._dashboardService.getHotPostStatistic()
             .then((result) => {
                 if (result.Message === "Success" && result.Data !== null) {
-                    console.log(result.Data)
                     this.setState({
                         hotPosts: result.Data[0],
                         activeUserCount: result.Data[0].ActiveUsersCount,
-                        inactiveUserCount: result.Data[0].UnactiveUsersCount,
+                        inactiveUserCount: result.Data[0].UnActiveUsersCount,
                         topReadNews: JSON.parse(result.Data[0].Top20MostReadNews).slice(0, 10),
                         topCommentNews: JSON.parse(result.Data[0].Top20MostCommentNews).slice(0, 10),
                         topViewVideos: JSON.parse(result.Data[0].Top20MostViewVideo).slice(0, 10),
                         topCommentVideos: JSON.parse(result.Data[0].Top20MostCommentVideo).slice(0, 10),
                     }, () => {
-                        console.log(this.state.hotPosts)
+                        console.log(this.state.activeUserCount)
                     })
                 } else if (result.Message === "Success" && result.Data === null) {
                     this.addNoti.addNotification("danger", "Không tìm thấy dữ liệu thống kê người dùng và các bài đăng Hot");
@@ -281,7 +281,7 @@ class Dashboard extends Component {
         })
     }
 
-    //Top Comment News
+    //Top Comment Videos
     selecteTopCommentVideosPage(selectedPage) {
         if (this.state.topCommentVideosMode === 20) {
             this.setState({
@@ -340,9 +340,10 @@ class Dashboard extends Component {
                         downloadHTMLCompletedStatusStatistic: [],
                         etlErrorStatusStatistic: [],
                         etlCompletedStatusStatistic: [],
+                        downloadMediaStatusStatistic: [],
                         allCompleteStatus: [],
-                        cmsUpdatedStatus: []
-
+                        cmsUpdatedStatus: [],
+                        cmsNotFoundStatus: [],
                     })
                 }
             }).catch((err) => {
@@ -357,8 +358,10 @@ class Dashboard extends Component {
         const downloadHTMLCompletedStatus = []
         const etlErrorStatus = []
         const etlCompletedStatus = []
+        const downloadMediaStatus = []
         const allCompleteStatus = []
         const cmsUpdatedStatus = []
+        const cmsNotFoundStatus = []
 
         dataSorted.forEach(element => {
             publishers.push(element.Publisher)
@@ -366,8 +369,10 @@ class Dashboard extends Component {
             downloadHTMLCompletedStatus.push(element.TotalByStatus[4])
             etlErrorStatus.push(element.TotalByStatus[6])
             etlCompletedStatus.push(element.TotalByStatus[7])
+            downloadMediaStatus.push(element.TotalByStatus[8] + element.TotalByStatus[9] + element.TotalByStatus[10] + element.TotalByStatus[11])
             allCompleteStatus.push(element.TotalByStatus[12])
             cmsUpdatedStatus.push(element.TotalByStatus[13])
+            cmsNotFoundStatus.push(element.TotalByStatus[14])
         });
 
         this.setState({
@@ -377,18 +382,21 @@ class Dashboard extends Component {
             downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
             etlErrorStatusStatistic: etlErrorStatus,
             etlCompletedStatusStatistic: etlCompletedStatus,
+            downloadMediaStatusStatistic: downloadMediaStatus,
             allCompleteStatusStatistic: allCompleteStatus,
-            cmsUpdatedStatusStatistic: cmsUpdatedStatus
+            cmsUpdatedStatusStatistic: cmsUpdatedStatus,
+            cmsNotFoundStatusStatistic: cmsNotFoundStatus
         })
     }
 
     fromDateStatusChange = date => {
-        if (date !== null) {
-            this.getCrawlStatusStatistic(date)
-            this.setState({
-                fromDatePickedByStatus: date,
-            })
-        }
+        this.setState({
+            fromDatePickedByStatus: date,
+        }, () =>{  
+            if (date !== null) {
+                this.getCrawlStatusStatistic(date)
+            }
+        })
     }
 
     showCrawlStatusStatisticChart() {
@@ -423,7 +431,7 @@ class Dashboard extends Component {
                 },
                 itemMarginBottom: 5
             },
-            colors: ['#4dbd74', '#0900ff', '#00ff59', '#ff0300', '#00c6ff', '#ffbf00'],
+            colors: ['#2f353a', '#4dbd74', '#0900ff', '#73818f', '#00ff59', '#ff0300', '#00c6ff', '#ffbf00'],
             credits: {
                 enabled: false
             },
@@ -433,12 +441,18 @@ class Dashboard extends Component {
                 }
             },
             series: [{
+                name: 'CMS updated error',
+                data: this.state.cmsNotFoundStatusStatistic
+            },{
                 name: 'CMS updated',
                 data: this.state.cmsUpdatedStatusStatistic
             }, {
                 name: 'All completed',
                 data: this.state.allCompleteStatusStatistic
             }, {
+                name: 'Download Media',
+                data: this.state.downloadMediaStatusStatistic
+            },{
                 name: 'ETL completed',
                 data: this.state.etlCompletedStatusStatistic
             }, {
@@ -488,9 +502,13 @@ class Dashboard extends Component {
         } else if (orderOpt === 5) {
             return data.sort(this.compareByStatusETLCompleted)
         } else if (orderOpt === 6) {
-            return data.sort(this.compareByStatusAllCompleted)
+            return data.sort(this.compareByStatusDownloadMedia)
         } else if (orderOpt === 7) {
+            return data.sort(this.compareByStatusAllCompleted)
+        } else if (orderOpt === 8) {
             return data.sort(this.compareByStatusCmsUpdated)
+        } else if (orderOpt === 9) {
+            return data.sort(this.compareByStatusCmsNotFound)
         }
     }
 
@@ -505,8 +523,8 @@ class Dashboard extends Component {
     }
 
     compareByStatusCrawlError(a, b) {
-        const A = a.TotalByStatus[constant.StatusCrawlError]
-        const B = b.TotalByStatus[constant.StatusCrawlError]
+        const A = a.TotalByStatus[2]
+        const B = b.TotalByStatus[2]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -515,8 +533,8 @@ class Dashboard extends Component {
     }
 
     compareByStatusCrawlCompleted(a, b) {
-        const A = a.TotalByStatus[constant.StatusCrawlCompleted - 5]
-        const B = b.TotalByStatus[constant.StatusCrawlCompleted - 5]
+        const A = a.TotalByStatus[4]
+        const B = b.TotalByStatus[4]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -525,8 +543,8 @@ class Dashboard extends Component {
     }
 
     compareByStatusETLError(a, b) {
-        const A = a.TotalByStatus[constant.StatusETLError - 5]
-        const B = b.TotalByStatus[constant.StatusETLError - 5]
+        const A = a.TotalByStatus[6]
+        const B = b.TotalByStatus[6]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -535,8 +553,18 @@ class Dashboard extends Component {
     }
 
     compareByStatusETLCompleted(a, b) {
-        const A = a.TotalByStatus[constant.StatusETLCompleted - 12]
-        const B = b.TotalByStatus[constant.StatusETLCompleted - 12]
+        const A = a.TotalByStatus[7]
+        const B = b.TotalByStatus[7]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusDownloadMedia(a, b) {
+        const A = a.TotalByStatus[8] + a.TotalByStatus[9] + a.TotalByStatus[10] + a.TotalByStatus[11] 
+        const B = b.TotalByStatus[8] + b.TotalByStatus[9] + b.TotalByStatus[10] + b.TotalByStatus[11] 
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -545,8 +573,8 @@ class Dashboard extends Component {
     }
 
     compareByStatusAllCompleted(a, b) {
-        const A = a.TotalByStatus[constant.StatusAllCompleted - 18]
-        const B = b.TotalByStatus[constant.StatusAllCompleted - 18]
+        const A = a.TotalByStatus[12]
+        const B = b.TotalByStatus[12]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -555,8 +583,18 @@ class Dashboard extends Component {
     }
 
     compareByStatusCmsUpdated(a, b) {
-        const A = a.TotalByStatus[constant.StatusCmsUpdated - 27]
-        const B = b.TotalByStatus[constant.StatusCmsUpdated - 27]
+        const A = a.TotalByStatus[13]
+        const B = b.TotalByStatus[13]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusCmsNotFound(a, b) {
+        const A = a.TotalByStatus[14]
+        const B = b.TotalByStatus[14]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -640,12 +678,13 @@ class Dashboard extends Component {
     }
 
     fromDateErrorCodeChange = date => {
-        if (date !== null) {
-            this.getPostErrorCodeStatistic(date)
-            this.setState({
-                fromDatePickedByErrorCode: date,
-            })
-        }
+        this.setState({
+            fromDatePickedByErrorCode: date,
+        },()=>{
+            if (date !== null) {
+                this.getPostErrorCodeStatistic(date)
+            }
+        })
     }
 
     showErrorCodeStatisticChart() {
@@ -927,7 +966,7 @@ class Dashboard extends Component {
             <div className="animated fadeIn">
                 <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
                 <Card>
-                    <CardHeader>
+                    <CardHeader style={{ backgroundColor: '#d7efff' }}>
                         <i className="fa fa-user-o"></i> Thống kê nguời dùng
                     </CardHeader>
                     <CardBody>
@@ -938,16 +977,16 @@ class Dashboard extends Component {
                         </Row>
                         <FormGroup row>
                             <Col md={{ size: 4, offset: 2 }}>
-                                <Widget04 icon="icon-people" color="primary" header={this.state.activeUser.toString()} value="100" invert>ACTIVE USERS</Widget04>
+                                <Widget04 icon="icon-people" color="primary" header={this.state.activeUserCount.toString()} value="100" invert>ACTIVE USERS</Widget04>
                             </Col>
                             <Col md={{ size: 4 }}>
-                                <Widget04 icon="icon-user-follow" color="info" header={this.state.registerUser.toString()} value="100" invert>INACTIVE USERS</Widget04>
+                                <Widget04 icon="icon-user-follow" color="info" header={this.state.inactiveUserCount.toString()} value="100" invert>INACTIVE USERS</Widget04>
                             </Col>
                         </FormGroup>
                     </CardBody>
                 </Card>
                 <Card>
-                    <CardHeader>
+                    <CardHeader style={{ backgroundColor: '#d7efff' }}>
                         <i className="fa fa-newspaper-o"></i> Thống kê quá trình Crwal
                     </CardHeader>
                     <CardBody>
@@ -971,8 +1010,8 @@ class Dashboard extends Component {
                 <Row>
                     <Col md={{ size: 6 }}>
                         <Card>
-                            <CardHeader>
-                                <i className="fa fa-user-o"></i> Thống kê bài đăng nhiều lượt đọc nhất
+                            <CardHeader style={{ backgroundColor: '#d7efff' }}>
+                                <i className="fa fa-newspaper-o"></i> Thống kê bài đăng nhiều lượt đọc nhất
                         </CardHeader>
                             <CardBody>
                                 <ButtonDropdown className="left-emerged" isOpen={this.state.topReadNewsOptionOpen} toggle={this.topReadNewsOptionToggle.bind(this)}>
@@ -1012,8 +1051,8 @@ class Dashboard extends Component {
 
                     <Col md={{ size: 6 }}>
                         <Card>
-                            <CardHeader>
-                                <i className="fa fa-user-o"></i> Thống kê bài đăng nhiều lượt comment nhất
+                            <CardHeader style={{ backgroundColor: '#d7efff' }}>
+                                <i className="fa fa-newspaper-o"></i> Thống kê bài đăng nhiều lượt comment nhất
                         </CardHeader>
                             <CardBody>
                                 <ButtonDropdown className="left-emerged" isOpen={this.state.topCommentNewsOptionOpen} toggle={this.topCommentNewsOptionToggle.bind(this)}>
@@ -1055,8 +1094,8 @@ class Dashboard extends Component {
                 <Row>
                     <Col md={{ size: 6 }}>
                         <Card>
-                            <CardHeader>
-                                <i className="fa fa-user-o"></i> Thống kê video nhiều lượt xem nhất
+                            <CardHeader style={{ backgroundColor: '#d7efff' }}>
+                                <i className="fa fa-file-video-o"></i> Thống kê video nhiều lượt xem nhất
                         </CardHeader>
                             <CardBody>
                                 <ButtonDropdown className="left-emerged" isOpen={this.state.topViewVideosOptionOpen} toggle={this.topViewVideosOptionToggle.bind(this)}>
@@ -1096,8 +1135,8 @@ class Dashboard extends Component {
 
                     <Col md={{ size: 6 }}>
                         <Card>
-                            <CardHeader>
-                                <i className="fa fa-user-o"></i> Thống kê video nhiều lượt comment nhất
+                            <CardHeader style={{ backgroundColor: '#d7efff' }}>
+                                <i className="fa fa-file-video-o"></i> Thống kê video nhiều lượt comment nhất 
                         </CardHeader>
                             <CardBody>
                                 <ButtonDropdown className="left-emerged" isOpen={this.state.topCommentVideosOptionOpen} toggle={this.topCommentVideosOptionToggle.bind(this)}>
