@@ -323,7 +323,8 @@ class Dashboard extends Component {
     //Build Statistic by Status Chart
 
     getCrawlStatusStatistic(fromDatePickedByStatus) {
-        let fromDate = fromDatePickedByStatus.getFullYear() + "-" + (fromDatePickedByStatus.getMonth() + 1) + "-" + fromDatePickedByStatus.getDate();
+        let fromDate = fromDatePickedByStatus.getFullYear() + "-" + (fromDatePickedByStatus.getMonth() + 1) + "-" + fromDatePickedByStatus.getDate() + " " + fromDatePickedByStatus.getHours() + ":" + fromDatePickedByStatus.getMinutes() + ":00" ;
+        console.log(fromDate)
         this._dashboardService.getCrawlStatusStatistic(fromDate)
             .then((result) => {
                 if (result.Message === "Success" && result.Data !== null) {
@@ -607,7 +608,7 @@ class Dashboard extends Component {
     /////////////////////////////////////////////////////////
     // Build ErrorCode Statistic Chart 
     getPostErrorCodeStatistic(fromDatePickedByErrorCode) {
-        let fromDate = fromDatePickedByErrorCode.getFullYear() + "-" + (fromDatePickedByErrorCode.getMonth() + 1) + "-" + fromDatePickedByErrorCode.getDate();
+        let fromDate = fromDatePickedByErrorCode.getFullYear() + "-" + (fromDatePickedByErrorCode.getMonth() + 1) + "-" + fromDatePickedByErrorCode.getDate()  + " " + fromDatePickedByErrorCode.getHours() + ":" + fromDatePickedByErrorCode.getMinutes() + ":00" ;
         this._dashboardService.getPostErrorCodeStatistic(fromDate)
             .then((result) => {
                 if (result.Message === "Success" && result.Data !== null) {
