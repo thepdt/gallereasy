@@ -47,6 +47,11 @@ export default {
                     url: '/manage/hotNews',
                     icon: 'fa fa-newspaper-o',
                 },
+                {
+                    name: 'Phiên bản',
+                    url: '/manage/versions',
+                    icon: 'fa fa-newspaper-o',
+                },
             ],
         }
     ],

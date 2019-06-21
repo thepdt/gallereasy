@@ -324,7 +324,6 @@ class Dashboard extends Component {
 
     getCrawlStatusStatistic(fromDatePickedByStatus) {
         let fromDate = fromDatePickedByStatus.getFullYear() + "-" + (fromDatePickedByStatus.getMonth() + 1) + "-" + fromDatePickedByStatus.getDate() + " " + fromDatePickedByStatus.getHours() + ":" + fromDatePickedByStatus.getMinutes() + ":00" ;
-        console.log(fromDate)
         this._dashboardService.getCrawlStatusStatistic(fromDate)
             .then((result) => {
                 if (result.Message === "Success" && result.Data !== null) {
