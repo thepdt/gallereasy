@@ -23,6 +23,7 @@ class Versions extends Component {
             forceUpdate: "",
             description: "",
             createdAt: "",
+            lastUpdatedAt: "",
         };
         this.showVersionDetail = this.showVersionDetail.bind(this);
 
@@ -68,6 +69,7 @@ class Versions extends Component {
             forceUpdate: "",
             description: "",
             createdAt: "",
+            lastUpdatedAt: "",
         });
     }
 
@@ -109,7 +111,8 @@ class Versions extends Component {
             frag: versionSelected.Frag,
             forceUpdate: versionSelected.ForceUpdate,
             description: versionSelected.Description,
-            createdAt: versionSelected.CreatedAt
+            createdAt: versionSelected.CreatedAt,
+            lastUpdatedAt: versionSelected.LastUpdatedAt,
         });
     }
 
@@ -309,13 +312,14 @@ class Versions extends Component {
                                                         <span className="label-text"></span>
                                                     </label>
                                                 </th>
-                                                <th scope="col" width="15%" className="">Tên</th>
-                                                <th scope="col" width="10%" className="centered">Version build</th>
-                                                <th scope="col" width="10%" className="centered">Trạng thái</th>
-                                                <th scope="col" width="10%" className="centered">Frag</th>
-                                                <th scope="col" width="10%" className="centered">Force update</th>
-                                                <th scope="col" width="21%" className="">Mô tả</th>
-                                                <th scope="col" width="21%" className="">Ngày tạo</th>
+                                                <th scope="col" width="10%" className="centered">Tên</th>
+                                                <th scope="col" width="9%" className="centered">Version build</th>
+                                                <th scope="col" width="9%" className="centered">Trạng thái</th>
+                                                <th scope="col" width="7%" className="centered">Frag</th>
+                                                <th scope="col" width="9%" className="centered">Force update</th>
+                                                <th scope="col" width="19%" className="centered">Mô tả</th>
+                                                <th scope="col" width="17%" className="centered">Ngày khởi tạo</th>
+                                                <th scope="col" width="17%" className="centered">Ngày update cuối</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -336,6 +340,7 @@ class Versions extends Component {
                                                     <td className="centered">{version.ForceUpdate}</td>
                                                     <td>{version.Description}</td>
                                                     <td>{version.CreatedAt}</td>
+                                                    <td>{version.LastUpdatedAt}</td>
                                                 </tr>)
                                             )}
                                         </tbody>
@@ -401,14 +406,24 @@ class Versions extends Component {
                                 </Col>
                             </FormGroup>
                             {!this.state.createModalMode ?
-                                (<FormGroup row>
-                                    <Col md="4" xs="12">
-                                        <Label htmlFor="createdat-input">Ngày khởi tạo:</Label>
-                                    </Col>
-                                    <Col md="8" xs="12">
-                                        <Input type="text" id="createdat-input" name="createdat-input" value={this.state.createdAt} readOnly />
-                                    </Col>
-                                </FormGroup>)
+                                (<>
+                                    <FormGroup row>
+                                        <Col md="4" xs="12">
+                                            <Label htmlFor="createdat-input">Ngày khởi tạo:</Label>
+                                        </Col>
+                                        <Col md="8" xs="12">
+                                            <Input type="text" id="createdat-input" name="createdat-input" value={this.state.createdAt} readOnly />
+                                        </Col>
+                                    </FormGroup>
+                                    <FormGroup row>
+                                        <Col md="4" xs="12">
+                                            <Label htmlFor="lastupdatedat-input">Ngày update cuối:</Label>
+                                        </Col>
+                                        <Col md="8" xs="12">
+                                            <Input type="text" id="lastupdatedat-input" name="createlastupdatedatdat-input" value={this.state.lastUpdatedAt} readOnly />
+                                        </Col>
+                                    </FormGroup>
+                                </>)
                                 : null
                             }
                         </ModalBody>
