@@ -1,34 +1,33 @@
-import api from './../../../Environment'
 
 class VersionService {
     getVersions = () => {
-        const url = api.apiManage.getBaseURL() + "/version/list"
+        const url = process.env.REACT_APP_BASE_URL_MANAGE + "/version/list"
         return fetch(url).then(res => res.json())
     }
 
     createVersion(version) {
-        const url =  api.apiManage.getBaseURL() + "/version/add";
+        const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/version/add";
         return fetch(url, {
             method: 'POST',
-            headers: api.apiManage.headers,
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify(version)
         }).then(res => res.json());
     }
 
     updateVersion(version) {
-        const url =  api.apiManage.getBaseURL() + "/version/update";
+        const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/version/update";
         return fetch(url, {
             method: 'PUT',
-            headers: api.apiManage.headers,
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify(version)
         }).then(res => res.json());
     }
 
     deleteVersion(id) {
-        const url =  api.apiManage.getBaseURL() + "/version/remove/" + id;
+        const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/version/remove/" + id;
         return fetch(url, {
             method: 'DELETE',
-            headers: api.apiManage.headers,
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         }).then(res => res.json());
     }
 }

@@ -1,35 +1,33 @@
-import api from './../../../Environment'
-
 class CategoryService {
     getCategories = () => {
-        const url = api.apiManage.getBaseURL() + "/news/categories"
+        const url = process.env.REACT_APP_BASE_URL_MANAGE + "/news/categories"
         return fetch(url).then(res => res.json())
     }
 
     createCategory(category) {
-        const url =  api.apiManage.getBaseURL() + "/news/categories";
+        const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/news/categories";
         // console.log(headers);
         return fetch(url, {
             method: 'POST',
-            headers: api.apiManage.headers,
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify(category)
         }).then(res => res.json());
     }
 
     updateCategory(category) {
-        const url =  api.apiManage.getBaseURL() + "/news/categories";
+        const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/news/categories";
         return fetch(url, {
             method: 'PUT',
-            headers: api.apiManage.headers,
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify(category)
         }).then(res => res.json());
     }
 
     deleteCategory(id) {
-        const url =  api.apiManage.getBaseURL() + "/news/categories/" + id;
+        const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/news/categories/" + id;
         return fetch(url, {
             method: 'DELETE',
-            headers: api.apiManage.headers,
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         }).then(res => res.json());
     }
 }

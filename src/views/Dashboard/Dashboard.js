@@ -987,7 +987,7 @@ class Dashboard extends Component {
                 </Card>
                 <Card>
                     <CardHeader style={{ backgroundColor: '#d7efff' }}>
-                        <i className="fa fa-newspaper-o"></i> Thống kê quá trình Crwal
+                        <i className="fa fa-newspaper-o"></i> Thống kê quá trình Crawl
                     </CardHeader>
                     <CardBody>
                         <Nav tabs>
