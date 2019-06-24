@@ -19,8 +19,7 @@ class Versions extends Component {
             versionName: "",
             versionBuild: "",
             status: "",
-            frag: "",
-            forceUpdate: "",
+            forceUpdated: "",
             description: "",
             createdAt: "",
             lastUpdatedAt: "",
@@ -65,8 +64,7 @@ class Versions extends Component {
             versionName: "",
             versionBuild: "",
             status: "",
-            frag: "",
-            forceUpdate: "",
+            forceUpdated: "",
             description: "",
             createdAt: "",
             lastUpdatedAt: "",
@@ -78,8 +76,7 @@ class Versions extends Component {
             VersionName: this.state.versionName,
             VersionBuild: Number(this.state.versionBuild),
             Status: Number(this.state.status),
-            Frag: Number(this.state.frag),
-            ForceUpdate: Number(this.state.forceUpdate),
+            ForceUpdated: Number(this.state.forceUpdated),
             Description: this.state.description,
         }
 
@@ -108,8 +105,7 @@ class Versions extends Component {
             versionName: versionSelected.VersionName,
             versionBuild: versionSelected.VersionBuild,
             status: versionSelected.Status,
-            frag: versionSelected.Frag,
-            forceUpdate: versionSelected.ForceUpdate,
+            forceUpdated: versionSelected.ForceUpdated,
             description: versionSelected.Description,
             createdAt: versionSelected.CreatedAt,
             lastUpdatedAt: versionSelected.LastUpdatedAt,
@@ -122,8 +118,7 @@ class Versions extends Component {
             VersionName: this.state.versionName,
             VersionBuild: Number(this.state.versionBuild),
             Status: Number(this.state.status),
-            Frag: Number(this.state.frag),
-            ForceUpdate: Number(this.state.forceUpdate),
+            ForceUpdated: Number(this.state.forceUpdated),
             Description: this.state.description,
         }
 
@@ -265,15 +260,9 @@ class Versions extends Component {
         })
     }
 
-    getFrag(event) {
+    getForceUpdated(event) {
         this.setState({
-            frag: event.target.value
-        })
-    }
-
-    getForceUpdate(event) {
-        this.setState({
-            forceUpdate: event.target.value
+            forceUpdated: event.target.value
         })
     }
 
@@ -312,11 +301,10 @@ class Versions extends Component {
                                                         <span className="label-text"></span>
                                                     </label>
                                                 </th>
-                                                <th scope="col" width="10%" className="centered">Tên</th>
+                                                <th scope="col" width="17%" className="centered">Tên</th>
                                                 <th scope="col" width="9%" className="centered">Version build</th>
                                                 <th scope="col" width="9%" className="centered">Trạng thái</th>
-                                                <th scope="col" width="7%" className="centered">Frag</th>
-                                                <th scope="col" width="9%" className="centered">Force update</th>
+                                                <th scope="col" width="9%" className="centered">Force updated</th>
                                                 <th scope="col" width="19%" className="centered">Mô tả</th>
                                                 <th scope="col" width="17%" className="centered">Ngày khởi tạo</th>
                                                 <th scope="col" width="17%" className="centered">Ngày update cuối</th>
@@ -336,8 +324,7 @@ class Versions extends Component {
                                                     </td>
                                                     <td className="centered">{version.VersionBuild}</td>
                                                     <td className="centered">{version.Status}</td>
-                                                    <td className="centered">{version.Frag}</td>
-                                                    <td className="centered">{version.ForceUpdate}</td>
+                                                    <td className="centered">{version.ForceUpdated}</td>
                                                     <td>{version.Description}</td>
                                                     <td>{version.CreatedAt}</td>
                                                     <td>{version.LastUpdatedAt}</td>
@@ -381,20 +368,11 @@ class Versions extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4" xs="12">
-                                    <Label htmlFor="frag-input" className="title-required">Frag:</Label>
+                                    <Label htmlFor="forceupdated-input" className="title-required">Force updated:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="number" id="frag-input" name="frag-input" value={this.state.frag} onChange={(e) => this.getFrag(e)} invalid={(Number(this.state.frag) < 0) || (this.state.frag === "")} />
-                                    <FormFeedback valid={false}>Frag không được bỏ trống</FormFeedback>
-                                </Col>
-                            </FormGroup>
-                            <FormGroup row>
-                                <Col md="4" xs="12">
-                                    <Label htmlFor="forceupdate-input" className="title-required">Force update:</Label>
-                                </Col>
-                                <Col md="8" xs="12">
-                                    <Input type="number" id="forceupdate-input" name="forceupdate-input" value={this.state.forceUpdate} onChange={(e) => this.getForceUpdate(e)} invalid={(Number(this.state.forceUpdate) < 0) || (this.state.forceUpdate === "")} />
-                                    <FormFeedback valid={false}>Force update không được bỏ trống</FormFeedback>
+                                    <Input type="number" id="forceupdated-input" name="forceupdated-input" value={this.state.forceUpdated} onChange={(e) => this.getForceUpdated(e)} invalid={(Number(this.state.forceUpdated) < 0) || (this.state.forceUpdated === "")} />
+                                    <FormFeedback valid={false}>Force updated không được bỏ trống</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -429,9 +407,9 @@ class Versions extends Component {
                         </ModalBody>
                         <ModalFooter>
                             {this.state.createModalMode ?
-                                <Button color="primary" onClick={this.createVersion.bind(this)} disabled={(this.state.versionName === "") || (this.state.versionBuild === "") || (this.state.frag === "") || (Number(this.state.frag) < 0) || (this.state.status === "") || (Number(this.state.status) < 0) || (this.state.forceUpdate === "") || (Number(this.state.forceUpdate) < 0) || (this.state.description === "")}>Thêm mới</Button>
+                                <Button color="primary" onClick={this.createVersion.bind(this)} disabled={(this.state.versionName === "") || (this.state.versionBuild === "") || (this.state.status === "") || (Number(this.state.status) < 0) || (this.state.forceUpdated === "") || (Number(this.state.forceUpdated) < 0) || (this.state.description === "")}>Thêm mới</Button>
                                 :
-                                <Button color="primary" onClick={this.updateVersion.bind(this)} disabled={(this.state.versionName === "") || (this.state.versionBuild === "") || (this.state.frag === "") || (Number(this.state.frag) < 0) || (this.state.status === "") || (Number(this.state.status) < 0) || (this.state.forceUpdate === "") || (Number(this.state.forceUpdate) < 0) || (this.state.description === "")}>Cập nhật</Button>
+                                <Button color="primary" onClick={this.updateVersion.bind(this)} disabled={(this.state.versionName === "") || (this.state.versionBuild === "") || (this.state.status === "") || (Number(this.state.status) < 0) || (this.state.forceUpdated === "") || (Number(this.state.forceUpdated) < 0) || (this.state.description === "")}>Cập nhật</Button>
                             }
                             <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                         </ModalFooter>
