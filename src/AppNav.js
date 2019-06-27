@@ -50,7 +50,7 @@ export default {
                 {
                     name: 'Phiên bản',
                     url: '/manage/versions',
-                    icon: 'fa fa-newspaper-o',
+                    icon: 'fa fa-code-fork',
                 },
             ],
         }

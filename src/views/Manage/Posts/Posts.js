@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Badge, Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import MultiSelectReact from 'multi-select-react';
 import Textarea from 'react-textarea-autosize';
+import LoadingOverlay from 'react-loading-overlay'
+import { RingLoader } from 'react-spinners';
 import PostService from './PostService';
 import PaginationComponent from "react-reactstrap-pagination";
 import PublisherService from './../Publishers/PublisherService';
@@ -38,6 +40,8 @@ class Posts extends Component {
         super(props);
 
         this.state = {
+            loading: true,
+
             posts: [],
             publishers: [],
             checkedPosts: [],
@@ -127,11 +131,13 @@ class Posts extends Component {
                         element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
                     });
                     this.setState({
+                        loading: false,
                         posts: result.Data
                     })
                 } else if (result.Message === "Success" && result.Data == null) {
                     this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
                     this.setState({
+                        loading: false,
                         posts: []
                     })
                 }
@@ -141,48 +147,60 @@ class Posts extends Component {
     }
 
     getPostByTitle(text) {
-        this._postService.getPostByTitle(text)
-            .then((result) => {
-                if (result.Message === "Success" && result.Data !== null) {
-                    result.Data.forEach(element => {
-                        element.checked = false
-                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
-                    });
-                    this.setState({
-                        posts: result.Data
-                    })
-                } else if (result.Message === "Success" && result.Data === null) {
-                    this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
-                    this.setState({
-                        posts: []
-                    })
-                }
-            }).catch((err) => {
-                console.log("error: " + err);
-            });
+        this.setState({
+            loading: true
+        }, () => {
+            this._postService.getPostByTitle(text)
+                .then((result) => {
+                    if (result.Message === "Success" && result.Data !== null) {
+                        result.Data.forEach(element => {
+                            element.checked = false
+                            element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
+                        });
+                        this.setState({
+                            loading: false,
+                            posts: result.Data
+                        })
+                    } else if (result.Message === "Success" && result.Data === null) {
+                        this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
+                        this.setState({
+                            loading: false,
+                            posts: []
+                        })
+                    }
+                }).catch((err) => {
+                    console.log("error: " + err);
+                });
+        })
     }
 
     //get posts by publisher
     getPostsByPublisher(publisherId, paggeIndex) {
-        this._postService.getPostsByPublisher(publisherId, paggeIndex)
-            .then((result) => {
-                if (result.Message === "Success" && result.Data !== null) {
-                    result.Data.forEach(element => {
-                        element.checked = false
-                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
-                    });
-                    this.setState({
-                        posts: result.Data
-                    })
-                } else if (result.Message === "Success" && result.Data === null) {
-                    this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
-                    this.setState({
-                        posts: []
-                    })
-                }
-            }).catch((err) => {
-                console.log("error: " + err);
-            });
+        this.setState({
+            loading: true
+        }, () => {
+            this._postService.getPostsByPublisher(publisherId, paggeIndex)
+                .then((result) => {
+                    if (result.Message === "Success" && result.Data !== null) {
+                        result.Data.forEach(element => {
+                            element.checked = false
+                            element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
+                        });
+                        this.setState({
+                            loading: false,
+                            posts: result.Data
+                        })
+                    } else if (result.Message === "Success" && result.Data === null) {
+                        this.addNoti.addNotification("danger", "Không có dữ liệu được tìm thấy");
+                        this.setState({
+                            loading: false,
+                            posts: []
+                        })
+                    }
+                }).catch((err) => {
+                    console.log("error: " + err);
+                });
+        })
     }
 
     //get publishers
@@ -494,19 +512,20 @@ class Posts extends Component {
 
     deletePost() {
         if (this.state.checkedPosts.length !== 0) {
-            this._postService.deletePost(this.state.checkedPosts[0])
-                .then((result) => {
-                    if (result.Message === "Success") {
-                        const _posts = this.state.posts
-                        const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0])
-                        _posts.splice(index, 1);
-                        this.setState({
-                            posts: _posts
-                        })
-                    }
-                }).catch((err) => {
-                    console.log(err);
-                });
+            console.log(this.state.checkedPosts)
+            // this._postService.deletePost(this.state.checkedPosts[0])
+            //     .then((result) => {
+            //         if (result.Message === "Success") {
+            //             const _posts = this.state.posts
+            //             const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0])
+            //             _posts.splice(index, 1);
+            //             this.setState({
+            //                 posts: _posts
+            //             })
+            //         }
+            //     }).catch((err) => {
+            //         console.log(err);
+            //     });
         }
     }
 
@@ -1099,142 +1118,144 @@ class Posts extends Component {
 
         return (
             <div className="animated fadeIn">
-                <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
-                <Row>
-                    <Col>
-                        <Toolbars
-                            onDelete={e => this.deletePost(e)}
-                            onOpenCreateModal={e => this.openCreateModal(e)}
-                            onShowSearchBox={e => this.onShowSearchBox(e)}
-                            onSearch={(opt, text) => this.searchPost(opt, text)}
-                            onClearSearchBox={e => this.onClearSearchBox()}
-                            valueOptions={this.state.publishers}
-                            searchOptions={[{ value: 1, text: "Theo đầu báo" }, { value: 2, text: "Theo tên bài báo" }]}
-                            searchPlaceholder1={'Tìm kiếm theo đầu báo'}
-                            searchPlaceholder2={'Tìm kiếm theo tên bài báo'}
-                        />
-                        <Card>
-                            <CardHeader>
-                                <i className="fa fa-align-justify"></i> Bài đăng
+                <LoadingOverlay active={this.state.loading} spinner={<RingLoader sizeUnit={"px"} size={150} color={'#11c1ff'} />}>
+                    <Notifications onAddNoti={e => this.addNoti = e}></Notifications>
+                    <Row>
+                        <Col>
+                            <Toolbars
+                                onDelete={e => this.deletePost(e)}
+                                onOpenCreateModal={e => this.openCreateModal(e)}
+                                onShowSearchBox={e => this.onShowSearchBox(e)}
+                                onSearch={(opt, text) => this.searchPost(opt, text)}
+                                onClearSearchBox={e => this.onClearSearchBox()}
+                                valueOptions={this.state.publishers}
+                                searchOptions={[{ value: 1, text: "Theo đầu báo" }, { value: 2, text: "Theo tên bài báo" }]}
+                                searchPlaceholder1={'Tìm kiếm theo đầu báo'}
+                                searchPlaceholder2={'Tìm kiếm theo tên bài báo'}
+                            />
+                            <Card>
+                                <CardHeader>
+                                    <i className="fa fa-align-justify"></i> Bài đăng
                             </CardHeader>
-                            <CardBody>
-                                {this.state.searchMode ?
-                                    <Row className="right">
-                                        <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selecteSearchPage.bind(this)} />
-                                    </Row> :
-                                    <Row className="pagination">
-                                        <Col md="3">
-                                            {/* <Row> */}
-                                            <DateTimePicker onChange={this.fromDateChange} value={this.state.fromDatePicked} />
-                                        </Col>
-                                        <Col md="3">
+                                <CardBody>
+                                    {this.state.searchMode ?
+                                        <Row className="right">
+                                            <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selecteSearchPage.bind(this)} />
+                                        </Row> :
+                                        <Row className="pagination">
+                                            <Col md="3">
+                                                {/* <Row> */}
+                                                <DateTimePicker onChange={this.fromDateChange} value={this.state.fromDatePicked} />
+                                            </Col>
+                                            <Col md="3">
 
-                                            <DateTimePicker onChange={this.toDateChange} value={this.state.toDatePicked} />
-                                        </Col>
-                                        <Col md="6">
+                                                <DateTimePicker onChange={this.toDateChange} value={this.state.toDatePicked} />
+                                            </Col>
+                                            <Col md="6" className="right">
 
-                                            <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} />
-                                        </Col>
-                                        {/* </Row> */}
+                                                <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} />
+                                            </Col>
+                                            {/* </Row> */}
 
-                                    </Row>
-                            }
-                                <Table responsive hover bordered striped>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" width="3%" className="centered">
-                                                <label className="checkboxLabel">#
+                                        </Row>
+                                    }
+                                    <Table responsive hover bordered striped>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" width="3%" className="centered">
+                                                    <label className="checkboxLabel">#
                                                     {/* <Input className="form-check-input" type="checkbox" checked={this.state.checkedAll} onChange={() => this.checkAll()} /> */}
-                                                    <span className="label-text"></span>
-                                                </label>
-                                            </th>
-                                            <th scope="col" width="45%" className="centered">Tiêu đề</th>
-                                            <th scope="col" width="10%" className="centered">Đầu báo</th>
-                                            <th scope="col" width="10%" className="centered">Chuyên mục</th>
-                                            <th scope="col" width="10%" className="centered">Chuyên mục AI</th>
-                                            <th scope="col" width="12%" className="centered">Ngày tạo</th>
-                                            <th scope="col" width="10%" className="centered">Trạng thái</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {this.state.posts.map((post, index) =>
-                                            (< tr key={post.Id.toString()} >
-                                                <td className="centered">
-                                                    <label className="checkboxLabel">
-                                                        <Input className="form-check-input" type="checkbox" id={post.Id} name={post.Id} value={post.checked} checked={post.checked} onChange={() => this.checkOne(post.Id)} />
                                                         <span className="label-text"></span>
                                                     </label>
-                                                </td>
-                                                <td>
-                                                    <span className="title" onClick={() => this.showPostPreview(post.Id)}>{post.Title}</span>
-                                                </td>
-                                                <td>{post.Publisher}</td>
-                                                <td>{post.Category}</td>
-                                                <td>{post.CategoryAi}</td>
-                                                <td>{(new Date(post.CreatedAt * 1000)).toLocaleString()}</td>
-                                                <td>{post.statusText}</td>
-                                            </tr>)
-                                        )}
-                                    </tbody>
-                                </Table>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
-                <Modal isOpen={this.state.postDetailModal} toggle={this.closePostDetailModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
-                    <ModalHeader toggle={this.closePostDetailModal.bind(this)}>Bài đăng</ModalHeader>
-                    <ModalBody>
-                        <Nav tabs>
-                            <NavItem>
-                                <NavLink active={this.state.activeTab[0] === 'general'} onClick={() => { this.selectedTab(0, 'general'); }}>
-                                    <i className="fa fa-tasks"></i> &nbsp;Thông tin chung
+                                                </th>
+                                                <th scope="col" width="45%" className="centered">Tiêu đề</th>
+                                                <th scope="col" width="10%" className="centered">Đầu báo</th>
+                                                <th scope="col" width="10%" className="centered">Chuyên mục</th>
+                                                <th scope="col" width="10%" className="centered">Chuyên mục AI</th>
+                                                <th scope="col" width="12%" className="centered">Ngày tạo</th>
+                                                <th scope="col" width="10%" className="centered">Trạng thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {this.state.posts.map((post, index) =>
+                                                (< tr key={post.Id.toString()} >
+                                                    <td className="centered">
+                                                        <label className="checkboxLabel">
+                                                            <Input className="form-check-input" type="checkbox" id={post.Id} name={post.Id} value={post.checked} checked={post.checked} onChange={() => this.checkOne(post.Id)} />
+                                                            <span className="label-text"></span>
+                                                        </label>
+                                                    </td>
+                                                    <td>
+                                                        <span className="title" onClick={() => this.showPostPreview(post.Id)}>{post.Title}</span>
+                                                    </td>
+                                                    <td>{post.Publisher}</td>
+                                                    <td>{post.Category}</td>
+                                                    <td>{post.CategoryAi}</td>
+                                                    <td>{(new Date(post.CreatedAt * 1000)).toLocaleString()}</td>
+                                                    <td>{post.statusText}</td>
+                                                </tr>)
+                                            )}
+                                        </tbody>
+                                    </Table>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Modal isOpen={this.state.postDetailModal} toggle={this.closePostDetailModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
+                        <ModalHeader toggle={this.closePostDetailModal.bind(this)}>Bài đăng</ModalHeader>
+                        <ModalBody>
+                            <Nav tabs>
+                                <NavItem>
+                                    <NavLink active={this.state.activeTab[0] === 'general'} onClick={() => { this.selectedTab(0, 'general'); }}>
+                                        <i className="fa fa-tasks"></i> &nbsp;Thông tin chung
                                 </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink active={this.state.activeTab[0] === 'seo'} onClick={() => { this.selectedTab(0, 'seo'); }}>
-                                    <i className="icon-book-open"></i>&nbsp;SEO
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink active={this.state.activeTab[0] === 'seo'} onClick={() => { this.selectedTab(0, 'seo'); }}>
+                                        <i className="icon-book-open"></i>&nbsp;SEO
                                 </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink active={this.state.activeTab[0] === 'tags'} onClick={() => { this.selectedTab(0, 'tags'); }}>
-                                    <i className="fa fa-tags"></i>&nbsp;Thẻ tags
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink active={this.state.activeTab[0] === 'tags'} onClick={() => { this.selectedTab(0, 'tags'); }}>
+                                        <i className="fa fa-tags"></i>&nbsp;Thẻ tags
                                 </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink active={this.state.activeTab[0] === 'media'} onClick={() => { this.selectedTab(0, 'media'); }}>
-                                    <i className="fa fa-file-video-o"></i>&nbsp;Đa phương tiện
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink active={this.state.activeTab[0] === 'media'} onClick={() => { this.selectedTab(0, 'media'); }}>
+                                        <i className="fa fa-file-video-o"></i>&nbsp;Đa phương tiện
                                 </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink active={this.state.activeTab[0] === 'statistics'} onClick={() => { this.selectedTab(0, 'statistics'); }}>
-                                    <i className="fa fa-line-chart"></i>&nbsp;Thống kê
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink active={this.state.activeTab[0] === 'statistics'} onClick={() => { this.selectedTab(0, 'statistics'); }}>
+                                        <i className="fa fa-line-chart"></i>&nbsp;Thống kê
                                 </NavLink>
-                            </NavItem>
-                        </Nav>
-                        <TabContent activeTab={this.state.activeTab[0]}>
-                            {this.tabPane()}
-                        </TabContent>
+                                </NavItem>
+                            </Nav>
+                            <TabContent activeTab={this.state.activeTab[0]}>
+                                {this.tabPane()}
+                            </TabContent>
 
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button className="left preview-btn" color="danger" onClick={this.backToPreviewPost.bind(this)}>Quay lại</Button>
-                        {this.state.createModalMode ?
-                            <Button color="primary" onClick={this.createPost.bind(this)} >Thêm mới</Button>
-                            :
-                            <Button color="primary" onClick={this.updatePost.bind(this)} disabled={(this.state.publisher === "") || (this.state.category === "") || (this.state.categorySubLevel1 === "") || (this.state.title === "") || (this.state.abstract === "") || (this.state.tags.length === 0)}>Cập nhật</Button>
-                        }
-                        <Button color="secondary" onClick={this.closePostDetailModal.bind(this)}>Hủy</Button>
-                    </ModalFooter>
-                </Modal>
-                <Modal isOpen={this.state.postPreviewModal} toggle={this.closePostPreviewModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
-                    <ModalHeader toggle={this.closePostPreviewModal.bind(this)}>Bài đăng</ModalHeader>
-                    <ModalBody>
-                        {this.showPreview()}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button className="left preview-btn" color="success" onClick={this.showDetailPost.bind(this)}>Sửa</Button>
-                    </ModalFooter>
-                </Modal>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button className="left preview-btn" color="danger" onClick={this.backToPreviewPost.bind(this)}>Quay lại</Button>
+                            {this.state.createModalMode ?
+                                <Button color="primary" onClick={this.createPost.bind(this)} >Thêm mới</Button>
+                                :
+                                <Button color="primary" onClick={this.updatePost.bind(this)} disabled={(this.state.publisher === "") || (this.state.category === "") || (this.state.categorySubLevel1 === "") || (this.state.title === "") || (this.state.abstract === "") || (this.state.tags.length === 0)}>Cập nhật</Button>
+                            }
+                            <Button color="secondary" onClick={this.closePostDetailModal.bind(this)}>Hủy</Button>
+                        </ModalFooter>
+                    </Modal>
+                    <Modal isOpen={this.state.postPreviewModal} toggle={this.closePostPreviewModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
+                        <ModalHeader toggle={this.closePostPreviewModal.bind(this)}>Bài đăng</ModalHeader>
+                        <ModalBody>
+                            {this.showPreview()}
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button className="left preview-btn" color="success" onClick={this.showDetailPost.bind(this)}>Sửa</Button>
+                        </ModalFooter>
+                    </Modal>
+                </LoadingOverlay>
             </div>
         )
     }
