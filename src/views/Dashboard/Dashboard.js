@@ -149,12 +149,10 @@ class Dashboard extends Component {
                         hotPosts: result.Data[0],
                         activeUserCount: result.Data[0].ActiveUsersCount,
                         inactiveUserCount: result.Data[0].UnActiveUsersCount,
-                        topReadNews: JSON.parse(result.Data[0].Top20MostReadNews).slice(0, 10),
-                        topCommentNews: JSON.parse(result.Data[0].Top20MostCommentNews).slice(0, 10),
-                        topViewVideos: JSON.parse(result.Data[0].Top20MostViewVideo).slice(0, 10),
-                        topCommentVideos: JSON.parse(result.Data[0].Top20MostCommentVideo).slice(0, 10),
-                    }, () => {
-                        console.log(this.state.activeUserCount)
+                        topReadNews: result.Data[0].Top20MostReadNews === "null" ? [] : JSON.parse(result.Data[0].Top20MostReadNews).slice(0, 10),
+                        topCommentNews: result.Data[0].Top20MostCommentNews === "null" ? [] : JSON.parse(result.Data[0].Top20MostCommentNews).slice(0, 10),
+                        topViewVideos: result.Data[0].Top20MostViewVideo === "null" ? [] : JSON.parse(result.Data[0].Top20MostViewVideo).slice(0, 10),
+                        topCommentVideos: result.Data[0].Top20MostCommentVideo === "null" ? [] : JSON.parse(result.Data[0].Top20MostCommentVideo).slice(0, 10),
                     })
                 } else if (result.Message === "Success" && result.Data === null) {
                     this.addNoti.addNotification("danger", "Không tìm thấy dữ liệu thống kê người dùng và các bài đăng Hot");
@@ -180,11 +178,11 @@ class Dashboard extends Component {
     selecteTopReadNewsPage(selectedPage) {
         if (this.state.topReadNewsMode === 20) {
             this.setState({
-                topReadNews: JSON.parse(this.state.hotPosts.Top20MostReadNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+                topReadNews: this.state.hotPosts.Top20MostReadNews === "null" ? [] : JSON.parse(this.state.hotPosts.Top20MostReadNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
             });
         } else if (this.state.topReadNewsMode === 50) {
             this.setState({
-                topReadNews: JSON.parse(this.state.hotPosts.Top50MostReadNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+                topReadNews: this.state.hotPosts.Top50MostReadNews === "null" ? [] : JSON.parse(this.state.hotPosts.Top50MostReadNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
             });
         }
     }
@@ -192,13 +190,13 @@ class Dashboard extends Component {
     changeTopReadNewsMode(value, text) {
         if (value === 20) {
             this.setState({
-                topReadNews: JSON.parse(this.state.hotPosts.Top20MostReadNews).slice(0, 10),
+                topReadNews: this.state.hotPosts.Top20MostReadNews === "null" ? [] : JSON.parse(this.state.hotPosts.Top20MostReadNews).slice(0, 10),
                 topReadNewsMode: value,
                 topReadNewsOptionText: text
             })
         } else if (value === 50) {
             this.setState({
-                topReadNews: JSON.parse(this.state.hotPosts.Top50MostReadNews).slice(0, 10),
+                topReadNews: this.state.hotPosts.Top50MostReadNews === "null" ? [] : JSON.parse(this.state.hotPosts.Top50MostReadNews).slice(0, 10),
                 topReadNewsMode: value,
                 topReadNewsOptionText: text
             })
@@ -215,11 +213,11 @@ class Dashboard extends Component {
     selecteTopCommentNewsPage(selectedPage) {
         if (this.state.topCommentNewsMode === 20) {
             this.setState({
-                topCommentNews: JSON.parse(this.state.hotPosts.Top20MostCommentNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+                topCommentNews: this.state.hotPosts.Top20MostCommentNews === "null" ? [] : JSON.parse(this.state.hotPosts.Top20MostCommentNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
             });
         } else if (this.state.topCommentNewsMode === 50) {
             this.setState({
-                topCommentNews: JSON.parse(this.state.hotPosts.Top50MostCommentNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+                topCommentNews: this.state.hotPosts.Top50MostCommentNews === "null" ? [] : JSON.parse(this.state.hotPosts.Top50MostCommentNews).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
             });
         }
     }
@@ -227,13 +225,13 @@ class Dashboard extends Component {
     changeTopCommentNewsMode(value, text) {
         if (value === 20) {
             this.setState({
-                topCommentNews: JSON.parse(this.state.hotPosts.Top20MostCommentNews).slice(0, 10),
+                topCommentNews: this.state.hotPosts.Top20MostCommentNews === "null" ? [] : JSON.parse(this.state.hotPosts.Top20MostCommentNews).slice(0, 10),
                 topCommentNewsMode: value,
                 topCommentNewsOptionText: text
             })
         } else if (value === 50) {
             this.setState({
-                topCommentNews: JSON.parse(this.state.hotPosts.Top50MostCommentNews).slice(0, 10),
+                topCommentNews: this.state.hotPosts.Top50MostCommentNews === "null" ? [] : JSON.parse(this.state.hotPosts.Top50MostCommentNews).slice(0, 10),
                 topCommentNewsMode: value,
                 topCommentNewsOptionText: text
             })
@@ -250,11 +248,11 @@ class Dashboard extends Component {
     selecteTopViewVideosPage(selectedPage) {
         if (this.state.topViewVideosMode === 20) {
             this.setState({
-                topViewVideos: JSON.parse(this.state.hotPosts.Top20MostViewVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+                topViewVideos: this.state.hotPosts.Top20MostViewVideo === "null" ? [] : JSON.parse(this.state.hotPosts.Top20MostViewVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
             });
         } else if (this.state.topViewVideosMode === 50) {
             this.setState({
-                topViewVideos: JSON.parse(this.state.hotPosts.Top50MostViewVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+                topViewVideos: this.state.hotPosts.Top50MostViewVideo === "null" ? [] : JSON.parse(this.state.hotPosts.Top50MostViewVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
             });
         }
     }
@@ -262,13 +260,13 @@ class Dashboard extends Component {
     changeTopViewVideosMode(value, text) {
         if (value === 20) {
             this.setState({
-                topViewVideos: JSON.parse(this.state.hotPosts.Top20MostViewVideo).slice(0, 10),
+                topViewVideos: this.state.hotPosts.Top20MostViewVideo === "null" ? [] : JSON.parse(this.state.hotPosts.Top20MostViewVideo).slice(0, 10),
                 topViewVideosMode: value,
                 topViewVideosOptionText: text
             })
         } else if (value === 50) {
             this.setState({
-                topViewVideos: JSON.parse(this.state.hotPosts.Top50MostViewVideo).slice(0, 10),
+                topViewVideos: this.state.hotPosts.Top50MostViewVideo === "null" ? [] : JSON.parse(this.state.hotPosts.Top50MostViewVideo).slice(0, 10),
                 topViewVideosMode: value,
                 topViewVideosOptionText: text
             })
@@ -285,11 +283,11 @@ class Dashboard extends Component {
     selecteTopCommentVideosPage(selectedPage) {
         if (this.state.topCommentVideosMode === 20) {
             this.setState({
-                topCommentVideos: JSON.parse(this.state.hotPosts.Top20MostCommentVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+                topCommentVideos: this.state.hotPosts.Top20MostCommentVideo === "null" ? [] : JSON.parse(this.state.hotPosts.Top20MostCommentVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
             });
         } else if (this.state.topCommentVideosMode === 50) {
             this.setState({
-                topCommentVideos: JSON.parse(this.state.hotPosts.Top50MostCommentVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
+                topCommentVideos: this.state.hotPosts.Top50MostCommentVideo === "null" ? [] : JSON.parse(this.state.hotPosts.Top50MostCommentVideo).slice((selectedPage - 1) * 10, (selectedPage - 1) * 10 + 10)
             });
         }
     }
@@ -297,13 +295,13 @@ class Dashboard extends Component {
     changeTopCommentVideosMode(value, text) {
         if (value === 20) {
             this.setState({
-                topCommentVideos: JSON.parse(this.state.hotPosts.Top20MostCommentVideo).slice(0, 10),
+                topCommentVideos: this.state.hotPosts.Top20MostCommentVideo === "null" ? [] : JSON.parse(this.state.hotPosts.Top20MostCommentVideo).slice(0, 10),
                 topCommentVideosMode: value,
                 topCommentVideosOptionText: text
             })
         } else if (value === 50) {
             this.setState({
-                topCommentVideos: JSON.parse(this.state.hotPosts.Top50MostCommentVideo).slice(0, 10),
+                topCommentVideos: this.state.hotPosts.Top50MostCommentVideo === "null" ? [] : JSON.parse(this.state.hotPosts.Top50MostCommentVideo).slice(0, 10),
                 topCommentVideosMode: value,
                 topCommentVideosOptionText: text
             })
@@ -906,6 +904,9 @@ class Dashboard extends Component {
     // END Build ErrorCode Statistic Chart 
     /////////////////////////////////////////////////////////
 
+    showPostPreview (postId) {
+        console.log(postId);
+    }
     loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
     selectedTab(tabPane, tab) {
 
