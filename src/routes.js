@@ -42,7 +42,8 @@ const Subcategories = React.lazy(() => import('./views/Manage/Subcategories'));
 const Publishers = React.lazy(() => import('./views/Manage/Publishers/Publishers'));
 const HotNews = React.lazy(() => import('./views/Manage/HotNews'));
 const HotTrends = React.lazy(() => import('./views/Manage/HotTrends'));
-const Versions = React.lazy(() => import('./views/Manage/Versions'));
+const AndroidVersions = React.lazy(() => import('./views/Manage/Versions/Android'));
+const IosVersions = React.lazy(() => import('./views/Manage/Versions/Ios'));
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -95,8 +96,8 @@ const routes = [
     { path: '/manage/publishers', exact: true,  name: 'Publishers', component: Publishers },
     { path: '/manage/hotNews', exact: true,  name: 'HotNews', component: HotNews },
     { path: '/manage/hotTrends', exact: true,  name: 'HotTrends', component: HotTrends },
-    { path: '/manage/versions', exact: true,  name: 'HotTrends', component: Versions },
-
+    { path: '/manage/versions/android', exact: true,  name: 'AndroidVersions', component: AndroidVersions },
+    { path: '/manage/versions/ios', exact: true,  name: 'IosVersions', component: IosVersions },
 ];
 
 export default routes;

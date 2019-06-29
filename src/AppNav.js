@@ -51,6 +51,18 @@ export default {
                     name: 'Phiên bản',
                     url: '/manage/versions',
                     icon: 'fa fa-code-fork',
+                    children: [
+                        {
+                            name: 'Android',
+                            url: '/manage/versions/android',
+                            icon: 'fa fa-android',
+                        },
+                        {
+                            name: 'IOS',
+                            url: '/manage/versions/ios',
+                            icon: 'fa fa-apple',
+                        },
+                    ]
                 },
             ],
         }

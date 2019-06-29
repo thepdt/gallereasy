@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label } from 'reactstrap';
 import VersionService from './VersionService';
-const Toolbars = React.lazy(() => import('./../../../components/Toolbars'));
+const Toolbars = React.lazy(() => import('./../../../../components/Toolbars'));
 
 class Versions extends Component {
     _versionService = new VersionService();
@@ -20,6 +20,7 @@ class Versions extends Component {
             versionBuild: "",
             status: "",
             forceUpdated: "",
+            isNewest: "",
             description: "",
             createdAt: "",
             lastUpdatedAt: "",
@@ -65,6 +66,7 @@ class Versions extends Component {
             versionBuild: "",
             status: "",
             forceUpdated: "",
+            isNewest: "",
             description: "",
             createdAt: "",
             lastUpdatedAt: "",
@@ -77,6 +79,7 @@ class Versions extends Component {
             VersionBuild: Number(this.state.versionBuild),
             Status: Number(this.state.status),
             ForceUpdated: Number(this.state.forceUpdated),
+            IsNewest: Number(this.state.isNewest),
             Description: this.state.description,
         }
 
@@ -106,6 +109,7 @@ class Versions extends Component {
             versionBuild: versionSelected.VersionBuild,
             status: versionSelected.Status,
             forceUpdated: versionSelected.ForceUpdated,
+            isNewest: versionSelected.IsNewest,
             description: versionSelected.Description,
             createdAt: versionSelected.CreatedAt,
             lastUpdatedAt: versionSelected.LastUpdatedAt,
@@ -119,6 +123,7 @@ class Versions extends Component {
             VersionBuild: Number(this.state.versionBuild),
             Status: Number(this.state.status),
             ForceUpdated: Number(this.state.forceUpdated),
+            IsNewest: Number(this.state.isNewest),
             Description: this.state.description,
         }
 
@@ -265,6 +270,12 @@ class Versions extends Component {
             forceUpdated: event.target.value
         })
     }
+    
+    getIsNewest(event) {
+        this.setState({
+            isNewest: event.target.value
+        })
+    }
 
     getDescription(event) {
         this.setState({
@@ -289,7 +300,7 @@ class Versions extends Component {
                         <Col>
                             <Card>
                                 <CardHeader>
-                                    <i className="fa fa-align-justify"></i> Phiên bản
+                                    <i className="fa fa-align-justify"></i> Phiên bản Android
                                 </CardHeader>
                                 <CardBody>
                                     <Table responsive hover bordered striped>
@@ -301,13 +312,14 @@ class Versions extends Component {
                                                         <span className="label-text"></span>
                                                     </label>
                                                 </th>
-                                                <th scope="col" width="17%" className="centered">Tên</th>
+                                                <th scope="col" width="14%" className="centered">Tên</th>
                                                 <th scope="col" width="9%" className="centered">Version build</th>
                                                 <th scope="col" width="9%" className="centered">Trạng thái</th>
                                                 <th scope="col" width="9%" className="centered">Force updated</th>
+                                                <th scope="col" width="9%" className="centered">Phiên bản mới</th>
                                                 <th scope="col" width="19%" className="centered">Mô tả</th>
-                                                <th scope="col" width="17%" className="centered">Ngày khởi tạo</th>
-                                                <th scope="col" width="17%" className="centered">Ngày update cuối</th>
+                                                <th scope="col" width="14%" className="centered">Ngày khởi tạo</th>
+                                                <th scope="col" width="14%" className="centered">Ngày update cuối</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -325,6 +337,7 @@ class Versions extends Component {
                                                     <td className="centered">{version.VersionBuild}</td>
                                                     <td className="centered">{version.Status}</td>
                                                     <td className="centered">{version.ForceUpdated}</td>
+                                                    <td className="centered">{version.IsNewest}</td>
                                                     <td>{version.Description}</td>
                                                     <td>{version.CreatedAt}</td>
                                                     <td>{version.LastUpdatedAt}</td>
@@ -337,7 +350,7 @@ class Versions extends Component {
                         </Col>
                     </Row>
                     <Modal isOpen={this.state.modal} toggle={this.closeModal.bind(this)} className={'modal-lg ' + this.props.className} autoFocus={false}>
-                        <ModalHeader toggle={this.closeModal.bind(this)}>Phiên bản</ModalHeader>
+                        <ModalHeader toggle={this.closeModal.bind(this)}>Phiên bản Android</ModalHeader>
                         <ModalBody className="modal-body">
                             <FormGroup row>
                                 <Col md="4" xs="12">
@@ -377,6 +390,15 @@ class Versions extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4" xs="12">
+                                    <Label htmlFor="isNewest-input" className="title-required">Là phiên bản mới nhất:</Label>
+                                </Col>
+                                <Col md="8" xs="12">
+                                    <Input type="number" id="isNewest-input" name="isNewest-input" value={this.state.isNewest} onChange={(e) => this.getIsNewest(e)} invalid={(Number(this.state.isNewest) < 0) || (this.state.isNewest === "")} />
+                                    <FormFeedback valid={false}>Đây có là phiên bản mới nhất</FormFeedback>
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="4" xs="12">
                                     <Label htmlFor="description-input">Miêu tả:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
@@ -407,9 +429,9 @@ class Versions extends Component {
                         </ModalBody>
                         <ModalFooter>
                             {this.state.createModalMode ?
-                                <Button color="primary" onClick={this.createVersion.bind(this)} disabled={(this.state.versionName === "") || (this.state.versionBuild === "") || (this.state.status === "") || (Number(this.state.status) < 0) || (this.state.forceUpdated === "") || (Number(this.state.forceUpdated) < 0) || (this.state.description === "")}>Thêm mới</Button>
+                                <Button color="primary" onClick={this.createVersion.bind(this)} disabled={(this.state.versionName === "") || (this.state.versionBuild === "") || (this.state.status === "") || (Number(this.state.status) < 0) || (this.state.forceUpdated === "") || (Number(this.state.forceUpdated) < 0) || (this.state.isNewest === "") || (Number(this.state.isNewest) < 0) || (this.state.description === "")}>Thêm mới</Button>
                                 :
-                                <Button color="primary" onClick={this.updateVersion.bind(this)} disabled={(this.state.versionName === "") || (this.state.versionBuild === "") || (this.state.status === "") || (Number(this.state.status) < 0) || (this.state.forceUpdated === "") || (Number(this.state.forceUpdated) < 0) || (this.state.description === "")}>Cập nhật</Button>
+                                <Button color="primary" onClick={this.updateVersion.bind(this)} disabled={(this.state.versionName === "") || (this.state.versionBuild === "") || (this.state.status === "") || (Number(this.state.status) < 0) || (this.state.forceUpdated === "") || (Number(this.state.forceUpdated) < 0) || (this.state.isNewest === "") || (Number(this.state.isNewest) < 0) || (this.state.description === "")}>Cập nhật</Button>
                             }
                             <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                         </ModalFooter>
