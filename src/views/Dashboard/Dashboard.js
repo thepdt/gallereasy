@@ -75,25 +75,44 @@ class Dashboard extends Component {
             fromDatePickedByStatus: addDays(new Date(), -1),
             heightChartByStatus: 0,
             publishersStatisticByStatus: [],
-            downloadHTMLErrorStatusStatistic: [],
+
             downloadHTMLCompletedStatusStatistic: [],
             etlErrorStatusStatistic: [],
             etlCompletedStatusStatistic: [],
-            downloadMediaStatusStatistic: [],
-            allCompleteStatusStatistic: [],
-            cmsUpdatedStatusStatistic: [],
-            cmsNotFoundStatusStatistic: [],
+            downloadMediaErrorStatusStatistic: [],
+            downloadMediaCompletedStatusStatistic: [],
+            genThumImageErrorStatusStatistic: [],
+            genThumImageCompletedStatusStatistic: [],
+            updateMediaLinkErrorStatusStatistic: [],
+            updateMediaLinkCompletedStatusStatistic: [],
+            checkDuplicateErrorStatusStatistic: [],
+            inreviewStatusStatistic: [],
+            checkNoDuplicatedStatusStatistic: [],
+            updateWeightErrorStatusStatistic: [],
+            updateWeightCompletedStatusStatistic: [],
+            cmsUpdateCouchbaseErrorStatusStatistic: [],
+            publishStatusStatistic: [],
+            inTrashStatusStatistic: [],
 
             orderByStatusOptions: [
                 { value: 1, text: "Sắp xếp theo tên đầu báo" },
-                { value: 2, text: "Sắp xếp theo Download HTML Error" },
-                { value: 3, text: "Sắp xếp theo Download HTML Completed" },
-                { value: 4, text: "Sắp xếp theo ETL Error" },
-                { value: 5, text: "Sắp xếp theo ETL Completed" },
-                { value: 6, text: "Sắp xếp theo Download Media" },
-                { value: 7, text: "Sắp xếp theo All Completed" },
-                { value: 8, text: "Sắp xếp theo CMS Updated" },
-                { value: 9, text: "Sắp xếp theo CMS Not Found" }
+                { value: 2, text: "Sắp xếp theo Download HTML Completed" },
+                { value: 3, text: "Sắp xếp theo ETL Error" },
+                { value: 4, text: "Sắp xếp theo ETL Completed" },
+                { value: 5, text: "Sắp xếp theo Download Media Error" },
+                { value: 6, text: "Sắp xếp theo Download Media Completed" },
+                { value: 7, text: "Sắp xếp theo Gen Thumb Image Error" },
+                { value: 8, text: "Sắp xếp theo Gen Thumb Image Completed" },
+                { value: 9, text: "Sắp xếp theo Update Media Link Error" },
+                { value: 10, text: "Sắp xếp theo Update Media Link Completed" },
+                { value: 11, text: "Sắp xếp theo Check Duplicate Error" },
+                { value: 12, text: "Sắp xếp theo Inreview" },
+                { value: 13, text: "Sắp xếp theo Check No Duplicated" },
+                { value: 14, text: "Sắp xếp theo Update Weight Error" },
+                { value: 15, text: "Sắp xếp theo Update Weight Completed" },
+                { value: 16, text: "Sắp xếp theo CMS Update Couchbase Error" },
+                { value: 17, text: "Sắp xếp theo Publish" },
+                { value: 18, text: "Sắp xếp theo In Trash" },
             ],
             orderByStatusOptionOpen: false,
             orderByStatusOption: 4,
@@ -321,7 +340,7 @@ class Dashboard extends Component {
     //Build Statistic by Status Chart
 
     getCrawlStatusStatistic(fromDatePickedByStatus) {
-        let fromDate = fromDatePickedByStatus.getFullYear() + "-" + (fromDatePickedByStatus.getMonth() + 1) + "-" + fromDatePickedByStatus.getDate() + " " + fromDatePickedByStatus.getHours() + ":" + fromDatePickedByStatus.getMinutes() + ":00" ;
+        let fromDate = fromDatePickedByStatus.getFullYear() + "-" + (fromDatePickedByStatus.getMonth() + 1) + "-" + fromDatePickedByStatus.getDate() + " " + fromDatePickedByStatus.getHours() + ":" + fromDatePickedByStatus.getMinutes() + ":00";
         this._dashboardService.getCrawlStatusStatistic(fromDate)
             .then((result) => {
                 if (result.Message === "Success" && result.Data !== null) {
@@ -334,14 +353,24 @@ class Dashboard extends Component {
                     this.setState({
                         heightChartByStatus: 0,
                         publishersStatisticByStatus: [],
-                        downloadHTMLErrorStatusStatistic: [],
+
                         downloadHTMLCompletedStatusStatistic: [],
                         etlErrorStatusStatistic: [],
                         etlCompletedStatusStatistic: [],
-                        downloadMediaStatusStatistic: [],
-                        allCompleteStatus: [],
-                        cmsUpdatedStatus: [],
-                        cmsNotFoundStatus: [],
+                        downloadMediaErrorStatusStatistic: [],
+                        downloadMediaCompletedStatusStatistic: [],
+                        genThumImageErrorStatusStatistic: [],
+                        genThumImageCompletedStatusStatistic: [],
+                        updateMediaLinkErrorStatusStatistic: [],
+                        updateMediaLinkCompletedStatusStatistic: [],
+                        checkDuplicateErrorStatusStatistic: [],
+                        inreviewStatusStatistic: [],
+                        checkNoDuplicatedStatusStatistic: [],
+                        updateWeightErrorStatusStatistic: [],
+                        updateWeightCompletedStatusStatistic: [],
+                        cmsUpdateCouchbaseErrorStatusStatistic: [],
+                        publishStatusStatistic: [],
+                        inTrashStatusStatistic: [],
                     })
                 }
             }).catch((err) => {
@@ -352,45 +381,71 @@ class Dashboard extends Component {
     createStatusStatisticChart(data) {
         const dataSorted = this.sortStatusStatisticData(data, this.state.orderByStatusOption)
         const publishers = []
-        const downloadHTMLErrorStatus = []
         const downloadHTMLCompletedStatus = []
         const etlErrorStatus = []
         const etlCompletedStatus = []
-        const downloadMediaStatus = []
-        const allCompleteStatus = []
-        const cmsUpdatedStatus = []
-        const cmsNotFoundStatus = []
-
-        dataSorted.forEach(element => {
+        const downloadMediaErrorStatus = []
+        const downloadMediaCompletedStatus = []
+        const genThumImageErrorStatus = []
+        const genThumImageCompletedStatus = []
+        const updateMediaLinkErrorStatus = []
+        const updateMediaLinkCompletedStatus = []
+        const checkDuplicateErrorStatus = []
+        const inreviewStatus = []
+        const checkNoDuplicatedStatus = []
+        const updateWeightErrorStatus = []
+        const updateWeightCompletedStatus = []
+        const cmsUpdateCouchbaseErrorStatus = []
+        const publishStatus = []
+        const inTrashStatus = [] 
+     dataSorted.forEach(element => {
             publishers.push(element.Publisher)
-            downloadHTMLErrorStatus.push(element.TotalByStatus[2])
-            downloadHTMLCompletedStatus.push(element.TotalByStatus[4])
-            etlErrorStatus.push(element.TotalByStatus[6])
-            etlCompletedStatus.push(element.TotalByStatus[7])
-            downloadMediaStatus.push(element.TotalByStatus[8] + element.TotalByStatus[9] + element.TotalByStatus[10] + element.TotalByStatus[11])
-            allCompleteStatus.push(element.TotalByStatus[12])
-            cmsUpdatedStatus.push(element.TotalByStatus[13])
-            cmsNotFoundStatus.push(element.TotalByStatus[14])
+            downloadHTMLCompletedStatus.push(element.TotalByStatus[0])
+            etlErrorStatus.push(element.TotalByStatus[1])
+            etlCompletedStatus.push(element.TotalByStatus[2])
+            downloadMediaErrorStatus.push(element.TotalByStatus[3])
+            downloadMediaCompletedStatus.push(element.TotalByStatus[4])
+            genThumImageErrorStatus.push(element.TotalByStatus[5])
+            genThumImageCompletedStatus.push(element.TotalByStatus[6])
+            updateMediaLinkErrorStatus.push(element.TotalByStatus[7])
+            updateMediaLinkCompletedStatus.push(element.TotalByStatus[8])
+            checkDuplicateErrorStatus.push(element.TotalByStatus[9])
+            inreviewStatus.push(element.TotalByStatus[10])
+            checkNoDuplicatedStatus.push(element.TotalByStatus[11])
+            updateWeightErrorStatus.push(element.TotalByStatus[12])
+            updateWeightCompletedStatus.push(element.TotalByStatus[13])
+            cmsUpdateCouchbaseErrorStatus.push(element.TotalByStatus[14])
+            publishStatus.push(element.TotalByStatus[15])
+            inTrashStatus.push(element.TotalByStatus[16])
         });
 
         this.setState({
             heightChartByStatus: 1200,
             publishersStatisticByStatus: publishers,
-            downloadHTMLErrorStatusStatistic: downloadHTMLErrorStatus,
             downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
             etlErrorStatusStatistic: etlErrorStatus,
             etlCompletedStatusStatistic: etlCompletedStatus,
-            downloadMediaStatusStatistic: downloadMediaStatus,
-            allCompleteStatusStatistic: allCompleteStatus,
-            cmsUpdatedStatusStatistic: cmsUpdatedStatus,
-            cmsNotFoundStatusStatistic: cmsNotFoundStatus
+            downloadMediaErrorStatusStatistic: downloadMediaErrorStatus,
+            downloadMediaCompletedStatusStatistic: downloadMediaCompletedStatus,
+            genThumImageErrorStatusStatistic: genThumImageErrorStatus,
+            genThumImageCompletedStatusStatistic: genThumImageCompletedStatus,
+            updateMediaLinkErrorStatusStatistic: updateMediaLinkErrorStatus,
+            updateMediaLinkCompletedStatusStatistic: updateMediaLinkCompletedStatus,
+            checkDuplicateErrorStatusStatistic: checkDuplicateErrorStatus,
+            inreviewStatusStatistic: inreviewStatus,
+            checkNoDuplicatedStatusStatistic: checkNoDuplicatedStatus,
+            updateWeightErrorStatusStatistic: updateWeightErrorStatus,
+            updateWeightCompletedStatusStatistic: updateWeightCompletedStatus,
+            cmsUpdateCouchbaseErrorStatusStatistic: cmsUpdateCouchbaseErrorStatus,
+            publishStatusStatistic: publishStatus,
+            inTrashStatusStatistic: inTrashStatus,
         })
     }
 
     fromDateStatusChange = date => {
         this.setState({
             fromDatePickedByStatus: date,
-        }, () =>{  
+        }, () => {
             if (date !== null) {
                 this.getCrawlStatusStatistic(date)
             }
@@ -429,7 +484,7 @@ class Dashboard extends Component {
                 },
                 itemMarginBottom: 5
             },
-            colors: ['#2f353a', '#4dbd74', '#0900ff', '#73818f', '#00ff59', '#ff0300', '#00c6ff', '#ffbf00'],
+            colors: ['#ff0000', '#ff006a', '#ff00bd', '#e300ff', '#9d00ff', '#4a00ff', '#002cff', '#007eff', '#00b9ff', '#00ffe7', '#00ff95', '#57ff00', '#d8ff00', '#ffdf00', '#ff9900', '#ff5e00', '#616161' ],
             credits: {
                 enabled: false
             },
@@ -439,18 +494,48 @@ class Dashboard extends Component {
                 }
             },
             series: [{
-                name: 'CMS updated error',
-                data: this.state.cmsNotFoundStatusStatistic
-            },{
-                name: 'CMS updated',
-                data: this.state.cmsUpdatedStatusStatistic
+                name: 'In trash',
+                data: this.state.inTrashStatusStatistic
             }, {
-                name: 'All completed',
-                data: this.state.allCompleteStatusStatistic
+                name: 'Published',
+                data: this.state.publishStatusStatistic
             }, {
-                name: 'Download Media',
-                data: this.state.downloadMediaStatusStatistic
-            },{
+                name: 'Cms update couchbase error',
+                data: this.state.cmsUpdateCouchbaseErrorStatusStatistic
+            }, {
+                name: 'Update weight complete',
+                data: this.state.updateWeightCompletedStatusStatistic
+            }, {
+                name: 'Update weight error',
+                data: this.state.updateWeightErrorStatusStatistic
+            }, {
+                name: 'Check no duplicated',
+                data: this.state.checkNoDuplicatedStatusStatistic
+            }, {
+                name: 'In review',
+                data: this.state.inreviewStatusStatistic
+            }, {
+                name: 'Check duplicate error',
+                data: this.state.checkDuplicateErrorStatusStatistic
+            }, {
+                name: 'Update media link completed',
+                data: this.state.updateMediaLinkCompletedStatusStatistic
+            }, {
+                name: 'Update media link error',
+                data: this.state.updateMediaLinkErrorStatusStatistic
+            }, {
+                name: 'Gen thumb image completed',
+                data: this.state.genThumImageCompletedStatusStatistic
+            }, {
+                name: 'Gen thumb image error',
+                data: this.state.genThumImageErrorStatusStatistic
+            }, {
+                name: 'Download media completed',
+                data: this.state.downloadMediaCompletedStatusStatistic
+            }, {
+                name: 'Download media error',
+                data: this.state.downloadMediaErrorStatusStatistic
+            }, {
                 name: 'ETL completed',
                 data: this.state.etlCompletedStatusStatistic
             }, {
@@ -459,9 +544,6 @@ class Dashboard extends Component {
             }, {
                 name: 'Download HTML completed',
                 data: this.state.downloadHTMLCompletedStatusStatistic
-            }, {
-                name: 'Download HTML error',
-                data: this.state.downloadHTMLErrorStatusStatistic
             }]
         }
         return (
@@ -492,21 +574,39 @@ class Dashboard extends Component {
         if (orderOpt === 1) {
             return data.sort(this.compareByPublisher)
         } else if (orderOpt === 2) {
-            return data.sort(this.compareByStatusCrawlError)
-        } else if (orderOpt === 3) {
             return data.sort(this.compareByStatusCrawlCompleted)
-        } else if (orderOpt === 4) {
+        }  else if (orderOpt === 3) {
             return data.sort(this.compareByStatusETLError)
-        } else if (orderOpt === 5) {
+        } else if (orderOpt === 4) {
             return data.sort(this.compareByStatusETLCompleted)
+        } else if (orderOpt === 5) {
+            return data.sort(this.compareByStatusDownloadMediaError)
         } else if (orderOpt === 6) {
-            return data.sort(this.compareByStatusDownloadMedia)
+            return data.sort(this.compareByStatusDownloadMediaCompleted)
         } else if (orderOpt === 7) {
-            return data.sort(this.compareByStatusAllCompleted)
+            return data.sort(this.compareByStatusGenThumImageError)
         } else if (orderOpt === 8) {
-            return data.sort(this.compareByStatusCmsUpdated)
+            return data.sort(this.compareByStatusGenThumImageCompleted)
         } else if (orderOpt === 9) {
-            return data.sort(this.compareByStatusCmsNotFound)
+            return data.sort(this.compareByStatusUpdateMediaLinkError)
+        } else if (orderOpt === 10) {
+            return data.sort(this.compareByStatusUpdateMediaLinkCompleted)
+        } else if (orderOpt === 11) {
+            return data.sort(this.compareByStatusCheckDuplicateError)
+        } else if (orderOpt === 12) {
+            return data.sort(this.compareByStatusInreview)
+        } else if (orderOpt === 13) {
+            return data.sort(this.compareByStatusCheckNoDuplicated)
+        } else if (orderOpt === 14) {
+            return data.sort(this.compareByStatusUpdateWeightError)
+        } else if (orderOpt === 15) {
+            return data.sort(this.compareByStatusUpdateWeightCompleted)
+        } else if (orderOpt === 16) {
+            return data.sort(this.compareByStatusCmsUpdateCouchbaseError)
+        } else if (orderOpt === 17) {
+            return data.sort(this.compareByStatusPublish)
+        } else if (orderOpt === 18) {
+            return data.sort(this.compareByStatusInTrash)
         }
     }
 
@@ -520,7 +620,27 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusCrawlError(a, b) {
+    compareByStatusCrawlCompleted(a, b) {
+        const A = a.TotalByStatus[0]
+        const B = b.TotalByStatus[0]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusETLError(a, b) {
+        const A = a.TotalByStatus[1]
+        const B = b.TotalByStatus[1]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusETLCompleted(a, b) {
         const A = a.TotalByStatus[2]
         const B = b.TotalByStatus[2]
         if (A > B) {
@@ -530,7 +650,17 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusCrawlCompleted(a, b) {
+    compareByStatusDownloadMediaError(a, b) {
+        const A = a.TotalByStatus[3]
+        const B = b.TotalByStatus[3]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusDownloadMediaCompleted(a, b) {
         const A = a.TotalByStatus[4]
         const B = b.TotalByStatus[4]
         if (A > B) {
@@ -540,7 +670,17 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusETLError(a, b) {
+    compareByStatusGenThumImageError(a, b) {
+        const A = a.TotalByStatus[5]
+        const B = b.TotalByStatus[5]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusGenThumImageCompleted(a, b) {
         const A = a.TotalByStatus[6]
         const B = b.TotalByStatus[6]
         if (A > B) {
@@ -550,7 +690,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusETLCompleted(a, b) {
+    compareByStatusUpdateMediaLinkError(a, b) {
         const A = a.TotalByStatus[7]
         const B = b.TotalByStatus[7]
         if (A > B) {
@@ -560,9 +700,9 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusDownloadMedia(a, b) {
-        const A = a.TotalByStatus[8] + a.TotalByStatus[9] + a.TotalByStatus[10] + a.TotalByStatus[11] 
-        const B = b.TotalByStatus[8] + b.TotalByStatus[9] + b.TotalByStatus[10] + b.TotalByStatus[11] 
+    compareByStatusUpdateMediaLinkCompleted(a, b) {
+        const A = a.TotalByStatus[8]
+        const B = b.TotalByStatus[8]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -570,7 +710,38 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusAllCompleted(a, b) {
+    compareByStatusCheckDuplicateError(a, b) {
+        const A = a.TotalByStatus[9]
+        const B = b.TotalByStatus[9]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+
+    compareByStatusInreview(a, b) {
+        const A = a.TotalByStatus[10]
+        const B = b.TotalByStatus[10]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusCheckNoDuplicated(a, b) {
+        const A = a.TotalByStatus[11]
+        const B = b.TotalByStatus[11]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusUpdateWeightError(a, b) {
         const A = a.TotalByStatus[12]
         const B = b.TotalByStatus[12]
         if (A > B) {
@@ -580,7 +751,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusCmsUpdated(a, b) {
+    compareByStatusUpdateWeightCompleted(a, b) {
         const A = a.TotalByStatus[13]
         const B = b.TotalByStatus[13]
         if (A > B) {
@@ -590,9 +761,29 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusCmsNotFound(a, b) {
+    compareByStatusCmsUpdateCouchbaseError(a, b) {
         const A = a.TotalByStatus[14]
         const B = b.TotalByStatus[14]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusPublish(a, b) {
+        const A = a.TotalByStatus[15]
+        const B = b.TotalByStatus[15]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusInTrash(a, b) {
+        const A = a.TotalByStatus[16]
+        const B = b.TotalByStatus[16]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -605,7 +796,7 @@ class Dashboard extends Component {
     /////////////////////////////////////////////////////////
     // Build ErrorCode Statistic Chart 
     getPostErrorCodeStatistic(fromDatePickedByErrorCode) {
-        let fromDate = fromDatePickedByErrorCode.getFullYear() + "-" + (fromDatePickedByErrorCode.getMonth() + 1) + "-" + fromDatePickedByErrorCode.getDate()  + " " + fromDatePickedByErrorCode.getHours() + ":" + fromDatePickedByErrorCode.getMinutes() + ":00" ;
+        let fromDate = fromDatePickedByErrorCode.getFullYear() + "-" + (fromDatePickedByErrorCode.getMonth() + 1) + "-" + fromDatePickedByErrorCode.getDate() + " " + fromDatePickedByErrorCode.getHours() + ":" + fromDatePickedByErrorCode.getMinutes() + ":00";
         this._dashboardService.getPostErrorCodeStatistic(fromDate)
             .then((result) => {
                 if (result.Message === "Success" && result.Data !== null) {
@@ -678,7 +869,7 @@ class Dashboard extends Component {
     fromDateErrorCodeChange = date => {
         this.setState({
             fromDatePickedByErrorCode: date,
-        },()=>{
+        }, () => {
             if (date !== null) {
                 this.getPostErrorCodeStatistic(date)
             }
@@ -904,7 +1095,7 @@ class Dashboard extends Component {
     // END Build ErrorCode Statistic Chart 
     /////////////////////////////////////////////////////////
 
-    showPostPreview (postId) {
+    showPostPreview(postId) {
         console.log(postId);
     }
     loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
@@ -1137,7 +1328,7 @@ class Dashboard extends Component {
                     <Col md={{ size: 6 }}>
                         <Card>
                             <CardHeader style={{ backgroundColor: '#d7efff' }}>
-                                <i className="fa fa-file-video-o"></i> Thống kê video nhiều lượt comment nhất 
+                                <i className="fa fa-file-video-o"></i> Thống kê video nhiều lượt comment nhất
                         </CardHeader>
                             <CardBody>
                                 <ButtonDropdown className="left-emerged" isOpen={this.state.topCommentVideosOptionOpen} toggle={this.topCommentVideosOptionToggle.bind(this)}>
