@@ -496,7 +496,8 @@ class Dashboard extends Component {
                 },
                 itemMarginBottom: 5
             },
-            colors: ['#ff0000', '#ff006a', '#ff00bd', '#e300ff', '#9d00ff', '#4a00ff', '#002cff', '#007eff', '#00b9ff', '#00ffe7', '#00ff95', '#57ff00', '#d8ff00', '#ffdf00', '#ff9900', '#ff5e00', '#616161', '#000000', '#b1b1b1'],
+            // colors: ['#ff0000', '#ff006a', '#ff00bd', '#e300ff', '#9d00ff', '#4a00ff', '#002cff', '#007eff', '#00b9ff', '#00ffe7', '#00ff95', '#57ff00', '#d8ff00', '#ffdf00', '#ff9900', '#ff5e00', '#616161', '#000000', '#b1b1b1'],
+            colors: ['#ff0000', '#ff006a', '#ff00bd', '#ff5e00', '#ff9900', '#ffdf00', '#d8ff00', '#57ff00', '#00ff95', '#00ffe7', '#00b9ff', '#007eff', '#002cff','#4a00ff', '#e300ff', '#9d00ff', '#4a2d2d', '#616161', '#000000'],
             credits: {
                 enabled: false
             },
