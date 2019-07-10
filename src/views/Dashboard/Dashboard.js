@@ -79,6 +79,8 @@ class Dashboard extends Component {
             downloadHTMLCompletedStatusStatistic: [],
             etlErrorStatusStatistic: [],
             etlCompletedStatusStatistic: [],
+            cmsInsertPostErrorStatusStatistic: [],
+            cmsInsertPostCompletedStatusStatistic: [],
             downloadMediaErrorStatusStatistic: [],
             downloadMediaCompletedStatusStatistic: [],
             genThumImageErrorStatusStatistic: [],
@@ -99,20 +101,22 @@ class Dashboard extends Component {
                 { value: 2, text: "Sắp xếp theo Download HTML Completed" },
                 { value: 3, text: "Sắp xếp theo ETL Error" },
                 { value: 4, text: "Sắp xếp theo ETL Completed" },
-                { value: 5, text: "Sắp xếp theo Download Media Error" },
-                { value: 6, text: "Sắp xếp theo Download Media Completed" },
-                { value: 7, text: "Sắp xếp theo Gen Thumb Image Error" },
-                { value: 8, text: "Sắp xếp theo Gen Thumb Image Completed" },
-                { value: 9, text: "Sắp xếp theo Update Media Link Error" },
-                { value: 10, text: "Sắp xếp theo Update Media Link Completed" },
-                { value: 11, text: "Sắp xếp theo Check Duplicate Error" },
-                { value: 12, text: "Sắp xếp theo Inreview" },
-                { value: 13, text: "Sắp xếp theo Check No Duplicated" },
-                { value: 14, text: "Sắp xếp theo Update Weight Error" },
-                { value: 15, text: "Sắp xếp theo Update Weight Completed" },
-                { value: 16, text: "Sắp xếp theo CMS Update Couchbase Error" },
-                { value: 17, text: "Sắp xếp theo Publish" },
-                { value: 18, text: "Sắp xếp theo In Trash" },
+                { value: 5, text: "Sắp xếp theo CMS Insert Post Error" },
+                { value: 6, text: "Sắp xếp theo CMS Insert Post Completed" },
+                { value: 7, text: "Sắp xếp theo Download Media Error" },
+                { value: 8, text: "Sắp xếp theo Download Media Completed" },
+                { value: 9, text: "Sắp xếp theo Gen Thumb Image Error" },
+                { value: 10, text: "Sắp xếp theo Gen Thumb Image Completed" },
+                { value: 11, text: "Sắp xếp theo Update Media Link Error" },
+                { value: 12, text: "Sắp xếp theo Update Media Link Completed" },
+                { value: 13, text: "Sắp xếp theo Check Duplicate Error" },
+                { value: 14, text: "Sắp xếp theo Inreview" },
+                { value: 15, text: "Sắp xếp theo Check No Duplicated" },
+                { value: 16, text: "Sắp xếp theo Update Weight Error" },
+                { value: 17, text: "Sắp xếp theo Update Weight Completed" },
+                { value: 18, text: "Sắp xếp theo CMS Update Couchbase Error" },
+                { value: 19, text: "Sắp xếp theo Publish" },
+                { value: 20, text: "Sắp xếp theo In Trash" },
             ],
             orderByStatusOptionOpen: false,
             orderByStatusOption: 4,
@@ -357,6 +361,8 @@ class Dashboard extends Component {
                         downloadHTMLCompletedStatusStatistic: [],
                         etlErrorStatusStatistic: [],
                         etlCompletedStatusStatistic: [],
+                        cmsInsertPostErrorStatusStatistic: [],
+                        cmsInsertPostCompletedStatusStatistic: [],
                         downloadMediaErrorStatusStatistic: [],
                         downloadMediaCompletedStatusStatistic: [],
                         genThumImageErrorStatusStatistic: [],
@@ -384,6 +390,8 @@ class Dashboard extends Component {
         const downloadHTMLCompletedStatus = []
         const etlErrorStatus = []
         const etlCompletedStatus = []
+        const cmsInsertPostErrorStatus = []
+        const cmsInsertPostCompletedStatus = []
         const downloadMediaErrorStatus = []
         const downloadMediaCompletedStatus = []
         const genThumImageErrorStatus = []
@@ -397,26 +405,28 @@ class Dashboard extends Component {
         const updateWeightCompletedStatus = []
         const cmsUpdateCouchbaseErrorStatus = []
         const publishStatus = []
-        const inTrashStatus = [] 
-     dataSorted.forEach(element => {
+        const inTrashStatus = []
+        dataSorted.forEach(element => {
             publishers.push(element.Publisher)
             downloadHTMLCompletedStatus.push(element.TotalByStatus[0])
             etlErrorStatus.push(element.TotalByStatus[1])
             etlCompletedStatus.push(element.TotalByStatus[2])
-            downloadMediaErrorStatus.push(element.TotalByStatus[3])
-            downloadMediaCompletedStatus.push(element.TotalByStatus[4])
-            genThumImageErrorStatus.push(element.TotalByStatus[5])
-            genThumImageCompletedStatus.push(element.TotalByStatus[6])
-            updateMediaLinkErrorStatus.push(element.TotalByStatus[7])
-            updateMediaLinkCompletedStatus.push(element.TotalByStatus[8])
-            checkDuplicateErrorStatus.push(element.TotalByStatus[9])
-            inreviewStatus.push(element.TotalByStatus[10])
-            checkNoDuplicatedStatus.push(element.TotalByStatus[11])
-            updateWeightErrorStatus.push(element.TotalByStatus[12])
-            updateWeightCompletedStatus.push(element.TotalByStatus[13])
-            cmsUpdateCouchbaseErrorStatus.push(element.TotalByStatus[14])
-            publishStatus.push(element.TotalByStatus[15])
-            inTrashStatus.push(element.TotalByStatus[16])
+            cmsInsertPostErrorStatus.push(element.TotalByStatus[3])
+            cmsInsertPostCompletedStatus.push(element.TotalByStatus[4])
+            downloadMediaErrorStatus.push(element.TotalByStatus[5])
+            downloadMediaCompletedStatus.push(element.TotalByStatus[6])
+            genThumImageErrorStatus.push(element.TotalByStatus[7])
+            genThumImageCompletedStatus.push(element.TotalByStatus[8])
+            updateMediaLinkErrorStatus.push(element.TotalByStatus[9])
+            updateMediaLinkCompletedStatus.push(element.TotalByStatus[10])
+            checkDuplicateErrorStatus.push(element.TotalByStatus[11])
+            inreviewStatus.push(element.TotalByStatus[12])
+            checkNoDuplicatedStatus.push(element.TotalByStatus[13])
+            updateWeightErrorStatus.push(element.TotalByStatus[14])
+            updateWeightCompletedStatus.push(element.TotalByStatus[15])
+            cmsUpdateCouchbaseErrorStatus.push(element.TotalByStatus[16])
+            publishStatus.push(element.TotalByStatus[17])
+            inTrashStatus.push(element.TotalByStatus[18])
         });
 
         this.setState({
@@ -425,6 +435,8 @@ class Dashboard extends Component {
             downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
             etlErrorStatusStatistic: etlErrorStatus,
             etlCompletedStatusStatistic: etlCompletedStatus,
+            cmsInsertPostErrorStatusStatistic: cmsInsertPostErrorStatus,
+            cmsInsertPostCompletedStatusStatistic: cmsInsertPostCompletedStatus,
             downloadMediaErrorStatusStatistic: downloadMediaErrorStatus,
             downloadMediaCompletedStatusStatistic: downloadMediaCompletedStatus,
             genThumImageErrorStatusStatistic: genThumImageErrorStatus,
@@ -484,7 +496,7 @@ class Dashboard extends Component {
                 },
                 itemMarginBottom: 5
             },
-            colors: ['#ff0000', '#ff006a', '#ff00bd', '#e300ff', '#9d00ff', '#4a00ff', '#002cff', '#007eff', '#00b9ff', '#00ffe7', '#00ff95', '#57ff00', '#d8ff00', '#ffdf00', '#ff9900', '#ff5e00', '#616161' ],
+            colors: ['#ff0000', '#ff006a', '#ff00bd', '#e300ff', '#9d00ff', '#4a00ff', '#002cff', '#007eff', '#00b9ff', '#00ffe7', '#00ff95', '#57ff00', '#d8ff00', '#ffdf00', '#ff9900', '#ff5e00', '#616161', '#000000', '#b1b1b1'],
             credits: {
                 enabled: false
             },
@@ -536,6 +548,12 @@ class Dashboard extends Component {
                 name: 'Download media error',
                 data: this.state.downloadMediaErrorStatusStatistic
             }, {
+                name: 'Cms insert post completed',
+                data: this.state.cmsInsertPostCompletedStatusStatistic
+            }, {
+                name: 'Cms insert post error',
+                data: this.state.cmsInsertPostErrorStatusStatistic
+            }, {
                 name: 'ETL completed',
                 data: this.state.etlCompletedStatusStatistic
             }, {
@@ -575,37 +593,41 @@ class Dashboard extends Component {
             return data.sort(this.compareByPublisher)
         } else if (orderOpt === 2) {
             return data.sort(this.compareByStatusCrawlCompleted)
-        }  else if (orderOpt === 3) {
+        } else if (orderOpt === 3) {
             return data.sort(this.compareByStatusETLError)
         } else if (orderOpt === 4) {
             return data.sort(this.compareByStatusETLCompleted)
         } else if (orderOpt === 5) {
-            return data.sort(this.compareByStatusDownloadMediaError)
+            return data.sort(this.compareByStatusCmsInsertPostError)
         } else if (orderOpt === 6) {
-            return data.sort(this.compareByStatusDownloadMediaCompleted)
+            return data.sort(this.compareByStatusCmsInsertPostCompleted)
         } else if (orderOpt === 7) {
-            return data.sort(this.compareByStatusGenThumImageError)
+            return data.sort(this.compareByStatusDownloadMediaError)
         } else if (orderOpt === 8) {
-            return data.sort(this.compareByStatusGenThumImageCompleted)
+            return data.sort(this.compareByStatusDownloadMediaCompleted)
         } else if (orderOpt === 9) {
-            return data.sort(this.compareByStatusUpdateMediaLinkError)
+            return data.sort(this.compareByStatusGenThumImageError)
         } else if (orderOpt === 10) {
-            return data.sort(this.compareByStatusUpdateMediaLinkCompleted)
+            return data.sort(this.compareByStatusGenThumImageCompleted)
         } else if (orderOpt === 11) {
-            return data.sort(this.compareByStatusCheckDuplicateError)
+            return data.sort(this.compareByStatusUpdateMediaLinkError)
         } else if (orderOpt === 12) {
-            return data.sort(this.compareByStatusInreview)
+            return data.sort(this.compareByStatusUpdateMediaLinkCompleted)
         } else if (orderOpt === 13) {
-            return data.sort(this.compareByStatusCheckNoDuplicated)
+            return data.sort(this.compareByStatusCheckDuplicateError)
         } else if (orderOpt === 14) {
-            return data.sort(this.compareByStatusUpdateWeightError)
+            return data.sort(this.compareByStatusInreview)
         } else if (orderOpt === 15) {
-            return data.sort(this.compareByStatusUpdateWeightCompleted)
+            return data.sort(this.compareByStatusCheckNoDuplicated)
         } else if (orderOpt === 16) {
-            return data.sort(this.compareByStatusCmsUpdateCouchbaseError)
+            return data.sort(this.compareByStatusUpdateWeightError)
         } else if (orderOpt === 17) {
-            return data.sort(this.compareByStatusPublish)
+            return data.sort(this.compareByStatusUpdateWeightCompleted)
         } else if (orderOpt === 18) {
+            return data.sort(this.compareByStatusCmsUpdateCouchbaseError)
+        } else if (orderOpt === 19) {
+            return data.sort(this.compareByStatusPublish)
+        } else if (orderOpt === 20) {
             return data.sort(this.compareByStatusInTrash)
         }
     }
@@ -650,7 +672,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusDownloadMediaError(a, b) {
+    compareByStatusCmsInsertPostError(a, b) {
         const A = a.TotalByStatus[3]
         const B = b.TotalByStatus[3]
         if (A > B) {
@@ -660,7 +682,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusDownloadMediaCompleted(a, b) {
+    compareByStatusCmsInsertPostCompleted(a, b) {
         const A = a.TotalByStatus[4]
         const B = b.TotalByStatus[4]
         if (A > B) {
@@ -670,9 +692,9 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusGenThumImageError(a, b) {
-        const A = a.TotalByStatus[5]
-        const B = b.TotalByStatus[5]
+    compareByStatusDownloadMediaError(a, b) {
+        const A = a.TotalByStatus[4]
+        const B = b.TotalByStatus[4]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -680,7 +702,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusGenThumImageCompleted(a, b) {
+    compareByStatusDownloadMediaCompleted(a, b) {
         const A = a.TotalByStatus[6]
         const B = b.TotalByStatus[6]
         if (A > B) {
@@ -690,7 +712,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusUpdateMediaLinkError(a, b) {
+    compareByStatusGenThumImageError(a, b) {
         const A = a.TotalByStatus[7]
         const B = b.TotalByStatus[7]
         if (A > B) {
@@ -700,7 +722,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusUpdateMediaLinkCompleted(a, b) {
+    compareByStatusGenThumImageCompleted(a, b) {
         const A = a.TotalByStatus[8]
         const B = b.TotalByStatus[8]
         if (A > B) {
@@ -710,7 +732,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusCheckDuplicateError(a, b) {
+    compareByStatusUpdateMediaLinkError(a, b) {
         const A = a.TotalByStatus[9]
         const B = b.TotalByStatus[9]
         if (A > B) {
@@ -720,8 +742,7 @@ class Dashboard extends Component {
         }
     }
 
-
-    compareByStatusInreview(a, b) {
+    compareByStatusUpdateMediaLinkCompleted(a, b) {
         const A = a.TotalByStatus[10]
         const B = b.TotalByStatus[10]
         if (A > B) {
@@ -731,7 +752,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusCheckNoDuplicated(a, b) {
+    compareByStatusCheckDuplicateError(a, b) {
         const A = a.TotalByStatus[11]
         const B = b.TotalByStatus[11]
         if (A > B) {
@@ -741,7 +762,8 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusUpdateWeightError(a, b) {
+
+    compareByStatusInreview(a, b) {
         const A = a.TotalByStatus[12]
         const B = b.TotalByStatus[12]
         if (A > B) {
@@ -751,7 +773,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusUpdateWeightCompleted(a, b) {
+    compareByStatusCheckNoDuplicated(a, b) {
         const A = a.TotalByStatus[13]
         const B = b.TotalByStatus[13]
         if (A > B) {
@@ -761,7 +783,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusCmsUpdateCouchbaseError(a, b) {
+    compareByStatusUpdateWeightError(a, b) {
         const A = a.TotalByStatus[14]
         const B = b.TotalByStatus[14]
         if (A > B) {
@@ -771,7 +793,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusPublish(a, b) {
+    compareByStatusUpdateWeightCompleted(a, b) {
         const A = a.TotalByStatus[15]
         const B = b.TotalByStatus[15]
         if (A > B) {
@@ -781,9 +803,29 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusInTrash(a, b) {
+    compareByStatusCmsUpdateCouchbaseError(a, b) {
         const A = a.TotalByStatus[16]
         const B = b.TotalByStatus[16]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusPublish(a, b) {
+        const A = a.TotalByStatus[17]
+        const B = b.TotalByStatus[17]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByStatusInTrash(a, b) {
+        const A = a.TotalByStatus[18]
+        const B = b.TotalByStatus[18]
         if (A > B) {
             return -1;
         } else if (A < B) {
