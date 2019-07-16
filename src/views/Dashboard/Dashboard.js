@@ -130,27 +130,50 @@ class Dashboard extends Component {
             fromDatePickedByErrorCode: addDays(new Date(), -1),
             heightChartByErrorCode: 0,
             publishersStatisticByErrorCode: [],
-            successErrorCodeStatistic: [],
-            downloadHtmlS3ExceptionErrorCodeStatistic: [],
+            crawlerDownloadFailedErrorCodeStatistic: [],
+            crawlerUrlNotFoundErrorCodeStatistic: [],
+            crawlerCannotCreateFileErrorCodeStatistic: [],
+            crawlerCannotCopyFileErrorCodeStatistic: [],
+            crawlerTooLongVideoErrorCodeStatistic: [],
+            crawlerIgnoreDownloadMediaErrorCodeStatistic: [],
+            crawlerUnknownErrorCodeStatistic: [],
+            crawlerUploadAwsErrorCodeStatistic: [],
+            etlParsingCrawlMessageExceptionErrorCodeStatistic: [],
+            etlDownloadHtmlS3ExceptionErrorCodeStatistic: [],
             etlExceptionErrorCodeStatistic: [],
-            aiTaggingApiExceptionErrorCodeStatistic: [],
-            // crawlDownloadImageApiExceptionErrorCodeStatistic: [],
-            // crawlDownloadVideoApiExceptionErrorCodeStatistic: [],
-            cmsApiDuplicateArticleIdExceptionErrorCodeStatistic: [],
-            cmsApiExceptionErrorCodeStatistic: [],
-            crawlDownloadMediaApiExceptionErrorCodeStatistic: [],
+            etlAiTaggingApiExceptionErrorCodeStatistic: [],
+            etlRabbitmqPostDataExceptionErrorCodeStatistic: [],
+            thumbDownloadImagesFromS3ExceptionErrorCodeStatistic: [],
+            thumbUploadToS3ExceptionErrorCodeStatistic: [],
+            thumbExceptionErrorCodeStatistic: [],
+            thumbVideoGetThumbExceptionErrorCodeStatistic: [],
+            thumbLackMediaExceptionErrorCodeStatistic: [],
+            duplicateFailureErrorCodeStatistic: [],
+            duplicateInvalidDataErrorCodeStatistic: [],
 
             orderByErrorCodeOptions: [
                 { value: 1, text: "Sắp xếp theo tên đầu báo" },
-                { value: 2, text: "Sắp xếp theo SUCCESS" },
-                { value: 3, text: "Sắp xếp theo DOWNLOAD_HTML_S3_EXCEPTION" },
-                { value: 4, text: "Sắp xếp theo ETL_EXCEPTION" },
-                { value: 5, text: "Sắp xếp theo AI_TAGGING_API_EXCEPTION" },
-                // { value: 6, text: "Sắp xếp theo CRAWL_DOWMLOAD_IMAGE_API_EXCEPTION" },
-                // { value: 7, text: "Sắp xếp theo CRAWL_DOWMLOAD_VIDEO_API_EXCEPTION" },
-                { value: 8, text: "Sắp xếp theo CMS_API_DUPLICATE_ARTICLE_ID_EXCEPTION" },
-                { value: 9, text: "Sắp xếp theo CMS_API_EXCEPTION" },
-                { value: 10, text: "Sắp xếp theo CRAWL_DOWMLOAD_MEDIA_API_EXCEPTION" },
+                { value: 2, text: "Sắp xếp theo Crawler download failed" },
+                { value: 3, text: "Sắp xếp theo Crawler url not found" },
+                { value: 4, text: "Sắp xếp theo Crawler cannot create file" },
+                { value: 5, text: "Sắp xếp theo Crawler cannot copy file" },
+                { value: 6, text: "Sắp xếp theo Crawler too long video" },
+                { value: 7, text: "Sắp xếp theo Crawler ignore download media" },
+                { value: 8, text: "Sắp xếp theo Crawler unknow error" },
+                { value: 9, text: "Sắp xếp theo Crawler upload AWS error" },
+                { value: 10, text: "Sắp xếp theo Etl parsing crawl message exception" },
+                { value: 11, text: "Sắp xếp theo Etl download HTML S3 exception" },
+                { value: 12, text: "Sắp xếp theo Etl exception" },
+                { value: 13, text: "Sắp xếp theo Etl AI tagging API exception" },
+                { value: 15, text: "Sắp xếp theo Etl rabbitMQ post data exception" },
+                { value: 15, text: "Sắp xếp theo Thumb download images from S3 exception" },
+                { value: 16, text: "Sắp xếp theo Thumb uploadTo S3 exception" },
+                { value: 17, text: "Sắp xếp theo Thumb exception" },
+                { value: 18, text: "Sắp xếp theo Thumb video get thumb exception" },
+                { value: 19, text: "Sắp xếp theo Thumb lack media exception" },
+                { value: 20, text: "Sắp xếp theo Duplicate failure" },
+                { value: 21, text: "Sắp xếp theo Duplicate invalid data" },
+
             ],
             orderByErrorCodeOptionOpen: false,
             orderByErrorCodeOption: 1,
@@ -503,7 +526,7 @@ class Dashboard extends Component {
                 itemMarginBottom: 5
             },
             // colors: ['#ff0000', '#ff006a', '#ff00bd', '#e300ff', '#9d00ff', '#4a00ff', '#002cff', '#007eff', '#00b9ff', '#00ffe7', '#00ff95', '#57ff00', '#d8ff00', '#ffdf00', '#ff9900', '#ff5e00', '#616161', '#000000', '#b1b1b1'],
-            colors: ['#ff0000', '#8c0000', '#ff006a', '#ff00bd', '#ff5e00', '#ff9900', '#ffdf00', '#d8ff00', '#57ff00', '#00ff95', '#00ffe7', '#00b9ff', '#007eff', '#002cff','#4a00ff', '#e300ff', '#9d00ff', '#4a2d2d', '#616161', '#000000'],
+            colors: ['#ff0000', '#8c0000', '#ff006a', '#ff00bd', '#ff5e00', '#ff9900', '#ffdf00', '#d8ff00', '#57ff00', '#00ff95', '#00ffe7', '#00b9ff', '#007eff', '#002cff', '#4a00ff', '#e300ff', '#9d00ff', '#4a2d2d', '#616161', '#000000'],
             credits: {
                 enabled: false
             },
@@ -873,15 +896,26 @@ class Dashboard extends Component {
                     this.setState({
                         heightChartByErrorCode: 0,
                         publishersStatisticByErrorCode: [],
-                        successErrorCodeStatistic: [],
-                        downloadHtmlS3ExceptionErrorCodeStatistic: [],
+                        crawlerDownloadFailedErrorCodeStatistic: [],
+                        crawlerUrlNotFoundErrorCodeStatistic: [],
+                        crawlerCannotCreateFileErrorCodeStatistic: [],
+                        crawlerCannotCopyFileErrorCodeStatistic: [],
+                        crawlerTooLongVideoErrorCodeStatistic: [],
+                        crawlerIgnoreDownloadMediaErrorCodeStatistic: [],
+                        crawlerUnknownErrorCodeStatistic: [],
+                        crawlerUploadAwsErrorCodeStatistic: [],
+                        etlParsingCrawlMessageExceptionErrorCodeStatistic: [],
+                        etlDownloadHtmlS3ExceptionErrorCodeStatistic: [],
                         etlExceptionErrorCodeStatistic: [],
-                        aiTaggingApiExceptionErrorCodeStatistic: [],
-                        // crawlDownloadImageApiExceptionErrorCodeStatistic: [],
-                        // crawlDownloadVideoApiExceptionErrorCodeStatistic: [],
-                        cmsApiDuplicateArticleIdExceptionErrorCodeStatistic: [],
-                        cmsApiExceptionErrorCodeStatistic: [],
-                        crawlDownloadMediaApiExceptionErrorCodeStatistic: [],
+                        etlAiTaggingApiExceptionErrorCodeStatistic: [],
+                        etlRabbitmqPostDataExceptionErrorCodeStatistic: [],
+                        thumbDownloadImagesFromS3ExceptionErrorCodeStatistic: [],
+                        thumbUploadToS3ExceptionErrorCodeStatistic: [],
+                        thumbExceptionErrorCodeStatistic: [],
+                        thumbVideoGetThumbExceptionErrorCodeStatistic: [],
+                        thumbLackMediaExceptionErrorCodeStatistic: [],
+                        duplicateFailureErrorCodeStatistic: [],
+                        duplicateInvalidDataErrorCodeStatistic: [],
                     })
                 }
             }).catch((err) => {
@@ -892,41 +926,74 @@ class Dashboard extends Component {
     createErrorCodeStatisticChart(data) {
         const dataSorted = this.sortErrorCodeStatisticData(data, this.state.orderByErrorCodeOption)
         const publishers = []
-        const successErrorCode = []
-        const downloadHtmlS3ExceptionErrorCode = []
+        const crawlerDownloadFailedErrorCode = []
+        const crawlerUrlNotFoundErrorCode = []
+        const crawlerCannotCreateFileErrorCode = []
+        const crawlerCannotCopyFileErrorCode =  []
+        const crawlerTooLongVideoErrorCode = []
+        const crawlerIgnoreDownloadMediaErrorCode = []
+        const crawlerUnknownErrorCode = []
+        const crawlerUploadAwsErrorCode = []
+        const etlParsingCrawlMessageExceptionErrorCode = []
+        const etlDownloadHtmlS3ExceptionErrorCode = []
         const etlExceptionErrorCode = []
-        const aiTaggingApiExceptionErrorCode = []
-        // const crawlDownloadImageApiExceptionErrorCode = []
-        // const crawlDownloadVideoApiExceptionErrorCode = []
-        const cmsApiDuplicateArticleIdExceptionErrorCode = []
-        const cmsApiExceptionErrorCode = []
-        const crawlDownloadMediaApiExceptionErrorCode = []
+        const etlAiTaggingApiExceptionErrorCode = []
+        const etlRabbitmqPostDataExceptionErrorCode = []
+        const thumbDownloadImagesFromS3ExceptionErrorCode = []
+        const thumbUploadToS3ExceptionErrorCode = []
+        const thumbExceptionErrorCode = []
+        const thumbVideoGetThumbExceptionErrorCode = []
+        const thumbLackMediaExceptionErrorCode = []
+        const duplicateFailureErrorCode = []
+        const duplicateInvalidDataErrorCode = []
 
         dataSorted.forEach(element => {
             publishers.push(element.Publisher)
-            successErrorCode.push(element.TotalByErrorCode[0])
-            downloadHtmlS3ExceptionErrorCode.push(element.TotalByErrorCode[1])
-            etlExceptionErrorCode.push(element.TotalByErrorCode[2])
-            aiTaggingApiExceptionErrorCode.push(element.TotalByErrorCode[3])
-            // crawlDownloadImageApiExceptionErrorCode.push(element.TotalByErrorCode[4])
-            // crawlDownloadVideoApiExceptionErrorCode.push(element.TotalByErrorCode[5])
-            cmsApiDuplicateArticleIdExceptionErrorCode.push(element.TotalByErrorCode[6])
-            cmsApiExceptionErrorCode.push(element.TotalByErrorCode[7])
-            crawlDownloadMediaApiExceptionErrorCode.push(element.TotalByErrorCode[8])
+            crawlerDownloadFailedErrorCode.push(element.TotalByErrorCode[0])
+            crawlerUrlNotFoundErrorCode.push(element.TotalByErrorCode[1])
+            crawlerCannotCreateFileErrorCode.push(element.TotalByErrorCode[2])
+            crawlerCannotCopyFileErrorCode.push(element.TotalByErrorCode[3])
+            crawlerTooLongVideoErrorCode.push(element.TotalByErrorCode[4])
+            crawlerIgnoreDownloadMediaErrorCode.push(element.TotalByErrorCode[5])
+            crawlerUnknownErrorCode.push(element.TotalByErrorCode[6])
+            crawlerUploadAwsErrorCode.push(element.TotalByErrorCode[7])
+            etlParsingCrawlMessageExceptionErrorCode.push(element.TotalByErrorCode[8])
+            etlDownloadHtmlS3ExceptionErrorCode.push(element.TotalByErrorCode[9])
+            etlExceptionErrorCode.push(element.TotalByErrorCode[10])
+            etlAiTaggingApiExceptionErrorCode.push(element.TotalByErrorCode[11])
+            etlRabbitmqPostDataExceptionErrorCode.push(element.TotalByErrorCode[12])
+            thumbDownloadImagesFromS3ExceptionErrorCode.push(element.TotalByErrorCode[13])
+            thumbUploadToS3ExceptionErrorCode.push(element.TotalByErrorCode[14])
+            thumbExceptionErrorCode.push(element.TotalByErrorCode[15])
+            thumbVideoGetThumbExceptionErrorCode.push(element.TotalByErrorCode[16])
+            thumbLackMediaExceptionErrorCode.push(element.TotalByErrorCode[17])
+            duplicateFailureErrorCode.push(element.TotalByErrorCode[18])
+            duplicateInvalidDataErrorCode.push(element.TotalByErrorCode[19])
         });
 
         this.setState({
             heightChartByErrorCode: 1200,
             publishersStatisticByErrorCode: publishers,
-            successErrorCodeStatistic: successErrorCode,
-            downloadHtmlS3ExceptionErrorCodeStatistic: downloadHtmlS3ExceptionErrorCode,
+            crawlerDownloadFailedErrorCodeStatistic: crawlerDownloadFailedErrorCode,
+            crawlerUrlNotFoundErrorCodeStatistic: crawlerUrlNotFoundErrorCode,
+            crawlerCannotCreateFileErrorCodeStatistic: crawlerCannotCreateFileErrorCode,
+            crawlerCannotCopyFileErrorCodeStatistic: crawlerCannotCopyFileErrorCode,
+            crawlerTooLongVideoErrorCodeStatistic: crawlerTooLongVideoErrorCode,
+            crawlerIgnoreDownloadMediaErrorCodeStatistic: crawlerIgnoreDownloadMediaErrorCode,
+            crawlerUnknownErrorCodeStatistic: crawlerUnknownErrorCode,
+            crawlerUploadAwsErrorCodeStatistic: crawlerUploadAwsErrorCode,
+            etlParsingCrawlMessageExceptionErrorCodeStatistic: etlParsingCrawlMessageExceptionErrorCode,
+            etlDownloadHtmlS3ExceptionErrorCodeStatistic: etlDownloadHtmlS3ExceptionErrorCode,
             etlExceptionErrorCodeStatistic: etlExceptionErrorCode,
-            aiTaggingApiExceptionErrorCodeStatistic: aiTaggingApiExceptionErrorCode,
-            // crawlDownloadImageApiExceptionErrorCodeStatistic: crawlDownloadImageApiExceptionErrorCode,
-            // crawlDownloadVideoApiExceptionErrorCodeStatistic: crawlDownloadVideoApiExceptionErrorCode,
-            cmsApiDuplicateArticleIdExceptionErrorCodeStatistic: cmsApiDuplicateArticleIdExceptionErrorCode,
-            cmsApiExceptionErrorCodeStatistic: cmsApiExceptionErrorCode,
-            crawlDownloadMediaApiExceptionErrorCodeStatistic: crawlDownloadMediaApiExceptionErrorCode,
+            etlAiTaggingApiExceptionErrorCodeStatistic: etlAiTaggingApiExceptionErrorCode,
+            etlRabbitmqPostDataExceptionErrorCodeStatistic: etlRabbitmqPostDataExceptionErrorCode,
+            thumbDownloadImagesFromS3ExceptionErrorCodeStatistic: thumbDownloadImagesFromS3ExceptionErrorCode,
+            thumbUploadToS3ExceptionErrorCodeStatistic: thumbUploadToS3ExceptionErrorCode,
+            thumbExceptionErrorCodeStatistic: thumbExceptionErrorCode,
+            thumbVideoGetThumbExceptionErrorCodeStatistic:thumbVideoGetThumbExceptionErrorCode,
+            thumbLackMediaExceptionErrorCodeStatistic: thumbLackMediaExceptionErrorCode,
+            duplicateFailureErrorCodeStatistic: duplicateFailureErrorCode,
+            duplicateInvalidDataErrorCodeStatistic: duplicateInvalidDataErrorCode,
         })
     }
 
@@ -971,7 +1038,7 @@ class Dashboard extends Component {
                 },
                 itemMarginBottom: 5
             },
-            colors: ['#4dbd74', '#00c6ff', '#6610f2', '#2f353', '#73818f', '#0900ff', '#00ff59', '#ffc107'],
+            colors: ['#ff0000', '#8c0000', '#ff006a', '#ff00bd', '#ff5e00', '#ff9900', '#ffdf00', '#d8ff00', '#57ff00', '#00ff95', '#00ffe7', '#00b9ff', '#007eff', '#002cff', '#4a00ff', '#e300ff', '#9d00ff', '#4a2d2d', '#616161', '#000000'],
             credits: {
                 enabled: false
             },
@@ -982,41 +1049,67 @@ class Dashboard extends Component {
             },
             series: [
                 {
-                    name: 'CRAWL_DOWMLOAD_MEDIA_API_EXCEPTION',
-                    data: this.state.crawlDownloadMediaApiExceptionErrorCodeStatistic
-                },
-                {
-                    name: 'CMS_API_EXCEPTION',
-                    data: this.state.cmsApiExceptionErrorCodeStatistic
-                },
-                {
-                    name: 'CMS_API_DUPLICATE_ARTICLE_ID_EXCEPTION',
-                    data: this.state.cmsApiDuplicateArticleIdExceptionErrorCodeStatistic
-                },
-                // {
-                //     name: 'CRAWL_DOWMLOAD_VIDEO_API_EXCEPTION',
-                //     data: this.state.crawlDownloadVideoApiExceptionErrorCodeStatistic
-                // },
-                // {
-                //     name: 'CRAWL_DOWMLOAD_IMAGE_API_EXCEPTION',
-                //     data: this.state.crawlDownloadImageApiExceptionErrorCodeStatistic
-                // },
-                {
-                    name: 'AI_TAGGING_API_EXCEPTION',
-                    data: this.state.aiTaggingApiExceptionErrorCodeStatistic
-                },
-                {
-                    name: 'ETL_EXCEPTION',
+                    name: 'Duplicate invalid data',
+                    data: this.state.duplicateInvalidDataErrorCodeStatistic
+                }, {
+                    name: 'Duplicate failure',
+                    data: this.state.duplicateFailureErrorCodeStatistic
+                }, {
+                    name: 'Thumb lack media exception',
+                    data: this.state.thumbLackMediaExceptionErrorCodeStatistic
+                }, {
+                    name: 'Thumb video get thumb exception',
+                    data: this.state.thumbVideoGetThumbExceptionErrorCodeStatistic
+                }, {
+                    name: 'Thumb exception',
+                    data: this.state.thumbExceptionErrorCodeStatistic
+                }, {
+                    name: 'Thumb uploadTo S3 exception',
+                    data: this.state.thumbUploadToS3ExceptionErrorCodeStatistic
+                }, {
+                    name: 'Thumb download images from S3 exception"',
+                    data: this.state.thumbDownloadImagesFromS3ExceptionErrorCodeStatistic
+                }, {
+                    name: 'Etl rabbitMQ post data exception',
+                    data: this.state.etlRabbitmqPostDataExceptionErrorCodeStatistic
+                }, {
+                    name: 'Etl AI tagging API exception',
+                    data: this.state.etlAiTaggingApiExceptionErrorCodeStatistic
+                }, {
+                    name: 'Etl exception',
                     data: this.state.etlExceptionErrorCodeStatistic
-                },
-                {
-                    name: 'DOWNLOAD_HTML_S3_EXCEPTION',
-                    data: this.state.downloadHtmlS3ExceptionErrorCodeStatistic
-                },
-                {
-                    name: 'SUCCESS',
-                    data: this.state.successErrorCodeStatistic
-                }
+                }, {
+                    name: 'Etl download HTML S3 exception',
+                    data: this.state.etlDownloadHtmlS3ExceptionErrorCodeStatistic
+                }, {
+                    name: 'Etl parsing crawl message exception',
+                    data: this.state.etlParsingCrawlMessageExceptionErrorCodeStatistic
+                }, {
+                    name: 'Crawler upload AWS error',
+                    data: this.state.crawlerUploadAwsErrorCodeStatistic
+                }, {
+                    name: 'Crawler unknow error',
+                    data: this.state.crawlerUnknownErrorCodeStatistic
+                }, {
+                    name: 'Crawler ignore download media',
+                    data: this.state.crawlerIgnoreDownloadMediaErrorCodeStatistic
+                }, {
+                    name: 'Crawler too long video',
+                    data: this.state.crawlerTooLongVideoErrorCodeStatistic
+                }, {
+                    name: 'Crawler cannot copy file',
+                    data: this.state.crawlerCannotCopyFileErrorCodeStatistic
+                }, {
+                    name: 'Crawler cannot create file',
+                    data: this.state.crawlerCannotCreateFileErrorCodeStatistic
+                }, {
+                    name: 'Crawler url not found',
+                    data: this.state.crawlerUrlNotFoundErrorCodeStatistic
+                }, {
+                    name: 'Crawler download failed',
+                    data: this.state.crawlerDownloadFailedErrorCodeStatistic
+                }, 
+                
             ]
         }
         return (
@@ -1047,29 +1140,51 @@ class Dashboard extends Component {
         if (orderOpt === 1) {
             return data.sort(this.compareByPublisher)
         } else if (orderOpt === 2) {
-            return data.sort(this.compareByErrorCodeSuccess)
+            return data.sort(this.compareByErrorCodeCrawlerDownloadFailed)
         } else if (orderOpt === 3) {
-            return data.sort(this.compareByErrorCodeDownloadHtmlS3Exception)
+            return data.sort(this.compareByErrorCodeCrawlerUrlNotFound)
         } else if (orderOpt === 4) {
-            return data.sort(this.compareByErrorCodeEtlException)
+            return data.sort(this.compareByErrorCodeCrawlerCannotCreateFile)
         } else if (orderOpt === 5) {
-            return data.sort(this.compareByErrorCodeAiTaggingApiException)
-            // } else if (orderOpt === 6) {
-            //     return data.sort(this.compareByErrorCodeCrawlDownloadImageApiException)
-            // } else if (orderOpt === 7) {
-            //     return data.sort(this.compareByErrorCodeCrawlDownloadVideoApiException)
+            return data.sort(this.compareByErrorCodeCrawlerCannotCopyFile)
+        } else if (orderOpt === 6) {
+            return data.sort(this.compareByErrorCodeCrawlerTooLongVideo)
+        } else if (orderOpt === 7) {
+            return data.sort(this.compareByErrorCodeCrawlerIgnoreDownloadMedia)
         } else if (orderOpt === 8) {
-            return data.sort(this.compareByErrorCodeCmsApiDuplicateArticleIdException)
+            return data.sort(this.compareByErrorCodeCrawlerUnknown)
         } else if (orderOpt === 9) {
-            return data.sort(this.compareByErrorCodeCmsApiException)
+            return data.sort(this.compareByErrorCodeCrawlerUploadAws)
         } else if (orderOpt === 10) {
-            return data.sort(this.compareByErrorCodeCrawlDownloadMediaApiException)
-        }
+            return data.sort(this.compareByErrorCodeEtlParsingCrawlMessageException)
+        } else if (orderOpt === 11) {
+            return data.sort(this.compareByErrorCodeEtlDownloadHtmlS3Exception)
+        } else if (orderOpt === 12) {
+            return data.sort(this.compareByErrorCodeEtlException)
+        } else if (orderOpt === 13) {
+            return data.sort(this.compareByErrorCodeEtlAiTaggingApiException)
+        } else if (orderOpt === 14) {
+            return data.sort(this.compareByErrorCodeEtlRabbitmqPostDataException)
+        } else if (orderOpt === 15) {
+            return data.sort(this.compareByErrorCodeThumbDownloadImagesFromS3Exception)
+        } else if (orderOpt === 16) {
+            return data.sort(this.compareByErrorCodeThumbUploadToS3Exception)
+        } else if (orderOpt === 17) {
+            return data.sort(this.compareByErrorCodeThumbException)
+        } else if (orderOpt === 18) {
+            return data.sort(this.compareByErrorCodeThumbVideoGetThumb)
+        } else if (orderOpt === 19) {
+            return data.sort(this.compareByErrorCodeThumbLackMediaException)
+        } else if (orderOpt === 20) {
+            return data.sort(this.compareByErrorCodeDuplicateFailure)
+        } else if (orderOpt === 21) {
+            return data.sort(this.compareByErrorCodeDuplicateInvalidData)
+        } 
     }
 
-    compareByErrorCodeSuccess(a, b) {
-        const A = a.TotalByErrorCode[constant.SUCCESS - 810]
-        const B = b.TotalByErrorCode[constant.SUCCESS - 810]
+    compareByErrorCodeCrawlerDownloadFailed(a, b) {
+        const A = a.TotalByErrorCode[0]
+        const B = b.TotalByErrorCode[0]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -1077,85 +1192,197 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeDownloadHtmlS3Exception(a, b) {
-        const A = a.TotalByErrorCode[constant.DOWNLOAD_HTML_S3_EXCEPTION - 810]
-        const B = b.TotalByErrorCode[constant.DOWNLOAD_HTML_S3_EXCEPTION - 810]
+    compareByErrorCodeCrawlerUrlNotFound(a, b) {
+        const A = a.TotalByErrorCode[1]
+        const B = b.TotalByErrorCode[1]
         if (A > B) {
             return -1;
         } else if (A < B) {
             return 1;
         }
     }
+
+    compareByErrorCodeCrawlerCannotCreateFile(a, b) {
+        const A = a.TotalByErrorCode[2]
+        const B = b.TotalByErrorCode[2]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByErrorCodeCrawlerCannotCopyFile(a, b) {
+        const A = a.TotalByErrorCode[3]
+        const B = b.TotalByErrorCode[3]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
+
+    compareByErrorCodeCrawlerTooLongVideo(a, b) {
+        const A = a.TotalByErrorCode[4]
+        const B = b.TotalByErrorCode[4]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
+
+    compareByErrorCodeCrawlerIgnoreDownloadMedia(a, b) {
+        const A = a.TotalByErrorCode[5]
+        const B = b.TotalByErrorCode[5]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
+
+    compareByErrorCodeCrawlerUnknown(a, b) {
+        const A = a.TotalByErrorCode[6]
+        const B = b.TotalByErrorCode[6]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
+
+    compareByErrorCodeCrawlerUploadAws(a, b) {
+        const A = a.TotalByErrorCode[7]
+        const B = b.TotalByErrorCode[7]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
+
+    compareByErrorCodeEtlParsingCrawlMessageException(a, b) {
+        const A = a.TotalByErrorCode[8]
+        const B = b.TotalByErrorCode[8]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
+
+    compareByErrorCodeEtlDownloadHtmlS3Exception(a, b) {
+        const A = a.TotalByErrorCode[9]
+        const B = b.TotalByErrorCode[9]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
 
     compareByErrorCodeEtlException(a, b) {
-        const A = a.TotalByErrorCode[constant.ETL_EXCEPTION - 810]
-        const B = b.TotalByErrorCode[constant.ETL_EXCEPTION - 810]
+        const A = a.TotalByErrorCode[10]
+        const B = b.TotalByErrorCode[11]
         if (A > B) {
             return -1;
         } else if (A < B) {
             return 1;
         }
-    }
+    } 
 
-    compareByErrorCodeAiTaggingApiException(a, b) {
-        const A = a.TotalByErrorCode[constant.AI_TAGGING_API_EXCEPTION - 810]
-        const B = b.TotalByErrorCode[constant.AI_TAGGING_API_EXCEPTION - 810]
+    compareByErrorCodeEtlAiTaggingApiException(a, b) {
+        const A = a.TotalByErrorCode[12]
+        const B = b.TotalByErrorCode[12]
         if (A > B) {
             return -1;
         } else if (A < B) {
             return 1;
         }
-    }
+    } 
 
-    compareByErrorCodeCrawlDownloadImageApiException(a, b) {
-        const A = a.TotalByErrorCode[constant.CRAWL_DOWMLOAD_IMAGE_API_EXCEPTION - 810]
-        const B = b.TotalByErrorCode[constant.CRAWL_DOWMLOAD_IMAGE_API_EXCEPTION - 810]
+    compareByErrorCodeEtlRabbitmqPostDataException(a, b) {
+        const A = a.TotalByErrorCode[13]
+        const B = b.TotalByErrorCode[13]
         if (A > B) {
             return -1;
         } else if (A < B) {
             return 1;
         }
-    }
+    } 
 
-    compareByErrorCodeCrawlDownloadVideoApiException(a, b) {
-        const A = a.TotalByErrorCode[constant.CRAWL_DOWMLOAD_VIDEO_API_EXCEPTION - 810]
-        const B = b.TotalByErrorCode[constant.CRAWL_DOWMLOAD_VIDEO_API_EXCEPTION - 810]
+    compareByErrorCodeThumbDownloadImagesFromS3Exception(a, b) {
+        const A = a.TotalByErrorCode[14]
+        const B = b.TotalByErrorCode[14]
         if (A > B) {
             return -1;
         } else if (A < B) {
             return 1;
         }
-    }
+    } 
 
-    compareByErrorCodeCmsApiDuplicateArticleIdException(a, b) {
-        const A = a.TotalByErrorCode[constant.CMS_API_DUPLICATE_ARTICLE_ID_EXCEPTION - 810]
-        const B = b.TotalByErrorCode[constant.CMS_API_DUPLICATE_ARTICLE_ID_EXCEPTION - 810]
+    compareByErrorCodeThumbUploadToS3Exception(a, b) {
+        const A = a.TotalByErrorCode[15]
+        const B = b.TotalByErrorCode[15]
         if (A > B) {
             return -1;
         } else if (A < B) {
             return 1;
         }
-    }
+    } 
 
-    compareByErrorCodeCmsApiException(a, b) {
-        const A = a.TotalByErrorCode[constant.CMS_API_EXCEPTION - 810]
-        const B = b.TotalByErrorCode[constant.CMS_API_EXCEPTION - 810]
+    compareByErrorCodeThumbException(a, b) {
+        const A = a.TotalByErrorCode[16]
+        const B = b.TotalByErrorCode[16]
         if (A > B) {
             return -1;
         } else if (A < B) {
             return 1;
         }
-    }
+    } 
 
-    compareByErrorCodeCrawlDownloadMediaApiException(a, b) {
-        const A = a.TotalByErrorCode[constant.CRAWL_DOWMLOAD_MEDIA_API_EXCEPTION - 810]
-        const B = b.TotalByErrorCode[constant.CRAWL_DOWMLOAD_MEDIA_API_EXCEPTION - 810]
+    compareByErrorCodeThumbVideoGetThumb(a, b) {
+        const A = a.TotalByErrorCode[17]
+        const B = b.TotalByErrorCode[17]
         if (A > B) {
             return -1;
         } else if (A < B) {
             return 1;
         }
-    }
+    } 
+
+    compareByErrorCodeThumbLackMediaException(a, b) {
+        const A = a.TotalByErrorCode[18]
+        const B = b.TotalByErrorCode[18]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
+
+    compareByErrorCodeDuplicateFailure(a, b) {
+        const A = a.TotalByErrorCode[19]
+        const B = b.TotalByErrorCode[19]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
+
+    compareByErrorCodeDuplicateInvalidData(a, b) {
+        const A = a.TotalByErrorCode[20]
+        const B = b.TotalByErrorCode[20]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    } 
+
+    
     // END Build ErrorCode Statistic Chart 
     /////////////////////////////////////////////////////////
 
