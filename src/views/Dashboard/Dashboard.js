@@ -150,6 +150,10 @@ class Dashboard extends Component {
             thumbLackMediaExceptionErrorCodeStatistic: [],
             duplicateFailureErrorCodeStatistic: [],
             duplicateInvalidDataErrorCodeStatistic: [],
+            weightUpdateFailedErrorCodeStatistic: [],
+            weightInvalidStatusErrorCodeStatistic: [],
+            cmsInsertFailedErrorCodeStatistic: [],
+            cmsUnknownCategoryErrorCodeStatistic: [],
 
             orderByErrorCodeOptions: [
                 { value: 1, text: "Sắp xếp theo tên đầu báo" },
@@ -173,7 +177,10 @@ class Dashboard extends Component {
                 { value: 19, text: "Sắp xếp theo Thumb lack media exception" },
                 { value: 20, text: "Sắp xếp theo Duplicate failure" },
                 { value: 21, text: "Sắp xếp theo Duplicate invalid data" },
-
+                { value: 22, text: "Sắp xếp theo Weight update failed" },
+                { value: 23, text: "Sắp xếp theo Weight invalid" },
+                { value: 24, text: "Sắp xếp theo Cms insert failed" },
+                { value: 25, text: "Sắp xếp theo Cms unknown category" },
             ],
             orderByErrorCodeOptionOpen: false,
             orderByErrorCodeOption: 1,
@@ -916,6 +923,10 @@ class Dashboard extends Component {
                         thumbLackMediaExceptionErrorCodeStatistic: [],
                         duplicateFailureErrorCodeStatistic: [],
                         duplicateInvalidDataErrorCodeStatistic: [],
+                        weightUpdateFailedErrorCodeStatistic: [],
+                        weightInvalidStatusErrorCodeStatistic: [],
+                        cmsInsertFailedErrorCodeStatistic: [],
+                        cmsUnknownCategoryErrorCodeStatistic: [],
                     })
                 }
             }).catch((err) => {
@@ -929,7 +940,7 @@ class Dashboard extends Component {
         const crawlerDownloadFailedErrorCode = []
         const crawlerUrlNotFoundErrorCode = []
         const crawlerCannotCreateFileErrorCode = []
-        const crawlerCannotCopyFileErrorCode =  []
+        const crawlerCannotCopyFileErrorCode = []
         const crawlerTooLongVideoErrorCode = []
         const crawlerIgnoreDownloadMediaErrorCode = []
         const crawlerUnknownErrorCode = []
@@ -946,6 +957,10 @@ class Dashboard extends Component {
         const thumbLackMediaExceptionErrorCode = []
         const duplicateFailureErrorCode = []
         const duplicateInvalidDataErrorCode = []
+        const weightUpdateFailedErrorCode = []
+        const weightInvalidStatusErrorCode = []
+        const cmsInsertFailedErrorCode = []
+        const cmsUnknownCategoryErrorCode = []
 
         dataSorted.forEach(element => {
             publishers.push(element.Publisher)
@@ -969,6 +984,10 @@ class Dashboard extends Component {
             thumbLackMediaExceptionErrorCode.push(element.TotalByErrorCode[17])
             duplicateFailureErrorCode.push(element.TotalByErrorCode[18])
             duplicateInvalidDataErrorCode.push(element.TotalByErrorCode[19])
+            weightUpdateFailedErrorCode.push(element.TotalByErrorCode[20])
+            weightInvalidStatusErrorCode.push(element.TotalByErrorCode[21])
+            cmsInsertFailedErrorCode.push(element.TotalByErrorCode[22])
+            cmsUnknownCategoryErrorCode.push(element.TotalByErrorCode[23])
         });
 
         this.setState({
@@ -990,10 +1009,14 @@ class Dashboard extends Component {
             thumbDownloadImagesFromS3ExceptionErrorCodeStatistic: thumbDownloadImagesFromS3ExceptionErrorCode,
             thumbUploadToS3ExceptionErrorCodeStatistic: thumbUploadToS3ExceptionErrorCode,
             thumbExceptionErrorCodeStatistic: thumbExceptionErrorCode,
-            thumbVideoGetThumbExceptionErrorCodeStatistic:thumbVideoGetThumbExceptionErrorCode,
+            thumbVideoGetThumbExceptionErrorCodeStatistic: thumbVideoGetThumbExceptionErrorCode,
             thumbLackMediaExceptionErrorCodeStatistic: thumbLackMediaExceptionErrorCode,
             duplicateFailureErrorCodeStatistic: duplicateFailureErrorCode,
             duplicateInvalidDataErrorCodeStatistic: duplicateInvalidDataErrorCode,
+            weightUpdateFailedErrorCodeStatistic: weightUpdateFailedErrorCode,
+            weightInvalidStatusErrorCodeStatistic: weightInvalidStatusErrorCode,
+            cmsInsertFailedErrorCodeStatistic: cmsInsertFailedErrorCode,
+            cmsUnknownCategoryErrorCodeStatistic: cmsUnknownCategoryErrorCode,
         })
     }
 
@@ -1049,6 +1072,18 @@ class Dashboard extends Component {
             },
             series: [
                 {
+                    name: 'Cms unknown category',
+                    data: this.state.cmsUnknownCategoryErrorCodeStatistic
+                }, {
+                    name: 'Cms insert failed',
+                    data: this.state.cmsInsertFailedErrorCodeStatistic
+                }, {
+                    name: 'Weight invalid',
+                    data: this.state.weightInvalidStatusErrorCodeStatistic
+                }, {
+                    name: 'Weight update failed',
+                    data: this.state.weightUpdateFailedErrorCodeStatistic
+                }, {
                     name: 'Duplicate invalid data',
                     data: this.state.duplicateInvalidDataErrorCodeStatistic
                 }, {
@@ -1108,8 +1143,8 @@ class Dashboard extends Component {
                 }, {
                     name: 'Crawler download failed',
                     data: this.state.crawlerDownloadFailedErrorCodeStatistic
-                }, 
-                
+                },
+
             ]
         }
         return (
@@ -1179,7 +1214,15 @@ class Dashboard extends Component {
             return data.sort(this.compareByErrorCodeDuplicateFailure)
         } else if (orderOpt === 21) {
             return data.sort(this.compareByErrorCodeDuplicateInvalidData)
-        } 
+        } else if (orderOpt === 22) {
+            return data.sort(this.compareByErrorCodeWeightUpdateFailed)
+        } else if (orderOpt === 23) {
+            return data.sort(this.compareByErrorCodeWeightInvalid)
+        } else if (orderOpt === 24) {
+            return data.sort(this.compareByErrorCodeCmsInsertFailed)
+        } else if (orderOpt === 25) {
+            return data.sort(this.compareByErrorCodeCmsUnknownCategory)
+        }
     }
 
     compareByErrorCodeCrawlerDownloadFailed(a, b) {
@@ -1220,7 +1263,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeCrawlerTooLongVideo(a, b) {
         const A = a.TotalByErrorCode[4]
@@ -1230,7 +1273,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeCrawlerIgnoreDownloadMedia(a, b) {
         const A = a.TotalByErrorCode[5]
@@ -1240,7 +1283,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeCrawlerUnknown(a, b) {
         const A = a.TotalByErrorCode[6]
@@ -1250,7 +1293,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeCrawlerUploadAws(a, b) {
         const A = a.TotalByErrorCode[7]
@@ -1260,7 +1303,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeEtlParsingCrawlMessageException(a, b) {
         const A = a.TotalByErrorCode[8]
@@ -1270,7 +1313,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeEtlDownloadHtmlS3Exception(a, b) {
         const A = a.TotalByErrorCode[9]
@@ -1280,7 +1323,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeEtlException(a, b) {
         const A = a.TotalByErrorCode[10]
@@ -1290,7 +1333,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeEtlAiTaggingApiException(a, b) {
         const A = a.TotalByErrorCode[12]
@@ -1300,7 +1343,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeEtlRabbitmqPostDataException(a, b) {
         const A = a.TotalByErrorCode[13]
@@ -1310,7 +1353,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeThumbDownloadImagesFromS3Exception(a, b) {
         const A = a.TotalByErrorCode[14]
@@ -1320,7 +1363,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeThumbUploadToS3Exception(a, b) {
         const A = a.TotalByErrorCode[15]
@@ -1330,7 +1373,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeThumbException(a, b) {
         const A = a.TotalByErrorCode[16]
@@ -1340,7 +1383,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeThumbVideoGetThumb(a, b) {
         const A = a.TotalByErrorCode[17]
@@ -1350,7 +1393,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeThumbLackMediaException(a, b) {
         const A = a.TotalByErrorCode[18]
@@ -1360,7 +1403,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeDuplicateFailure(a, b) {
         const A = a.TotalByErrorCode[19]
@@ -1370,7 +1413,7 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
     compareByErrorCodeDuplicateInvalidData(a, b) {
         const A = a.TotalByErrorCode[20]
@@ -1380,9 +1423,49 @@ class Dashboard extends Component {
         } else if (A < B) {
             return 1;
         }
-    } 
+    }
 
-    
+    compareByErrorCodeWeightUpdateFailed(a, b) {
+        const A = a.TotalByErrorCode[21]
+        const B = b.TotalByErrorCode[21]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByErrorCodeWeightInvalid(a, b) {
+        const A = a.TotalByErrorCode[22]
+        const B = b.TotalByErrorCode[22]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByErrorCodeCmsInsertFailed(a, b) {
+        const A = a.TotalByErrorCode[23]
+        const B = b.TotalByErrorCode[23]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByErrorCodeCmsUnknownCategory(a, b) {
+        const A = a.TotalByErrorCode[24]
+        const B = b.TotalByErrorCode[24]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+
     // END Build ErrorCode Statistic Chart 
     /////////////////////////////////////////////////////////
 
