@@ -9,7 +9,6 @@ import PaginationComponent from "react-reactstrap-pagination";
 import Notifications from './../../components/Notifications'
 import Widget04 from './../Widgets/Widget04';
 
-import constant from './../../Constant'
 
 function addDays(date, amount) {
     var tzOff = date.getTimezoneOffset() * 60 * 1000,

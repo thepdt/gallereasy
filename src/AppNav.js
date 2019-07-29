@@ -62,6 +62,11 @@ export default {
                             url: '/manage/versions/ios',
                             icon: 'fa fa-apple',
                         },
+                        {
+                            name: 'Bảo trì ứng dụng',
+                            url: '/manage/versions/configApp',
+                            icon: 'fa fa-wrench',
+                        },
                     ]
                 },
             ],

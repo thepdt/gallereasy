@@ -23,6 +23,7 @@ class Publishers extends Component {
             title: "",
             code: "",
             kind: "",
+            status: "",
             logoUrl: "",
             description: "",
             postCount: "",
@@ -105,6 +106,7 @@ class Publishers extends Component {
             videoCount: "",
             followerCount: "",
             kind: "",
+            status: "",
             logoUrl: "",
             ordinal: "",
         });
@@ -117,6 +119,7 @@ class Publishers extends Component {
             Description: this.state.description,
             LogoUrl: this.state.logoUrl,
             Kind: Number(this.state.kind),
+            Status: Number(this.state.status),
             Ordinal: Number(this.state.ordinal)
         }
         this._publisherService.createPublisher(data)
@@ -150,6 +153,7 @@ class Publishers extends Component {
                 followerCount: publisherSelected.FollowerCount,
                 logoUrl: publisherSelected.LogoUrl,
                 kind: publisherSelected.Kind,
+                status: publisherSelected.Status,
                 ordinal: publisherSelected.Ordinal
             });
         }
@@ -162,6 +166,7 @@ class Publishers extends Component {
             Code: this.state.code,
             Description: this.state.description,
             Kind: this.state.kind,
+            Status: Number(this.state.status),
             LogoUrl: this.state.logoUrl,
             Ordinal: Number(this.state.ordinal)
         }
@@ -310,6 +315,12 @@ class Publishers extends Component {
         })
     }
 
+    getStatus(event) {
+        this.setState({
+            status: event.target.value
+        })
+    }
+
     getLogoUrl(event) {
         this.setState({
             logoUrl: event.target.value
@@ -360,11 +371,20 @@ class Publishers extends Component {
                             </FormGroup>
                             <FormGroup row>
                                 <Col md="4">
+                                    <Label htmlFor="status-input" className="title-required">Trạng thái:</Label>
+                                </Col>
+                                <Col xs="12" md="8">
+                                    <Input type="number" id="status-input" name="status-input" value={this.state.status} onChange={(e) => this.getStatus(e)} invalid={Number(this.state.status) !== 0 && Number(this.state.status) !== 1} />
+                                    <FormFeedback valid={false}>Trạng thái không được bỏ trống và bằng 0 hoặc 1 </FormFeedback>
+                                </Col>
+                            </FormGroup>
+                            <FormGroup row>
+                                <Col md="4">
                                     <Label htmlFor="logoUrl-input" className="title-required">Logo đầu báo:</Label>
                                 </Col>
                                 <Col xs="12" md="8">
-                                    <Input type="text" id="logoUrl-input" name="logoUrl-input" value={this.state.logoUrl} onChange={(e) => this.getLogoUrl(e)} invalid={this.state.logoUrl === ""} />
-                                    <FormFeedback valid={false}>Logo đầu báo không được bỏ trống</FormFeedback>
+                                    <Input type="text" id="logoUrl-input" name="logoUrl-input" value={this.state.logoUrl} onChange={(e) => this.getLogoUrl(e)} />
+                                    {/* <FormFeedback valid={false}>Logo đầu báo không được bỏ trống</FormFeedback> */}
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -449,10 +469,11 @@ class Publishers extends Component {
                                                     </label>
                                                 </th>
                                                 <th scope="col" width="7%" className="centered">Độ ưu tiên</th>
-                                                <th scope="col" width="25%" className="centered">Tên đầu báo</th>
+                                                <th scope="col" width="22%" className="centered">Tên đầu báo</th>
                                                 <th scope="col" width="20%" className="centered">Mã đầu báo</th>
                                                 <th scope="col" width="10%" className="centered">Loại đầu báo </th>
-                                                <th scope="col" width="35%" className="centered">Mô tả</th>
+                                                <th scope="col" width="8%" className="centered">Trạng thái </th>
+                                                <th scope="col" width="30%" className="centered">Mô tả</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -470,6 +491,7 @@ class Publishers extends Component {
                                                     </td>
                                                     <td>{publisher.Code}</td>
                                                     <td>{publisher.kindText}</td>
+                                                    <td>{publisher.Status}</td>
                                                     <td>{publisher.Description}</td>
                                                 </tr>)
                                             )}
@@ -506,7 +528,7 @@ class Publishers extends Component {
                             {this.state.createModalMode ?
                                 <Button color="primary" onClick={this.createPublisher.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (Number(this.state.ordinal) < 1) || (this.state.ordinal === "") || (this.state.logoUrl === "") || (this.state.kind) === ""}>Thêm mới</Button>
                                 :
-                                <Button color="primary" onClick={this.updatePublisher.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (Number(this.state.ordinal) < 1) || (this.state.ordinal === "") || (this.state.logoUrl === "") || (this.state.kind) === ""}>Cập nhật</Button>
+                                <Button color="primary" onClick={this.updatePublisher.bind(this)} disabled={(this.state.title === "") || (this.state.code === "") || (Number(this.state.ordinal) < 1) || (this.state.ordinal === "") || (this.state.kind) === "" || Number(this.state.status) > 1 || Number(this.state.status) < 0} >Cập nhật</Button>
                             }
                             <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                         </ModalFooter>
