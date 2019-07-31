@@ -36,7 +36,13 @@ class Dashboard extends Component {
         super(props);
 
         this.state = {
-            //////////////////////////////////////////////////
+
+            //for percentage            
+            percentageStatusStatistic: [],
+            percentageErrorCode: [],
+            titlesStatus: ['Download HTML completed', 'ETL Error', 'ETL Copmleted', 'Cms insert post error', 'Cms insert post completed blacklist', 'Cms insert post completed', 'Download media error', 'Download media error Completed', 'Gen thumb image error', 'Gen thumb image completed', "Update link media error", "Update link media completed", "Check duplicate error", 'Duplicated Inreview', 'No duplicated ', 'Update weight error', 'Update weight completed', 'Cms update couchbase error', 'Published', 'In trash'],
+            titlesErrorCode: ['Crawler Download Failed', 'Crawler Url Not Found', 'Crawler Cannot Create File', 'Crawler Cannnot Copy File', ' Crawler Too Long Video', 'Crawler Ignor Download Media', 'Crawler Unkown', 'Crawler Upload Aws', 'ETL Parsing Crawler Message Expection', 'ETL Download HTML S3 Exception', 'ETL Exception', 'ETL AI Tagging API Exception', 'ETL Rabbi TMQ Post Data Exception', 'Thumb Download Images From S3 Exception', 'Thumb Upload To S3 Exception', 'Thumb Exception', 'Thumb Video Get Thumb Exception', 'Thumb lack Media Exception', 'Dupliacte Failure', 'Duplicate Invalid Data', 'Weight Update Faited ', 'Weight Invalid Status', 'CMS Insert Failed', 'CMS Unkown Category'],
+
             //For statistic user
             onDatePickedUserStatistic: addDays(new Date(), -1),
             activeUserCount: 0,
@@ -74,12 +80,11 @@ class Dashboard extends Component {
             fromDatePickedByStatus: addDays(new Date(), -1),
             heightChartByStatus: 0,
             publishersStatisticByStatus: [],
-
             downloadHTMLCompletedStatusStatistic: [],
             etlErrorStatusStatistic: [],
-            etlUnknownCategoryStatusStatistic: [],
             etlCompletedStatusStatistic: [],
             cmsInsertPostErrorStatusStatistic: [],
+            cmsInsertPostCompletedStatusStatisticBlacklist: [],
             cmsInsertPostCompletedStatusStatistic: [],
             downloadMediaErrorStatusStatistic: [],
             downloadMediaCompletedStatusStatistic: [],
@@ -100,9 +105,9 @@ class Dashboard extends Component {
                 { value: 1, text: "Sắp xếp theo tên đầu báo" },
                 { value: 2, text: "Sắp xếp theo Download HTML Completed" },
                 { value: 3, text: "Sắp xếp theo ETL Error" },
-                { value: 4, text: "Sắp xếp theo ETL Unknown Category" },
-                { value: 5, text: "Sắp xếp theo ETL Completed" },
-                { value: 6, text: "Sắp xếp theo CMS Insert Post Error" },
+                { value: 4, text: "Sắp xếp theo ETL Completed" },
+                { value: 5, text: "Sắp xếp theo CMS Insert Post Error" },
+                { value: 6, text: "Sắp xếp theo CMS Insert Post Completed Blacklist" },
                 { value: 7, text: "Sắp xếp theo CMS Insert Post Completed" },
                 { value: 8, text: "Sắp xếp theo Download Media Error" },
                 { value: 9, text: "Sắp xếp theo Download Media Completed" },
@@ -378,8 +383,10 @@ class Dashboard extends Component {
         let fromDate = fromDatePickedByStatus.getFullYear() + "-" + (fromDatePickedByStatus.getMonth() + 1) + "-" + fromDatePickedByStatus.getDate() + " " + fromDatePickedByStatus.getHours() + ":" + fromDatePickedByStatus.getMinutes() + ":00";
         this._dashboardService.getCrawlStatusStatistic(fromDate)
             .then((result) => {
+                console.log(result)
                 if (result.Message === "Success" && result.Data !== null) {
                     this.createStatusStatisticChart(result.Data)
+                    this.totalCrawlStatusStatistic(result.Data)
                     this.setState({
                         statisticByStatusData: result.Data
                     })
@@ -388,12 +395,11 @@ class Dashboard extends Component {
                     this.setState({
                         heightChartByStatus: 0,
                         publishersStatisticByStatus: [],
-
                         downloadHTMLCompletedStatusStatistic: [],
                         etlErrorStatusStatistic: [],
-                        etlUnknownCategoryStatusStatistic: [],
                         etlCompletedStatusStatistic: [],
                         cmsInsertPostErrorStatusStatistic: [],
+                        cmsInsertPostCompletedStatusStatisticBlacklist: [],
                         cmsInsertPostCompletedStatusStatistic: [],
                         downloadMediaErrorStatusStatistic: [],
                         downloadMediaCompletedStatusStatistic: [],
@@ -417,13 +423,14 @@ class Dashboard extends Component {
     }
 
     createStatusStatisticChart(data) {
+        console.log(data)
         const dataSorted = this.sortStatusStatisticData(data, this.state.orderByStatusOption)
         const publishers = []
         const downloadHTMLCompletedStatus = []
         const etlErrorStatus = []
-        const etlUnknownCategoryStatus = []
         const etlCompletedStatus = []
         const cmsInsertPostErrorStatus = []
+        const cmsInsertPostCompletedBlacklistStatus = []
         const cmsInsertPostCompletedStatus = []
         const downloadMediaErrorStatus = []
         const downloadMediaCompletedStatus = []
@@ -443,9 +450,9 @@ class Dashboard extends Component {
             publishers.push(element.Publisher)
             downloadHTMLCompletedStatus.push(element.TotalByStatus[0])
             etlErrorStatus.push(element.TotalByStatus[1])
-            etlUnknownCategoryStatus.push(element.TotalByStatus[2])
-            etlCompletedStatus.push(element.TotalByStatus[3])
-            cmsInsertPostErrorStatus.push(element.TotalByStatus[4])
+            etlCompletedStatus.push(element.TotalByStatus[2])
+            cmsInsertPostErrorStatus.push(element.TotalByStatus[3])
+            cmsInsertPostCompletedBlacklistStatus.push(element.TotalByStatus[4])
             cmsInsertPostCompletedStatus.push(element.TotalByStatus[5])
             downloadMediaErrorStatus.push(element.TotalByStatus[6])
             downloadMediaCompletedStatus.push(element.TotalByStatus[7])
@@ -468,9 +475,9 @@ class Dashboard extends Component {
             publishersStatisticByStatus: publishers,
             downloadHTMLCompletedStatusStatistic: downloadHTMLCompletedStatus,
             etlErrorStatusStatistic: etlErrorStatus,
-            etlUnknownCategoryStatusStatistic: etlUnknownCategoryStatus,
             etlCompletedStatusStatistic: etlCompletedStatus,
             cmsInsertPostErrorStatusStatistic: cmsInsertPostErrorStatus,
+            cmsInsertPostCompletedStatusStatisticBlacklist: cmsInsertPostCompletedBlacklistStatus,
             cmsInsertPostCompletedStatusStatistic: cmsInsertPostCompletedStatus,
             downloadMediaErrorStatusStatistic: downloadMediaErrorStatus,
             downloadMediaCompletedStatusStatistic: downloadMediaCompletedStatus,
@@ -587,14 +594,14 @@ class Dashboard extends Component {
                 name: 'Cms insert post completed',
                 data: this.state.cmsInsertPostCompletedStatusStatistic
             }, {
+                name: 'Cms insert post completed blacklist',
+                data: this.state.cmsInsertPostCompletedStatusStatisticBlacklist
+            }, {
                 name: 'Cms insert post error',
                 data: this.state.cmsInsertPostErrorStatusStatistic
             }, {
                 name: 'ETL completed',
                 data: this.state.etlCompletedStatusStatistic
-            }, {
-                name: 'ETL unknown category',
-                data: this.state.etlUnknownCategoryStatusStatistic
             }, {
                 name: 'ETL error',
                 data: this.state.etlErrorStatusStatistic
@@ -635,11 +642,11 @@ class Dashboard extends Component {
         } else if (orderOpt === 3) {
             return data.sort(this.compareByStatusETLError)
         } else if (orderOpt === 4) {
-            return data.sort(this.compareByStatusETLUnknownCategory)
-        } else if (orderOpt === 5) {
             return data.sort(this.compareByStatusETLCompleted)
-        } else if (orderOpt === 6) {
+        } else if (orderOpt === 5) {
             return data.sort(this.compareByStatusCmsInsertPostError)
+        } else if (orderOpt === 6) {
+            return data.sort(this.compareByStatusCmsInsertPostCompletedBlacklist)
         } else if (orderOpt === 7) {
             return data.sort(this.compareByStatusCmsInsertPostCompleted)
         } else if (orderOpt === 8) {
@@ -703,7 +710,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusETLUnknownCategory(a, b) {
+    compareByStatusETLCompleted(a, b) {
         const A = a.TotalByStatus[2]
         const B = b.TotalByStatus[2]
         if (A > B) {
@@ -713,7 +720,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusETLCompleted(a, b) {
+    compareByStatusCmsInsertPostError(a, b) {
         const A = a.TotalByStatus[3]
         const B = b.TotalByStatus[3]
         if (A > B) {
@@ -723,7 +730,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByStatusCmsInsertPostError(a, b) {
+    compareByStatusCmsInsertPostCompletedBlacklist(a, b) {
         const A = a.TotalByStatus[4]
         const B = b.TotalByStatus[4]
         if (A > B) {
@@ -732,6 +739,7 @@ class Dashboard extends Component {
             return 1;
         }
     }
+
 
     compareByStatusCmsInsertPostCompleted(a, b) {
         const A = a.TotalByStatus[5]
@@ -886,6 +894,34 @@ class Dashboard extends Component {
     // END Build Status Statistic Chart 
     /////////////////////////////////////////////////////////
 
+    //////////////////////////////////////////////////////////
+    //Build Percentage Status
+    totalCrawlStatusStatistic(data) {
+        var totalStatus = 0
+        var elementTotalData = []
+        for (let j = 0; j < data[0].TotalByStatus.length; j++) {
+            var totalElement = 0
+            var obj = { titleStatus: "", total:0, percentsStatus: 0 }
+            for (let k = 0; k < data.length; k++) {
+                totalElement += data[k].TotalByStatus[j]
+            }
+            totalStatus += totalElement
+            obj.titleStatus = this.state.titlesStatus[j]
+            obj.total = totalElement
+           
+            elementTotalData[j] = obj
+        };
+
+        for (let i = 0; i < elementTotalData.length; i++) {
+            elementTotalData[i].percentsStatus = (elementTotalData[i].total / totalStatus * 100).toFixed(2) 
+        }
+
+        console.log(elementTotalData)
+        this.setState({
+            percentageStatusStatistic: elementTotalData
+        })
+    }
+
     /////////////////////////////////////////////////////////
     // Build ErrorCode Statistic Chart 
     getPostErrorCodeStatistic(fromDatePickedByErrorCode) {
@@ -894,6 +930,7 @@ class Dashboard extends Component {
             .then((result) => {
                 if (result.Message === "Success" && result.Data !== null) {
                     this.createErrorCodeStatisticChart(result.Data)
+                    this.totalByErrorCode(result.Data)
                     this.setState({
                         statisticByErrorCodeData: result.Data
                     })
@@ -1464,7 +1501,30 @@ class Dashboard extends Component {
         }
     }
 
-
+    totalByErrorCode(data) {
+        var totalErrorCode = 0
+        var elementDataError = []
+        for (let j = 0; j < data[0].TotalByErrorCode.length; j++) {
+            var totalElement = 0
+            var objError = { titleErrorCode: "",total:0, percentsErrorCode: 0 }
+            for (let i = 0; i < data.length; i++) {
+                totalElement += data[i].TotalByErrorCode[j]
+            }
+            totalErrorCode  +=totalElement
+            objError.titleErrorCode = this.state.titlesErrorCode[j]
+            objError.total = totalElement
+    
+            elementDataError[j] = objError
+        };
+        console.log(totalErrorCode)      
+        for(let i=0; i< elementDataError.length; i++){
+            elementDataError[i].percentsErrorCode = (elementDataError[i].total/totalErrorCode *100).toFixed(2)
+        }
+        this.setState({
+            percentageErrorCode: elementDataError
+        })
+        
+    }
     // END Build ErrorCode Statistic Chart 
     /////////////////////////////////////////////////////////
 
@@ -1572,6 +1632,75 @@ class Dashboard extends Component {
                         </TabContent>
                     </CardBody>
                 </Card>
+                <Row>
+                    <Col md={{ size: 6 }}>
+                        <Card>
+                            <CardHeader style={{ backgroundColor: '#d7efff' }} className='centered'> Percentage Status Statistic
+                            </CardHeader>
+                            <CardBody>
+
+                                <Table responsive hover bordered striped>
+                                    <thead>
+                                        <tr>
+                                            <th scope='col' width="5%" className="centered">Stt</th>
+                                            <th scope='col' width="50%" className="centered">StatusStatistic</th>
+                                            <th scope='col' width="45%" className="centered">Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.percentageStatusStatistic.map((item, index) =>
+                                            (<tr key={index}>
+                                                <td className="centered">
+                                                    {index + 1}
+                                                </td>
+                                                <td>
+                                                    <span>{item.titleStatus}</span>
+                                                </td>
+                                                <td>
+                                                    <span>{item.percentsStatus}</span>
+                                                </td>
+                                            </tr>)
+                                        )}
+                                    </tbody>
+                                </Table>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                    <Col md={{ size: 6 }}>
+                        <Card>
+                            <CardHeader style={{ backgroundColor: '#d7efff' }} className='centered'> Percentage ErrorCode
+                            </CardHeader>
+                            <CardBody>
+                                <Table responsive hover bordered striped>
+                                    <thead>
+                                        <tr>
+                                            <th scope='col' width="5%" className="centered">Stt</th>
+                                            <th scope='col' width="50%" className="centered">ErrorCode</th>
+                                            <th scope='col' width="45%" className="centered">Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.percentageErrorCode.map((item, index) =>
+                                            (<tr key={index}>
+                                                <td className="centered">
+                                                    {index + 1}
+                                                </td>
+                                                <td>
+                                                    <span>{item.titleErrorCode}</span>
+                                                </td>
+                                                <td>
+                                                    <span>{item.percentsErrorCode}</span>
+                                                </td>
+                                            </tr>)
+                                        )}
+                                    </tbody>
+                                </Table>
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+
+
                 <Row>
                     <Col md={{ size: 6 }}>
                         <Card>
