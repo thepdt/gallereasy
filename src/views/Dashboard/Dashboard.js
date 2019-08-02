@@ -38,10 +38,8 @@ class Dashboard extends Component {
         this.state = {
 
             //for percentage            
-            percentageStatusStatistic: [],
-            percentageErrorCode: [],
-            titlesStatus: ['Download HTML completed', 'ETL Error', 'ETL Copmleted', 'Cms insert post error', 'Cms insert post completed blacklist', 'Cms insert post completed', 'Download media error', 'Download media error Completed', 'Gen thumb image error', 'Gen thumb image completed', "Update link media error", "Update link media completed", "Check duplicate error", 'Duplicated Inreview', 'No duplicated ', 'Update weight error', 'Update weight completed', 'Cms update couchbase error', 'Published', 'In trash'],
-            titlesErrorCode: ['Crawler Download Failed', 'Crawler Url Not Found', 'Crawler Cannot Create File', 'Crawler Cannnot Copy File', ' Crawler Too Long Video', 'Crawler Ignor Download Media', 'Crawler Unkown', 'Crawler Upload Aws', 'ETL Parsing Crawler Message Expection', 'ETL Download HTML S3 Exception', 'ETL Exception', 'ETL AI Tagging API Exception', 'ETL Rabbi TMQ Post Data Exception', 'Thumb Download Images From S3 Exception', 'Thumb Upload To S3 Exception', 'Thumb Exception', 'Thumb Video Get Thumb Exception', 'Thumb lack Media Exception', 'Dupliacte Failure', 'Duplicate Invalid Data', 'Weight Update Faited ', 'Weight Invalid Status', 'CMS Insert Failed', 'CMS Unkown Category'],
+           
+            
 
             //For statistic user
             onDatePickedUserStatistic: addDays(new Date(), -1),
@@ -128,6 +126,59 @@ class Dashboard extends Component {
             orderByStatusOption: 4,
             orderByStatusOptionValue: "Sắp xếp theo ETL Error",
 
+            //// percentStatus
+            percentageStatusStatistic: [],          
+            titlesStatus: ['Download HTML completed', 'ETL Error', 'ETL Copmleted', 'Cms insert post error', 'Cms insert post completed blacklist', 'Cms insert post completed', 'Download media error', 'Download media error Completed', 'Gen thumb image error', 'Gen thumb image completed', "Update link media error", "Update link media completed", "Check duplicate error", 'Duplicated Inreview', 'No duplicated ', 'Update weight error', 'Update weight completed', 'Cms update couchbase error', 'Published', 'In trash'],
+           
+            downloadHTMLCompleteStatusPercent: 0,
+            etlErroStatusPercent: 0,
+            etlCompleteStatusPercent: 0,
+            cmsInsertPostErroStatusPercent: 0,
+            cmsInsertPostCompletedStatusStStatusPercent: 0,
+            cmsInsertPostCompleteStatusPercent: 0,
+            downloadMediaErroStatusPercent: 0,
+            downloadMediaCompleteStatusPercent: 0,
+            genThumImageErroStatusPercent: 0,
+            genThumImageCompleteStatusPercent: 0,
+            updateMediaLinkErroStatusPercent: 0,
+            updateMediaLinkCompleteStatusPercent: 0,
+            checkDuplicateErroStatusPercent: 0,
+            inrevieStatusPercent: 0,
+            checkNoDuplicateStatusPercent: 0,
+            updateWeightErroStatusPercent: 0,
+            updateWeightCompleteStatusPercent: 0,
+            cmsUpdateCouchbaseErroStatusPercent: 0,
+            publisStatusPercent: 0,
+            inTrasStatusPercent: 0,
+
+            //percentErrorCode
+            percentageErrorCode: [],
+            titlesErrorCode: ['Crawler Download Failed', 'Crawler Url Not Found', 'Crawler Cannot Create File', 'Crawler Cannnot Copy File', ' Crawler Too Long Video', 'Crawler Ignor Download Media', 'Crawler Unkown', 'Crawler Upload Aws', 'ETL Parsing Crawler Message Expection', 'ETL Download HTML S3 Exception', 'ETL Exception', 'ETL AI Tagging API Exception', 'ETL Rabbi TMQ Post Data Exception', 'Thumb Download Images From S3 Exception', 'Thumb Upload To S3 Exception', 'Thumb Exception', 'Thumb Video Get Thumb Exception', 'Thumb lack Media Exception', 'Dupliacte Failure', 'Duplicate Invalid Data', 'Weight Update Faited ', 'Weight Invalid Status', 'CMS Insert Failed', 'CMS Unkown Category'],
+          
+            crawlerDownloadFailedErrorCodepercent:0,
+            crawlerUrlNotFoundErrorCodepercent:0,
+            crawlerCannotCreateFileErrorCodepercent:0,
+            crawlerCannotCopyFileErrorCodepercent: 0,
+            crawlerTooLongVideoErrorCodepercent:0,
+            crawlerIgnoreDownloadMediaErrorCodepercent:0,
+            crawlerUnknownErrorCodepercent: 0,
+            crawlerUploadAwsErrorCodepercent:0,
+            etlParsingCrawlMessageExceptionErrorpercent:0,
+            etlDownloadHtmlS3ExceptionErrorCodepercent:0,
+            etlExceptionErrorCodepercent:0,
+            etlAiTaggingApiExceptionErrorCodepercent:0,
+            etlRabbitmqPostDataExceptionErrorCodeStaticpercent:0,
+            thumbDownloadImagesFromS3ExceptionErrorCoodepercent:0,
+            thumbUploadToS3ExceptionErrorCode:0,
+            thumbExceptionErrorCodepercent:0,
+            thumbVideoGetThumbExceptionErrorCodepercent:0,
+            thumbLackMediaExceptionErrorCodepercent:0,
+            duplicateFailureErrorCodepercent: 0,
+            duplicateInvalidDataErrorCodepercent:0,
+            weightUpdateFailedErrorCodepercent:0,
+            weightInvalidStatusErrorCodepercent:0,
+            cmsInsertFailedErrorCodepercent: 0,
+            cmsUnknownCategoryErrorCodepercent:0,
             //////////////////////////////////////////////////
             //For ErrorCode Statistic
             statisticByErrorCodeData: [],
@@ -224,7 +275,6 @@ class Dashboard extends Component {
     //Build Statistic User & Hot Posts
 
     onDateUserStatisticChange = date => {
-        console.log(date);
         if (date !== null) {
             // this.getUserStatistic(date)
             this.setState({
@@ -383,10 +433,10 @@ class Dashboard extends Component {
         let fromDate = fromDatePickedByStatus.getFullYear() + "-" + (fromDatePickedByStatus.getMonth() + 1) + "-" + fromDatePickedByStatus.getDate() + " " + fromDatePickedByStatus.getHours() + ":" + fromDatePickedByStatus.getMinutes() + ":00";
         this._dashboardService.getCrawlStatusStatistic(fromDate)
             .then((result) => {
-                console.log(result)
                 if (result.Message === "Success" && result.Data !== null) {
                     this.createStatusStatisticChart(result.Data)
                     this.totalCrawlStatusStatistic(result.Data)
+                    // this.totalCrawlStatusStatistic1(result.Data)
                     this.setState({
                         statisticByStatusData: result.Data
                     })
@@ -423,7 +473,6 @@ class Dashboard extends Component {
     }
 
     createStatusStatisticChart(data) {
-        console.log(data)
         const dataSorted = this.sortStatusStatisticData(data, this.state.orderByStatusOption)
         const publishers = []
         const downloadHTMLCompletedStatus = []
@@ -897,29 +946,153 @@ class Dashboard extends Component {
     //////////////////////////////////////////////////////////
     //Build Percentage Status
     totalCrawlStatusStatistic(data) {
+
         var totalStatus = 0
         var elementTotalData = []
         for (let j = 0; j < data[0].TotalByStatus.length; j++) {
             var totalElement = 0
-            var obj = { titleStatus: "", total:0, percentsStatus: 0 }
+            var obj = { titleStatus: "", total: 0, percentsStatus: 0 }
             for (let k = 0; k < data.length; k++) {
                 totalElement += data[k].TotalByStatus[j]
             }
             totalStatus += totalElement
             obj.titleStatus = this.state.titlesStatus[j]
             obj.total = totalElement
-           
             elementTotalData[j] = obj
+
         };
-
         for (let i = 0; i < elementTotalData.length; i++) {
-            elementTotalData[i].percentsStatus = (elementTotalData[i].total / totalStatus * 100).toFixed(2) 
-        }
-
-        console.log(elementTotalData)
+            elementTotalData[i].percentsStatus = (elementTotalData[i].total / totalStatus * 100).toFixed(2)
+        }        
         this.setState({
-            percentageStatusStatistic: elementTotalData
+            percentageStatusStatistic: elementTotalData,
+            downloadHTMLCompleteStatusPercent: elementTotalData[0].percentsStatus,
+            etlErroStatusPercent: elementTotalData[1].percentsStatus,
+            etlCompleteStatusPercent: elementTotalData[2].percentsStatus,
+            cmsInsertPostErroStatusPercent: elementTotalData[3].percentsStatus,
+            cmsInsertPostCompletedStatusStStatusPercent: elementTotalData[4].percentsStatus,
+            cmsInsertPostCompleteStatusPercent: elementTotalData[5].percentsStatus,
+            downloadMediaErroStatusPercent: elementTotalData[6].percentsStatus,
+            downloadMediaCompleteStatusPercent: elementTotalData[7].percentsStatus,
+            genThumImageErroStatusPercent: elementTotalData[8].percentsStatus,
+            genThumImageCompleteStatusPercent: elementTotalData[9].percentsStatus,
+            updateMediaLinkErroStatusPercent: elementTotalData[10].percentsStatus,
+            updateMediaLinkCompleteStatusPercent: elementTotalData[11].percentsStatus,
+            checkDuplicateErroStatusPercent: elementTotalData[12].percentsStatus,
+            inrevieStatusPercent: elementTotalData[13].percentsStatus,
+            checkNoDuplicateStatusPercent: elementTotalData[14].percentsStatus,
+            updateWeightErroStatusPercent: elementTotalData[15].percentsStatus,
+            updateWeightCompleteStatusPercent: elementTotalData[16].percentsStatus,
+            cmsUpdateCouchbaseErroStatusPercent: elementTotalData[17].percentsStatus,
+            publisStatusPercent: elementTotalData[18].percentsStatus,
+            inTrasStatusPercent: elementTotalData[19].percentsStatus,
         })
+
+    }
+
+    showPercentStatusChart() {
+        const showPercentStatus = {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Percenttage Status Statistic'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: [{
+                    name: 'Download HTML completed',
+                    y: Number(this.state.downloadHTMLCompleteStatusPercent),
+                    sliced: true,
+                    selected: true
+                }, {
+                    name: 'ETL Error',
+                    y: Number(this.state.etlErroStatusPercent)
+                }, {
+                    name: 'ETL Completed',
+                    y: Number(this.state.etlCompleteStatusPercent)
+                }, {
+                    name: 'Cms insert post error',
+                    y: Number(this.state.cmsInsertPostErroStatusPercent)
+                }, {
+                    name: 'Cms insert post completed blacklist',
+                    y: Number(this.state.cmsInsertPostCompletedStatusStStatusPercent)
+                }, {
+                    name: 'Cms insert post completed',
+                    y: Number(this.state.cmsInsertPostCompleteStatusPercent)
+                }, {
+                    name: 'Download media error',
+                    y: Number(this.state.downloadMediaErroStatusPercent)
+                }, {
+                    name: 'Download media error Completed',
+                    y: Number(this.state.downloadMediaCompleteStatusPercent)
+                }, {
+                    name: 'Gen thumb image error',
+                    y:Number(this.state.genThumImageErroStatusPercent)
+                }, {
+                    name: 'Gen thumb image completed',
+                    y: Number(this.state.genThumImageCompleteStatusPercent)
+                }, {
+                    name: " Update link media error",
+                    y: Number(this.state.updateMediaLinkErroStatusPercent)
+                }, {
+                    name: "Update link media completed",
+                    y: Number(this.state.updateMediaLinkCompleteStatusPercent)
+                }, {
+                    name: "Check duplicate error",
+                    y: Number(this.state.checkDuplicateErroStatusPercent)
+                }, {
+                    name: 'Duplicated Interiew',
+                    y: Number(this.state.inrevieStatusPercent)
+                }, {
+                    name: 'No duplicated ',
+                    y: Number(this.state.checkNoDuplicateStatusPercent)
+                }, {
+                    name: 'Update weight error',
+                    y: Number(this.state.updateWeightErroStatusPercent)
+                }, {
+                    name: 'Update weight completed',
+                    y: Number(this.state.updateWeightCompleteStatusPercent)
+                }, {
+                    name: 'Cms update couchbase error',
+                    y: Number(this.state.cmsUpdateCouchbaseErroStatusPercent)
+                }, {
+                    name: 'Published',
+                    y:Number(this.state.publisStatusPercent)
+                }, {
+                    name: 'In Trash',
+                    y: Number(this.state.inTrasStatusPercent)
+                }
+
+                ],
+            }]
+        };
+        return (
+            <HighchartsReact
+                highcharts={Highcharts}
+                options={showPercentStatus}
+            />
+        )
     }
 
     /////////////////////////////////////////////////////////
@@ -1363,7 +1536,7 @@ class Dashboard extends Component {
 
     compareByErrorCodeEtlException(a, b) {
         const A = a.TotalByErrorCode[10]
-        const B = b.TotalByErrorCode[11]
+        const B = b.TotalByErrorCode[10]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -1372,6 +1545,16 @@ class Dashboard extends Component {
     }
 
     compareByErrorCodeEtlAiTaggingApiException(a, b) {
+        const A = a.TotalByErrorCode[11]
+        const B = b.TotalByErrorCode[11]
+        if (A > B) {
+            return -1;
+        } else if (A < B) {
+            return 1;
+        }
+    }
+
+    compareByErrorCodeEtlRabbitmqPostDataException(a, b) {
         const A = a.TotalByErrorCode[12]
         const B = b.TotalByErrorCode[12]
         if (A > B) {
@@ -1381,7 +1564,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeEtlRabbitmqPostDataException(a, b) {
+    compareByErrorCodeThumbDownloadImagesFromS3Exception(a, b) {
         const A = a.TotalByErrorCode[13]
         const B = b.TotalByErrorCode[13]
         if (A > B) {
@@ -1391,7 +1574,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeThumbDownloadImagesFromS3Exception(a, b) {
+    compareByErrorCodeThumbUploadToS3Exception(a, b) {
         const A = a.TotalByErrorCode[14]
         const B = b.TotalByErrorCode[14]
         if (A > B) {
@@ -1401,7 +1584,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeThumbUploadToS3Exception(a, b) {
+    compareByErrorCodeThumbException(a, b) {
         const A = a.TotalByErrorCode[15]
         const B = b.TotalByErrorCode[15]
         if (A > B) {
@@ -1411,7 +1594,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeThumbException(a, b) {
+    compareByErrorCodeThumbVideoGetThumb(a, b) {
         const A = a.TotalByErrorCode[16]
         const B = b.TotalByErrorCode[16]
         if (A > B) {
@@ -1421,7 +1604,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeThumbVideoGetThumb(a, b) {
+    compareByErrorCodeThumbLackMediaException(a, b) {
         const A = a.TotalByErrorCode[17]
         const B = b.TotalByErrorCode[17]
         if (A > B) {
@@ -1431,7 +1614,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeThumbLackMediaException(a, b) {
+    compareByErrorCodeDuplicateFailure(a, b) {
         const A = a.TotalByErrorCode[18]
         const B = b.TotalByErrorCode[18]
         if (A > B) {
@@ -1441,7 +1624,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeDuplicateFailure(a, b) {
+    compareByErrorCodeDuplicateInvalidData(a, b) {
         const A = a.TotalByErrorCode[19]
         const B = b.TotalByErrorCode[19]
         if (A > B) {
@@ -1451,7 +1634,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeDuplicateInvalidData(a, b) {
+    compareByErrorCodeWeightUpdateFailed(a, b) {
         const A = a.TotalByErrorCode[20]
         const B = b.TotalByErrorCode[20]
         if (A > B) {
@@ -1461,7 +1644,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeWeightUpdateFailed(a, b) {
+    compareByErrorCodeWeightInvalid(a, b) {
         const A = a.TotalByErrorCode[21]
         const B = b.TotalByErrorCode[21]
         if (A > B) {
@@ -1471,7 +1654,7 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeWeightInvalid(a, b) {
+    compareByErrorCodeCmsInsertFailed(a, b) {
         const A = a.TotalByErrorCode[22]
         const B = b.TotalByErrorCode[22]
         if (A > B) {
@@ -1481,19 +1664,9 @@ class Dashboard extends Component {
         }
     }
 
-    compareByErrorCodeCmsInsertFailed(a, b) {
+    compareByErrorCodeCmsUnknownCategory(a, b) {
         const A = a.TotalByErrorCode[23]
         const B = b.TotalByErrorCode[23]
-        if (A > B) {
-            return -1;
-        } else if (A < B) {
-            return 1;
-        }
-    }
-
-    compareByErrorCodeCmsUnknownCategory(a, b) {
-        const A = a.TotalByErrorCode[24]
-        const B = b.TotalByErrorCode[24]
         if (A > B) {
             return -1;
         } else if (A < B) {
@@ -1506,24 +1679,165 @@ class Dashboard extends Component {
         var elementDataError = []
         for (let j = 0; j < data[0].TotalByErrorCode.length; j++) {
             var totalElement = 0
-            var objError = { titleErrorCode: "",total:0, percentsErrorCode: 0 }
+            var objError = { titleErrorCode: "", total: 0, percentsErrorCode: 0 }
             for (let i = 0; i < data.length; i++) {
                 totalElement += data[i].TotalByErrorCode[j]
             }
-            totalErrorCode  +=totalElement
+            totalErrorCode += totalElement
             objError.titleErrorCode = this.state.titlesErrorCode[j]
             objError.total = totalElement
-    
+
             elementDataError[j] = objError
         };
-        console.log(totalErrorCode)      
-        for(let i=0; i< elementDataError.length; i++){
-            elementDataError[i].percentsErrorCode = (elementDataError[i].total/totalErrorCode *100).toFixed(2)
+        for (let i = 0; i < elementDataError.length; i++) {
+            elementDataError[i].percentsErrorCode = (elementDataError[i].total / totalErrorCode * 100).toFixed(2)
         }
         this.setState({
-            percentageErrorCode: elementDataError
+            percentageErrorCode: elementDataError,
+
+            crawlerDownloadFailedErrorCodepercent:elementDataError[0].percentsErrorCode,
+            crawlerUrlNotFoundErrorCodepercent:elementDataError[1].percentsErrorCode,
+            crawlerCannotCreateFileErrorCodepercent:elementDataError[2].percentsErrorCode,
+            crawlerCannotCopyFileErrorCodepercent: elementDataError[3].percentsErrorCode,
+            crawlerTooLongVideoErrorCodepercent:elementDataError[4].percentsErrorCode,
+            crawlerIgnoreDownloadMediaErrorCodepercent:elementDataError[5].percentsErrorCode,
+            crawlerUnknownErrorCodepercent: elementDataError[6].percentsErrorCode,
+            crawlerUploadAwsErrorCodepercent:elementDataError[7].percentsErrorCode,
+            etlParsingCrawlMessageExceptionErrorpercent:elementDataError[8].percentsErrorCode,
+            etlDownloadHtmlS3ExceptionErrorCodepercent:elementDataError[9].percentsErrorCode,
+            etlExceptionErrorCodepercent:elementDataError[10].percentsErrorCode,
+            etlAiTaggingApiExceptionErrorCodepercent:elementDataError[11].percentsErrorCode,
+            etlRabbitmqPostDataExceptionErrorCodeStaticpercent:elementDataError[12].percentsErrorCode,
+            thumbDownloadImagesFromS3ExceptionErrorCoodepercent:elementDataError[13].percentsErrorCode,
+            thumbUploadToS3ExceptionErrorCode:elementDataError[14].percentsErrorCode,
+            thumbExceptionErrorCodepercent:elementDataError[15].percentsErrorCode,
+            thumbVideoGetThumbExceptionErrorCodepercent:elementDataError[16].percentsErrorCode,
+            thumbLackMediaExceptionErrorCodepercent:elementDataError[17].percentsErrorCode,
+            duplicateFailureErrorCodepercent: elementDataError[18].percentsErrorCode,
+            duplicateInvalidDataErrorCodepercent:elementDataError[19].percentsErrorCode,
+            weightUpdateFailedErrorCodepercent:elementDataError[20].percentsErrorCode,
+            weightInvalidStatusErrorCodepercent:elementDataError[21].percentsErrorCode,
+            cmsInsertFailedErrorCodepercent: elementDataError[22].percentsErrorCode,
+            cmsUnknownCategoryErrorCodepercent:elementDataError[23].percentsErrorCode,
         })
-        
+
+    }
+
+    showPercentErrorCode(){
+        const showPercentError = {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: 'Percenttage Error Code'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                        }
+                    }
+                }
+            },
+            series: [{
+                name: 'Brands',
+                colorByPoint: true,
+                data: [{
+                    name: 'Crawler Download Failed',
+                    y: Number(this.state.crawlerDownloadFailedErrorCodepercent),
+                    sliced: true,
+                    selected: true
+                }, {
+                    name: 'Crawler Url Not Found',
+                    y: Number(this.state.crawlerUrlNotFoundErrorCodepercent)
+                }, {
+                    name: 'Crawler Cannot Create File',
+                    y: Number(this.state.crawlerCannotCreateFileErrorCodepercent)
+                }, {
+                    name: 'Crawler Cannnot Copy File',
+                    y: Number(this.state.crawlerCannotCopyFileErrorCodepercent)
+                }, {
+                    name: ' Crawler Too Long Video',
+                    y: Number(this.state.crawlerTooLongVideoErrorCodepercent)
+                }, {
+                    name: 'Crawler Ignor Download Media',
+                    y: Number(this.state.crawlerIgnoreDownloadMediaErrorCodepercent)
+                }, {
+                    name: 'Crawler Unkown',
+                    y: Number(this.state.crawlerUnknownErrorCodepercent)
+                }, {
+                    name: 'Crawler Upload Aws',
+                    y: Number(this.state.crawlerUploadAwsErrorCodepercent)
+                }, {
+                    name: 'ETL Parsing Crawler Message Expection',
+                    y:Number(this.state.etlParsingCrawlMessageExceptionErrorpercent)
+                }, {
+                    name: 'ETL Download HTML S3 Exception',
+                    y: Number(this.state.etlDownloadHtmlS3ExceptionErrorCodepercent)
+                }, {
+                    name: 'ETL Exception',
+                    y: Number(this.state.etlExceptionErrorCodepercent)
+                }, {
+                    name:  'ETL AI Tagging API Exception',
+                    y: Number(this.state.etlAiTaggingApiExceptionErrorCodepercent)
+                }, {
+                    name: 'ETL Rabbi TMQ Post Data Exception',
+                    y: Number(this.state.etlRabbitmqPostDataExceptionErrorCodeStaticpercent)
+                }, {
+                    name: 'Thumb Download Images From S3 Exception',
+                    y: Number(this.state.thumbDownloadImagesFromS3ExceptionErrorCoodepercent)
+                }, {
+                    name: 'Thumb Upload To S3 Exception',
+                    y: Number(this.state.thumbUploadToS3ExceptionErrorCode)
+                }, {
+                    name:  'Thumb Exception',
+                    y: Number(this.state.thumbExceptionErrorCodepercent)
+                }, {
+                    name: 'Thumb Video Get Thumb Exception',
+                    y: Number(this.state.thumbVideoGetThumbExceptionErrorCodepercent)
+                }, {
+                    name: 'Thumb lack Media Exception',
+                    y: Number(this.state.thumbLackMediaExceptionErrorCodepercent)
+                }, {
+                    name: 'Dupliacte Failure',
+                    y:Number(this.state.duplicateFailureErrorCodepercent)
+                }, {
+                    name:  'Duplicate Invalid Data',
+                    y: Number(this.state.duplicateInvalidDataErrorCodepercent)
+                }, {
+                    name: 'Weight Update Faited ',
+                    y: Number(this.state.weightUpdateFailedErrorCodepercent)
+                }, {
+                    name: 'Weight Invalid Status',
+                    y: Number(this.state.weightInvalidStatusErrorCodepercent)
+                }, {
+                    name:  'CMS Insert Failed',
+                    y: Number(this.state.cmsInsertFailedErrorCodepercent)
+                }, {
+                    name: 'CMS Unkown Category',
+                    y: Number(this.state.cmsUnknownCategoryErrorCodepercent)
+                }
+
+                ],
+            }]
+        };
+        return (
+            <HighchartsReact
+                highcharts={Highcharts}
+                options={showPercentError}
+            />
+        )
     }
     // END Build ErrorCode Statistic Chart 
     /////////////////////////////////////////////////////////
@@ -1700,6 +2014,22 @@ class Dashboard extends Component {
                     </Col>
                 </Row>
 
+                <Card>
+                    <CardHeader style={{ backgroundColor: '#d7efff' }}>
+                        <i className='fa fa-pie-chart'></i> Chart Percentage Status
+                    </CardHeader>
+                    <CardBody>
+                        {this.showPercentStatusChart()}
+                    </CardBody>
+                </Card>
+                <Card>
+                    <CardHeader style={{ backgroundColor: '#d7efff' }}>
+                        <i className='fa fa-pie-chart'></i> Chart Percentage Eror Code
+                    </CardHeader>
+                    <CardBody>
+                        {this.showPercentErrorCode()}
+                    </CardBody>
+                </Card>
 
                 <Row>
                     <Col md={{ size: 6 }}>
