@@ -12,7 +12,7 @@ class Login extends Component {
   }
 
   login() {
-    if (this.state.username === "admin" && this.state.password === "admin") {
+    if (this.state.username === "admin" && this.state.password === "hitvn@2020") {
       this.props.history.push('/')
       localStorage.setItem('logged', "true");
     }

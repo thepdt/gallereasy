@@ -128,7 +128,8 @@ class Posts extends Component {
                 if (result.Message === "Success" && result.Data !== null) {
                     result.Data.forEach(element => {
                         element.checked = false
-                        element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
+                        element.statusText =  element.Status === 100 ? "Publish": "Unpublish"
+                        // element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
                     });
                     this.setState({
                         loading: false,
@@ -155,7 +156,8 @@ class Posts extends Component {
                     if (result.Message === "Success" && result.Data !== null) {
                         result.Data.forEach(element => {
                             element.checked = false
-                            element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
+                            element.statusText =  element.Status === 100 ? "Publish": "Unpublish"
+                            // element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
                         });
                         this.setState({
                             loading: false,
@@ -184,7 +186,8 @@ class Posts extends Component {
                     if (result.Message === "Success" && result.Data !== null) {
                         result.Data.forEach(element => {
                             element.checked = false
-                            element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
+                            element.statusText =  element.Status === 100 ? "Publish": "Unpublish"
+                            // element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
                         });
                         this.setState({
                             loading: false,
@@ -498,7 +501,7 @@ class Posts extends Component {
         }
         if (Posts[index].checked) {
             this.setState({
-                checkedPosts: [Id],
+                checkedPosts: [Posts[index]],
             });
         } else {
             this.setState({
@@ -513,19 +516,19 @@ class Posts extends Component {
     deletePost() {
         if (this.state.checkedPosts.length !== 0) {
             console.log(this.state.checkedPosts)
-            // this._postService.deletePost(this.state.checkedPosts[0])
-            //     .then((result) => {
-            //         if (result.Message === "Success") {
-            //             const _posts = this.state.posts
-            //             const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0])
-            //             _posts.splice(index, 1);
-            //             this.setState({
-            //                 posts: _posts
-            //             })
-            //         }
-            //     }).catch((err) => {
-            //         console.log(err);
-            //     });
+            this._postService.deletePost(this.state.checkedPosts[0])
+                .then((result) => {
+                    if (result.Message === "Success") {
+                        const _posts = this.state.posts
+                        const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0])
+                        _posts.splice(index, 1);
+                        this.setState({
+                            posts: _posts
+                        })
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
         }
     }
 

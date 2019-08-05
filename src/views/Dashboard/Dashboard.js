@@ -996,7 +996,8 @@ class Dashboard extends Component {
                 plotBackgroundColor: null,
                 plotBorderWidth: null,
                 plotShadow: false,
-                type: 'pie'
+                type: 'pie',
+                height: 600,
             },
             title: {
                 text: 'Percenttage Status Statistic'
@@ -1729,7 +1730,8 @@ class Dashboard extends Component {
                 plotBackgroundColor: null,
                 plotBorderWidth: null,
                 plotShadow: false,
-                type: 'pie'
+                type: 'pie',
+                height: 600,
             },
             title: {
                 text: 'Percenttage Error Code'

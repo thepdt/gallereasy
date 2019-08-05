@@ -44,8 +44,8 @@ class PostService {
         }).then(res => res.json());
     }
 
-    deletePost(id) {
-        const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/news/posts/" + id;
+    deletePost(post) {
+        const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/news/post/delete/" + post.Id +"/"+post.Type;
         return fetch(url, {
             method: 'DELETE',
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
