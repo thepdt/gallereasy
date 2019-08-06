@@ -515,12 +515,14 @@ class Posts extends Component {
 
     deletePost() {
         if (this.state.checkedPosts.length !== 0) {
-            console.log(this.state.checkedPosts)
+            console.log(this.state.checkedPosts[0])
             this._postService.deletePost(this.state.checkedPosts[0])
                 .then((result) => {
                     if (result.Message === "Success") {
                         const _posts = this.state.posts
-                        const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0])
+                        console.log(_posts)
+                        const index = _posts.findIndex(el => el.Id === this.state.checkedPosts[0].Id)
+                        console.log(index)
                         _posts.splice(index, 1);
                         this.setState({
                             posts: _posts
