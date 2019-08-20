@@ -36,14 +36,6 @@ class Dashboard extends Component {
         super(props);
 
         this.state = {
-<<<<<<< HEAD
-
-            //for percentage            
-
-
-
-=======
->>>>>>> phuonganh
             //For statistic user
             onDatePickedUserStatistic: addDays(new Date(), -1),
             activeUserCount: 0,
