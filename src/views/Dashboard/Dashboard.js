@@ -36,11 +36,6 @@ class Dashboard extends Component {
         super(props);
 
         this.state = {
-
-            //for percentage            
-           
-            
-
             //For statistic user
             onDatePickedUserStatistic: addDays(new Date(), -1),
             activeUserCount: 0,
@@ -129,7 +124,7 @@ class Dashboard extends Component {
             //// percentStatus
             percentageStatusStatistic: [],          
             titlesStatus: ['Download HTML completed', 'ETL Error', 'ETL Copmleted', 'Cms insert post error', 'Cms insert post completed blacklist', 'Cms insert post completed', 'Download media error', 'Download media error Completed', 'Gen thumb image error', 'Gen thumb image completed', "Update link media error", "Update link media completed", "Check duplicate error", 'Duplicated Inreview', 'No duplicated ', 'Update weight error', 'Update weight completed', 'Cms update couchbase error', 'Published', 'In trash'],
-           
+            totalStatusStatistic:0,
             downloadHTMLCompleteStatusPercent: 0,
             etlErroStatusPercent: 0,
             etlCompleteStatusPercent: 0,
@@ -154,7 +149,7 @@ class Dashboard extends Component {
             //percentErrorCode
             percentageErrorCode: [],
             titlesErrorCode: ['Crawler Download Failed', 'Crawler Url Not Found', 'Crawler Cannot Create File', 'Crawler Cannnot Copy File', ' Crawler Too Long Video', 'Crawler Ignor Download Media', 'Crawler Unkown', 'Crawler Upload Aws', 'ETL Parsing Crawler Message Expection', 'ETL Download HTML S3 Exception', 'ETL Exception', 'ETL AI Tagging API Exception', 'ETL Rabbi TMQ Post Data Exception', 'Thumb Download Images From S3 Exception', 'Thumb Upload To S3 Exception', 'Thumb Exception', 'Thumb Video Get Thumb Exception', 'Thumb lack Media Exception', 'Dupliacte Failure', 'Duplicate Invalid Data', 'Weight Update Faited ', 'Weight Invalid Status', 'CMS Insert Failed', 'CMS Unkown Category'],
-          
+            totalErrorCodeStatistic:0,
             crawlerDownloadFailedErrorCodepercent:0,
             crawlerUrlNotFoundErrorCodepercent:0,
             crawlerCannotCreateFileErrorCodepercent:0,
@@ -472,7 +467,7 @@ class Dashboard extends Component {
             });
     }
 
-    createStatusStatisticChart(data) {
+    createStatusStatisticChart(data) {        
         const dataSorted = this.sortStatusStatisticData(data, this.state.orderByStatusOption)
         const publishers = []
         const downloadHTMLCompletedStatus = []
@@ -957,7 +952,7 @@ class Dashboard extends Component {
             }
             totalStatus += totalElement
             obj.titleStatus = this.state.titlesStatus[j]
-            obj.total = totalElement
+            obj.total = totalElement            
             elementTotalData[j] = obj
 
         };
@@ -966,6 +961,7 @@ class Dashboard extends Component {
         }        
         this.setState({
             percentageStatusStatistic: elementTotalData,
+            totalStatusStatistic:totalStatus,
             downloadHTMLCompleteStatusPercent: elementTotalData[0].percentsStatus,
             etlErroStatusPercent: elementTotalData[1].percentsStatus,
             etlCompleteStatusPercent: elementTotalData[2].percentsStatus,
@@ -1694,7 +1690,7 @@ class Dashboard extends Component {
         }
         this.setState({
             percentageErrorCode: elementDataError,
-
+            totalErrorCodeStatistic: totalErrorCode,
             crawlerDownloadFailedErrorCodepercent:elementDataError[0].percentsErrorCode,
             crawlerUrlNotFoundErrorCodepercent:elementDataError[1].percentsErrorCode,
             crawlerCannotCreateFileErrorCodepercent:elementDataError[2].percentsErrorCode,
@@ -1956,9 +1952,10 @@ class Dashboard extends Component {
                                 <Table responsive hover bordered striped>
                                     <thead>
                                         <tr>
-                                            <th scope='col' width="5%" className="centered">Stt</th>
-                                            <th scope='col' width="50%" className="centered">StatusStatistic</th>
-                                            <th scope='col' width="45%" className="centered">Percentage</th>
+                                            <th>Stt</th>
+                                            <th>StatusStatistic</th>
+                                            <th>Percentage</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -1973,9 +1970,20 @@ class Dashboard extends Component {
                                                 <td>
                                                     <span>{item.percentsStatus}</span>
                                                 </td>
+                                                <td>
+                                                    <span>{item.total}</span>
+                                                </td>                                               
                                             </tr>)
                                         )}
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th id="total" colSpan={3}>Total Status :</th>
+                                            <td className="font-weight-bold" >{this.state.totalStatusStatistic}</td>
+                                        </tr>
+                                        
+                                        
+                                    </tfoot>
                                 </Table>
                             </CardBody>
                         </Card>
@@ -1988,9 +1996,10 @@ class Dashboard extends Component {
                                 <Table responsive hover bordered striped>
                                     <thead>
                                         <tr>
-                                            <th scope='col' width="5%" className="centered">Stt</th>
-                                            <th scope='col' width="50%" className="centered">ErrorCode</th>
-                                            <th scope='col' width="45%" className="centered">Percentage</th>
+                                            <th>Stt</th>
+                                            <th>ErrorCode</th>
+                                            <th>Percentage</th>
+                                            <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -2005,9 +2014,18 @@ class Dashboard extends Component {
                                                 <td>
                                                     <span>{item.percentsErrorCode}</span>
                                                 </td>
+                                                <td>
+                                                    <span>{item.total}</span>
+                                                </td>
                                             </tr>)
                                         )}
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th id="total" colSpan={3} >Total ErrorCode :</th>
+                                            <td className="font-weight-bold">{this.state.totalErrorCodeStatistic}</td>
+                                        </tr>       
+                                    </tfoot>
                                 </Table>
                             </CardBody>
                         </Card>
