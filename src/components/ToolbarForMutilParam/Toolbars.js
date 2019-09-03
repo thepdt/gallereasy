@@ -78,42 +78,32 @@ class ToolBars extends Component {
                         </Row >
                     </Col>
                 </Row>
-                {this.state.showSearchBox &&
-                    (<Row className="searchbox">
-                        <div className="btn-group" role="group">
-                            <ButtonDropdown isOpen={this.state.searchOptionOpen} toggle={this.searchOptionToggle}>
-                                <DropdownToggle caret>{this.state.searchOptionValue}</DropdownToggle>
-                                <DropdownMenu>
-                                    {this.props.searchOptions.map(option =>
-                                        <DropdownItem id={option.value} key={option.value} onClick={this.changeSearchOptionValue}>{option.text}</DropdownItem>
-                                    )}
-                                </DropdownMenu>
-                            </ButtonDropdown>
-                            {this.state.searchOption === 1 &&
-                                <Select
-                                    options={this.props.valueOptions.map(option => ({
-                                        value: option.Id,
-                                        label: option.Title
-                                    }))}
-                                    value={this.state.searchText}
-                                    onChange={this.getSearchText("searchText")}
-                                    placeholder={this.props.searchPlaceholder1}
-                                    isClearable
-                                />
-                            }
-                            {this.state.searchOption === 2 &&
-                                <Input
-                                    type="text"
-                                    id="inputSearchOption_2"
-                                    value={this.state.searchText}
-                                    onChange={(e) => this.getSearchTextOption2(e)}
-                                    placeholder={this.props.searchPlaceholder2}
-                                />
-                            }
-                            <Button color="primary" onClick={() => this.props.onSearch(this.state.searchOption, this.state.searchText)} disabled={this.state.searchText === ""}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
-                        </div>
-                    </Row>)
-                }
+                <Row>
+                    {this.state.showSearchBox &&
+                        (   
+                            <Row className = "searchbox">
+                                <div className ="btn-group" role="group"> 
+                                    <div className ="col-3">
+                                        <div className = "input-group"> 
+                                            <span className ="input-group-text">Name</span>                                          
+                                            <Input type ="text" id ="search-name" onChange = {(e) => this.getSearchName(e)}  placeholder = {this.props.searchName}></Input> 
+                                        </div>
+                                       
+                                    </div>
+                                    <div className = "col-3">
+                                        <Input type ="text" id ="search-value" onChange ={(e) =>this.getSearchValue(e)} placeholder ={this.props.searchValue}></Input>
+                                    </div>
+                                    <div className ="col-3">
+                                        <span className ="input-group-text">Status</span>
+                                        <Input type="text" id="search-status" onChange ={(e)=>this.getSearchStatus(e)} placeholder ={this.props.searchStatus}></Input>
+                                    </div>
+                            
+                                </div>
+                                <Button color ="primary" onClick ={()=>this.props.onSearch}></Button>
+                            </Row>
+                        )
+                    }
+                </Row>
             </div>
         )
     }
