@@ -60,6 +60,8 @@ class ToolBars extends Component {
         })
     }
 
+
+
     render() {
         return (
             <div className="toolbar">
@@ -85,21 +87,27 @@ class ToolBars extends Component {
                                 <div className ="btn-group" role="group"> 
                                     <div className ="col-3">
                                         <div className = "input-group"> 
-                                            <span className ="input-group-text">Name</span>                                          
+                                            <span className ="input-group-text">Name</span>          
                                             <Input type ="text" id ="search-name" onChange = {(e) => this.getSearchName(e)}  placeholder = {this.props.searchName}></Input> 
                                         </div>
                                        
                                     </div>
                                     <div className = "col-3">
-                                        <Input type ="text" id ="search-value" onChange ={(e) =>this.getSearchValue(e)} placeholder ={this.props.searchValue}></Input>
+                                        <div className = "input-group">
+                                            <span className = "input-group-text">Value</span>
+                                            <Input type ="text" id ="search-value" onChange ={(e) =>this.getSearchValue(e)} placeholder ={this.props.searchValue}></Input>
+                                        </div>
+                                        
                                     </div>
                                     <div className ="col-3">
-                                        <span className ="input-group-text">Status</span>
-                                        <Input type="text" id="search-status" onChange ={(e)=>this.getSearchStatus(e)} placeholder ={this.props.searchStatus}></Input>
+                                        <div className = "input-group">
+                                            <span className ="input-group-text">Status</span>
+                                            <Input type="text" id="search-status" onChange ={(e)=>this.getSearchStatus(e)} placeholder ={this.props.searchStatus}></Input>
+                                        </div>                                        
                                     </div>
                             
                                 </div>
-                                <Button color ="primary" onClick ={()=>this.props.onSearch}></Button>
+                                <Button color ="primary" onClick ={()=>this.props.onSearch()}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
                             </Row>
                         )
                     }

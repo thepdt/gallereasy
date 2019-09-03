@@ -90,21 +90,6 @@ class Cardphone extends Component {
       
     }
 
-    getCardphoneVendorCode(id){
-       const VendorCodeSelect = this.state.vendorcodes
-       var vendorcodeSelected =[]
-       for( var i = 0; i< VendorCodeSelect.length; i++){
-           if(VendorCodeSelect[i].Id === id){
-               vendorcodeSelected.push(VendorCodeSelect[i])
-           }
-       }
-       this.setState({
-           vendorcodes :vendorcodeSelected
-       },
-       console.log(this.state.vendorcodes))
-
-    }
-
     checkOne(Id){
         const Cardphones = this.state.cardphones;
         const index = Cardphones.findIndex(element => element.Id === Id);
@@ -151,10 +136,9 @@ class Cardphone extends Component {
             this.getCardphone();
         }
     }
-    searchCardphone(o,e){
-        console.log(e.value)
+    searchCardphone(e,value){
+        console.log(e)
         this.getCardphoneStatus(e)
-        this.getCardphoneVendorCode(e.value)
         
     }
     onClearSearchBox() {
@@ -313,11 +297,10 @@ class Cardphone extends Component {
                     onDelete={e => this.deleteCardphone(e)}
                     onOpenCreateModal={e => this.openCreateModal(e)}
                     onShowSearchBox={e => this.onShowSearchBox(e)}
-                    onSearch={(opt, text) => this.searchCardphone(opt,text)}
+                    onSearch={(opt, text) => this.searchCardphone(text)}
                     onClearSearchBox={e => this.onClearSearchBox()}
-                    valueOptions={this.state.vendorcodes}
-                    searchOptions={[{value :1, text: "Theo mã nhà mạng "},{ value: 2, text: "Theo trạng thái thẻ nạp"}]} 
-                    searchPlaceholder1 = {'Tìm kiếm theo mã nhà mạng'}
+                    valueOptions={this.state.cardphones}
+                    searchOptions={[{ value: 2, text: "Theo trạng thái thẻ nạp"}]} 
                     searchPlaceholder2 = {'Tìm kiếm theo trạng thái thẻ'} />
                     
                 <div className="animated fadeIn">
