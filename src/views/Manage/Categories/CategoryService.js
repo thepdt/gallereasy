@@ -4,7 +4,7 @@ class CategoryService {
         return fetch(url).then(res => res.json())
     }
 
-    createCategory(category) {
+    createCategory(category) {       
         const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/news/categories";
         // console.log(headers);
         return fetch(url, {

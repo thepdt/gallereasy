@@ -1,0 +1,7 @@
+{
+    "name": "Cardphone",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./Cardphone.js"
+}
+  
