@@ -76,22 +76,52 @@ class Cardphone extends Component {
         })
     }
 
-    getCardphoneStatus(e){        
-        const CardphoneSelect = this.state.cardphones       
-        var _cardphone = []
+    // getCardphoneStatus(e){        
+    //     const CardphoneSelect = this.state.cardphones       
+    //     var _cardphone = []
+    //     for(var i = 0; i< CardphoneSelect.length ; i++){           
+    //         if(CardphoneSelecCardphoneSelect[i].Status === Number(e) ){               
+    //             _cardphone.push(CardphoneSelect[i])
+    //         }
+    //     }        
+    //     this.setState({tt    
+    //         cardphones :_cardphone
+    //     })
+      
+    // }
+
+    getSearchCardphone(text1,text2,text3){
+        const CardphoneSelect = this.state.cardphones
+        var _cardphone =[]
         for(var i = 0; i< CardphoneSelect.length ; i++){           
-            if(CardphoneSelect[i].Status === Number(e) ){               
+            if(CardphoneSelect[i].Name === text1 && CardphoneSelect[i].Value=== Number(text2) && CardphoneSelect[i].Status === Number(text3) ){               
+                _cardphone.push(CardphoneSelect[i])
+            }
+            else if(text1 === " " && Number(text2) === -1 && Number(text3) === -1){
+                _cardphone = CardphoneSelect
+            }
+            else if(text1 = " " && CardphoneSelect[i].Value === Number(text2) && CardphoneSelect[i].Status === Number(text3)){
+                _cardphone.push(CardphoneSelect[i])
+            }
+            else if(CardphoneSelect[i].Name === text1 && Number(text2) ===-1 && CardphoneSelect[i].Status === Number(text3)){
+                _cardphone.push(CardphoneSelect[i])
+            }
+            else if(CardphoneSelect[i].Name === text1 && CardphoneSelect[i].Value === Number(text2) && Number(text3) ===-1){
+                _cardphone.push(CardphoneSelect[i])
+            }
+            else if(CardphoneSelect[i].Name ===text1 && Number(text2) ===-1 && Number(text3) === -1){
+                _cardphone.push(CardphoneSelect[i])
+            }
+            else if(text1 === " " && CardphoneSelect[i].Value === Number(text2) && Number(text3) === -1){
+                _cardphone.push(CardphoneSelect[i])
+            }
+            else if (text1=== " " && Number(text2) === -1 && CardphoneSelect[i].Status === Number(text3)){
                 _cardphone.push(CardphoneSelect[i])
             }
         }        
         this.setState({
             cardphones :_cardphone
         })
-      
-    }
-
-    getSearchCardphone(text1,text2,text3){
-        
     }
 
     checkOne(Id){

@@ -126,7 +126,7 @@ class ToolBars extends Component {
                                     </div>
                             
                                 </div>
-                                <Button color ="primary" onClick ={()=>this.props.onSearch(this.state.searchNameText,this.state.searchValueText,this.state.searchStatusText)} disabled={this.state.searchNameText === ""|| this.state.searchValueText==="" || this.state.searchStatusText ===""}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
+                                <Button color ="primary" onClick ={()=>this.props.onSearch(this.state.searchNameText,this.state.searchValueText,this.state.searchStatusText)} ><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
                             </Row>
                         )
                     }
