@@ -90,40 +90,76 @@ class Cardphone extends Component {
       
     // }
 
+    // getSearchCardphone(text1,text2,text3){
+    //     const CardphoneSelect = this.state.cardphones
+    //     var _cardphone =[]
+    //     for(var i = 0; i< CardphoneSelect.length ; i++){           
+    //         if(CardphoneSelect[i].Name === text1 && CardphoneSelect[i].Value=== Number(text2) && CardphoneSelect[i].Status === Number(text3) ){               
+    //             _cardphone.push(CardphoneSelect[i])
+    //         }
+    //         else if(text1 === " " && Number(text2) === -1 && Number(text3) === -1){
+    //             _cardphone = CardphoneSelect
+    //         }
+    //         else if(text1 = " " && CardphoneSelect[i].Value === Number(text2) && CardphoneSelect[i].Status === Number(text3)){
+    //             _cardphone.push(CardphoneSelect[i])
+    //         }
+    //         else if(CardphoneSelect[i].Name === text1 && Number(text2) ===-1 && CardphoneSelect[i].Status === Number(text3)){
+    //             _cardphone.push(CardphoneSelect[i])
+    //         }
+    //         else if(CardphoneSelect[i].Name === text1 && CardphoneSelect[i].Value === Number(text2) && Number(text3) ===-1){
+    //             _cardphone.push(CardphoneSelect[i])
+    //         }
+    //         else if(CardphoneSelect[i].Name ===text1 && Number(text2) ===-1 && Number(text3) === -1){
+    //             _cardphone.push(CardphoneSelect[i])
+    //         }
+    //         else if(text1 === " " && CardphoneSelect[i].Value === Number(text2) && Number(text3) === -1){
+    //             _cardphone.push(CardphoneSelect[i])
+    //         }
+    //         else if (text1 === " " && Number(text2) === -1 && CardphoneSelect[i].Status === Number(text3)){
+    //             _cardphone.push(CardphoneSelect[i])
+    //         }
+    //     }        
+    //     this.setState({
+    //         cardphones :_cardphone
+    //     })
+    // }
+
     getSearchCardphone(text1,text2,text3){
         const CardphoneSelect = this.state.cardphones
-        var _cardphone =[]
-        for(var i = 0; i< CardphoneSelect.length ; i++){           
-            if(CardphoneSelect[i].Name === text1 && CardphoneSelect[i].Value=== Number(text2) && CardphoneSelect[i].Status === Number(text3) ){               
-                _cardphone.push(CardphoneSelect[i])
-            }
-            else if(text1 === " " && Number(text2) === -1 && Number(text3) === -1){
-                _cardphone = CardphoneSelect
-            }
-            else if(text1 = " " && CardphoneSelect[i].Value === Number(text2) && CardphoneSelect[i].Status === Number(text3)){
-                _cardphone.push(CardphoneSelect[i])
-            }
-            else if(CardphoneSelect[i].Name === text1 && Number(text2) ===-1 && CardphoneSelect[i].Status === Number(text3)){
-                _cardphone.push(CardphoneSelect[i])
-            }
-            else if(CardphoneSelect[i].Name === text1 && CardphoneSelect[i].Value === Number(text2) && Number(text3) ===-1){
-                _cardphone.push(CardphoneSelect[i])
-            }
-            else if(CardphoneSelect[i].Name ===text1 && Number(text2) ===-1 && Number(text3) === -1){
-                _cardphone.push(CardphoneSelect[i])
-            }
-            else if(text1 === " " && CardphoneSelect[i].Value === Number(text2) && Number(text3) === -1){
-                _cardphone.push(CardphoneSelect[i])
-            }
-            else if (text1=== " " && Number(text2) === -1 && CardphoneSelect[i].Status === Number(text3)){
-                _cardphone.push(CardphoneSelect[i])
-            }
-        }        
-        this.setState({
-            cardphones :_cardphone
-        })
-    }
+        var _cardphone1 =[]
+        if (text1 !== "") {
+            for(var i = 0; i< CardphoneSelect.length ; i++){           
+                if(CardphoneSelect[i].Name.contain(text1) === 0){               
+                    _cardphone1.push(CardphoneSelect[i])
+                }            
+            }        
+        } else {
+        _cardphone1 = CardphoneSelect
+        }
 
+        var _cardphone2 =[]
+        if (Number(text2) !== -1 ){
+            for(var i = 0; i< _cardphone1.length ; i++){           
+                    if(_cardphone1[i].value === Number(text2)){               
+                        _cardphone2.push(_cardphone1[i])
+                    }            
+                }        
+        } else {
+        _cardphone2 = _cardphone1
+        }
+
+        var _cardphone3 =[]
+        if (Number(text3) !== -1) {
+            for(var i = 0; i< _cardphone2.length ; i++){           
+                    if(_cardphone2[i].status === Number(text3)){               
+                        _cardphone3.push(_cardphone2[i])
+                    }            
+                }        
+        } else {
+        _cardphone3 = _cardphone2
+        }
+        return _cardphone3;
+    }
     checkOne(Id){
         const Cardphones = this.state.cardphones;
         const index = Cardphones.findIndex(element => element.Id === Id);

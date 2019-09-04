@@ -22,6 +22,7 @@ class Network extends Component {
     getNetwork(){
         this._networkService.getNetwork()
             .then((result)=>{
+                console.log(result)
                 if( result.Message ==="Success"){
                     this.setState({
                         networks : result.Data
@@ -171,7 +172,9 @@ class Network extends Component {
                                         <thead>
                                             <tr>
                                                 <th scope="col" width="3%" className="centered">
-                                                    <label className="checkboxLabel">#</label>  
+                                                    <label className="checkboxLabel">#
+                                                        <span className="label-text"></span>
+                                                    </label>  
                                                 </th>
                                                 <th scope="col" width="3%"className="centered">STT</th>
                                                 <th scope="col" width="44%"className="centered">Tên nhà mạng</th>
@@ -180,13 +183,24 @@ class Network extends Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <tb className = 'centered'></tb>
-                                                <tb></tb>
-                                                <tb></tb>
-                                                <tb></tb>
-                                            </tr>
-                                        </tbody>
+                                            {this.state.networks.map((network,index)=>
+                                            (
+                                                <tr key = {index} >
+                                                    <tb className ="centered">
+                                                        <lable className ="checkboxlable">
+                                                        <Input className="form-check-input" type="checkbox" id={network.Id} name={network.Id} value={network.checked} checked={network.checked} onChange={() => this.checkOne(network.Id)} />
+                                                        
+                                                        <span className ="lable-text"></span>
+                                                        </lable>
+                                                    </tb>
+                                                    <tb>{index +1}</tb>
+                                                    <tb><span className = "title" onClick ={()=> this.showNetworkdetail(network.Id)}>{network.Name}</span></tb>
+                                                    <tb>{network.VendorCode}</tb>
+                                                    <tb>{network.Status}</tb>
+                                            </tr>  
+                                            ))
+                                            }
+                                         </tbody>
                                     </Table>
                                 </CardBody>
                             </Card>
