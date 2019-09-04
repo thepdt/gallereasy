@@ -90,6 +90,10 @@ class Cardphone extends Component {
       
     }
 
+    getSearchCardphone(text1,text2,text3){
+        
+    }
+
     checkOne(Id){
         const Cardphones = this.state.cardphones;
         const index = Cardphones.findIndex(element => element.Id === Id);
@@ -136,9 +140,9 @@ class Cardphone extends Component {
             this.getCardphone();
         }
     }
-    searchCardphone(e,value){
-        console.log(e)
-        this.getCardphoneStatus(e)
+    searchCardphone(text1,text2,text3){
+        console.log(text1,text2,text3)
+        this.getSearchCardphone(text1,text2,text3)
         
     }
     onClearSearchBox() {
@@ -297,11 +301,15 @@ class Cardphone extends Component {
                     onDelete={e => this.deleteCardphone(e)}
                     onOpenCreateModal={e => this.openCreateModal(e)}
                     onShowSearchBox={e => this.onShowSearchBox(e)}
-                    onSearch={(opt, text) => this.searchCardphone(text)}
+                    onSearch={(text1,text2,text3) => this.searchCardphone(text1,text2,text3)}
                     onClearSearchBox={e => this.onClearSearchBox()}
-                    valueOptions={this.state.cardphones}
-                    searchOptions={[{ value: 2, text: "Theo trạng thái thẻ nạp"}]} 
-                    searchPlaceholder2 = {'Tìm kiếm theo trạng thái thẻ'} />
+                    // valueOptions={this.state.cardphones}
+                    // searchOptions={[{ value: 2, text: "Theo trạng thái thẻ nạp"}]} 
+                    // searchPlaceholder2 = {'Tìm kiếm theo trạng thái thẻ'} />
+                    searchName ={'Mã nhà mạng'}
+                    searchValue ={'Giá trị'}
+                    searchStatus={'Status'}
+                    />
                     
                 <div className="animated fadeIn">
                     <Row>

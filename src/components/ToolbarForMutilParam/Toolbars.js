@@ -11,7 +11,10 @@ class ToolBars extends Component {
             showSearchBox: false,
             searchOptionOpen: false,
             searchOption: 0,
-            searchOptionValue: "Chế độ tìm kiếm"
+            searchOptionValue: "Chế độ tìm kiếm",
+            searchNameText: "",
+            searchValueText:"",
+            searchStatusText:""
         };
 
         this.searchOptionToggle = this.searchOptionToggle.bind(this);
@@ -60,7 +63,23 @@ class ToolBars extends Component {
         })
     }
 
+    getSearchName(event){
+        this.setState({
+            searchNameText: event.target.value
+        })
+    }
 
+    getSearchValue(event){
+        this.setState({
+            searchValueText: event.target.value
+        })
+    }
+
+    getSearchStatus(event){
+        this.setState({
+            searchStatusText: event.target.value
+        })
+    }
 
     render() {
         return (
@@ -107,7 +126,7 @@ class ToolBars extends Component {
                                     </div>
                             
                                 </div>
-                                <Button color ="primary" onClick ={()=>this.props.onSearch()}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
+                                <Button color ="primary" onClick ={()=>this.props.onSearch(this.state.searchNameText,this.state.searchValueText,this.state.searchStatusText)} disabled={this.state.searchNameText === ""|| this.state.searchValueText==="" || this.state.searchStatusText ===""}><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
                             </Row>
                         )
                     }
