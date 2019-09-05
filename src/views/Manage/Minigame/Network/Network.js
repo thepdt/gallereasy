@@ -133,7 +133,6 @@ class Network extends Component {
             Name: this.state.name,
             Status: Number(this.state.status)
         }
-        console.log(data)
         this._networkService.updateNerwork(data)
             .then((result) => {
                 if (result.Message === "Success") {
@@ -150,7 +149,7 @@ class Network extends Component {
    
 
     deleteNetwork(){
-        if(this.checkedNetwork.length !== 0){
+        if(this.state.checkedNetwork.length !== 0){
             this._networkService.deleteNetwork(this.state.checkedNetwork[0])
                 .then((result)=>{
                    if(result.Message === "Success"){
@@ -171,7 +170,7 @@ class Network extends Component {
             id :networkSelected.Id,
             name : networkSelected.Name,
             vendorCode: networkSelected.VendorCode,
-            status: networkSelected.status,
+            status: networkSelected.Status,
         })
     }
     render(){
