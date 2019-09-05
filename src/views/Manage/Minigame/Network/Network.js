@@ -12,7 +12,11 @@ class Network extends Component {
             networks: [],
             name: "",
             vendorCode: "",
-            checkedNetwork: []
+            id:"",
+            status:0,
+            checkedNetwork: [],
+            modal:false,
+            createModalMode:Boolean
         }
     }
     componentWillMount(){
@@ -64,6 +68,7 @@ class Network extends Component {
             createModalMode: true,
             name: "",            
             vendorCode: "",
+            status : "",
 
         })
     }
@@ -73,19 +78,6 @@ class Network extends Component {
         });
     }
 
-    deleteNetwork(){
-        if(this.checkedNetwork.length !== 0){
-            this._networkService.deleteNetwork(this.state.checkedNetwork[0])
-                .then((result)=>{
-                   if(result.Message === "Success"){
-                       this.getNetwork()
-                   }
-                })
-                .catch((err)=>{
-                    console.log("error"+err)
-                });
-        }
-    }
     onShowSearchBox(e) {
         if (e === false){
             this.getNetwork();
@@ -108,11 +100,18 @@ class Network extends Component {
         this.setState ({
             vendorCode: event.target.value
         })
-    }    
+    }  
+    
+    getStatus(event){
+        this.setState({
+            status:event.target.value
+        })
+    }
     createNetwork(){
         const data = {
-            VendorCode : this.state.vendorCode,
-            Name: this.state.name,            
+            Name: this.state.name, 
+            VendorCode : this.state.vendorCode,            
+            status: Number(this.state.status)          
         }
         this._networkService.createNetwork(data)
             .then((result) => {
@@ -129,11 +128,12 @@ class Network extends Component {
     }
     updateNerwork(){
         const data = {
+            Id: this.state.id,
             VendorCode : this.state.vendorCode,
             Name: this.state.name,
-            
+            Status: Number(this.state.status)
         }
-
+        console.log(data)
         this._networkService.updateNerwork(data)
             .then((result) => {
                 if (result.Message === "Success") {
@@ -144,10 +144,36 @@ class Network extends Component {
             });
 
         this.setState({
-            modal: false,
+            modal: ! this.state.modal,
         });
     }
    
+
+    deleteNetwork(){
+        if(this.checkedNetwork.length !== 0){
+            this._networkService.deleteNetwork(this.state.checkedNetwork[0])
+                .then((result)=>{
+                   if(result.Message === "Success"){
+                       this.getNetwork()
+                   }
+                })
+                .catch((err)=>{
+                    console.log("error"+err)
+                });
+        }
+    }
+
+    showNetworkDetail(id){
+        const networkSelected = this.state.networks.find(element =>element.Id === id)
+        this.setState({
+            modal :!this.state.modal,
+            createModalMode :false,
+            id :networkSelected.Id,
+            name : networkSelected.Name,
+            vendorCode: networkSelected.VendorCode,
+            status: networkSelected.status,
+        })
+    }
     render(){
         return(
             <div className="container-fullwidth">
@@ -168,39 +194,35 @@ class Network extends Component {
                                     <i className='fa fa-volume-control-phone'></i>Nhà mạng
                                 </CardHeader>
                                 <CardBody>
-                                    <Table responsive hover bordered striped>
+                                     <Table responsive hover bordered striped>
                                         <thead>
                                             <tr>
                                                 <th scope="col" width="3%" className="centered">
-                                                    <label className="checkboxLabel">#
-                                                        <span className="label-text"></span>
-                                                    </label>  
+                                                    <label className="checkboxLabel">#</label>         
                                                 </th>
-                                                <th scope="col" width="3%"className="centered">STT</th>
+                                                <th scope="col" width="3%" className="centered">Stt</th>
                                                 <th scope="col" width="44%"className="centered">Tên nhà mạng</th>
                                                 <th scope="col" width="25%"className="centered">Mã nhà mạng</th>
                                                 <th scope="col" width="25%" className="centered">Trạng thái</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {this.state.networks.map((network,index)=>
-                                            (
-                                                <tr key = {index} >
-                                                    <tb className ="centered">
-                                                        <lable className ="checkboxlable">
+                                        {this.state.networks.map((network, index) =>
+                                                (<tr key={index}>
+                                                    <td className="centered">
+                                                        <label className="checkbocLable">
                                                         <Input className="form-check-input" type="checkbox" id={network.Id} name={network.Id} value={network.checked} checked={network.checked} onChange={() => this.checkOne(network.Id)} />
-                                                        
-                                                        <span className ="lable-text"></span>
-                                                        </lable>
-                                                    </tb>
-                                                    <tb>{index +1}</tb>
-                                                    <tb><span className = "title" onClick ={()=> this.showNetworkdetail(network.Id)}>{network.Name}</span></tb>
-                                                    <tb>{network.VendorCode}</tb>
-                                                    <tb>{network.Status}</tb>
-                                            </tr>  
-                                            ))
-                                            }
-                                         </tbody>
+                                                        <span className="label-text"></span>
+                                                        </label>
+                                                    </td>
+                                                    <td >{index +1}</td>
+                                                    <td> <span className = "title" onClick = {() => this.showNetworkDetail(network.Id)}>{network.Name}</span>
+                                                    </td>                                                    
+                                                    <td>{network.VendorCode}</td>
+                                                    <td>{network.Status}</td>                                                   
+                                                </tr>)
+                                            )}
+                                        </tbody>
                                     </Table>
                                 </CardBody>
                             </Card>
@@ -223,16 +245,25 @@ class Network extends Component {
                                     <Label htmlFor="vendorcode-input" className="title-required">Mã nhà mạng :</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="number" id="vendorcode-input" name="vendorcode-input" value={this.state.vendorCode} onChange={(e) => this.getVendorCode(e)} invalid={(this.state.vendorCode === "")} />
+                                    <Input type="text" id="vendorcode-input" name="vendorcode-input" value={this.state.vendorCode} onChange={(e) => this.getVendorCode(e)} invalid={(this.state.vendorCode === "")} />
                                     <FormFeedback valid={false}>Mã nhà mạng không được bỏ trống</FormFeedback>
                                 </Col>
-                            </FormGroup>                            
+                            </FormGroup>    
+                            <FormGroup row>
+                                <Col md="4" xs="12">
+                                    <Label htmlFor="status-input" className="title-required">Status :</Label>
+                                </Col>
+                                <Col md="8" xs="12">
+                                    <Input type="number" id="status-input" name="status-input" value={this.state.status} onChange={(e) => this.getStatus(e)} invalid={(this.state.status === "")} />
+                                    <FormFeedback valid={false}>Trạng thái không được bỏ trống</FormFeedback>
+                                </Col>
+                            </FormGroup>                         
                         </ModalBody>
                         <ModalFooter>
                             {this.state.createModalMode ?
-                                <Button color="primary" onClick={this.createNetwork.bind(this)} disabled={(this.state.name === "") || (Number(this.state.vendorCode === ""))}>Thêm mới</Button>
+                                <Button color="primary" onClick={this.createNetwork.bind(this)} disabled={(this.state.name === "") || (this.state.vendorCode === "")||(this.state.status === "")}>Thêm mới</Button>
                                 :
-                                <Button color="primary" onClick={this.updateNerwork.bind(this)}  disabled={(this.state.name === "") || (Number(this.state.vendorCode === ""))}>Cập nhật</Button>
+                                <Button color="primary" onClick={this.updateNerwork.bind(this)}  disabled={(this.state.name === "") || (this.state.vendorCode === "") || (this.state.status === "")}>Cập nhật</Button>
                             }
                             <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                         </ModalFooter>

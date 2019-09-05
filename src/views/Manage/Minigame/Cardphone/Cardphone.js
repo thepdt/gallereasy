@@ -127,20 +127,20 @@ class Cardphone extends Component {
     getSearchCardphone(text1,text2,text3){
         const CardphoneSelect = this.state.cardphones
         var _cardphone1 =[]
-        if (text1 !== "") {
+        if (text1 !== "" ){
             for(var i = 0; i< CardphoneSelect.length ; i++){           
-                if(CardphoneSelect[i].Name.contain(text1) === 0){               
-                    _cardphone1.push(CardphoneSelect[i])
-                }            
-            }        
+                    if(CardphoneSelect[i].Name === text1){               
+                        _cardphone1.push(CardphoneSelect[i])
+                    }            
+                }        
         } else {
         _cardphone1 = CardphoneSelect
         }
 
         var _cardphone2 =[]
         if (Number(text2) !== -1 ){
-            for(var i = 0; i< _cardphone1.length ; i++){           
-                    if(_cardphone1[i].value === Number(text2)){               
+            for(let i = 0; i< _cardphone1.length ; i++){           
+                    if(_cardphone1[i].Value === Number(text2)) {               
                         _cardphone2.push(_cardphone1[i])
                     }            
                 }        
@@ -149,16 +149,19 @@ class Cardphone extends Component {
         }
 
         var _cardphone3 =[]
-        if (Number(text3) !== -1) {
-            for(var i = 0; i< _cardphone2.length ; i++){           
-                    if(_cardphone2[i].status === Number(text3)){               
+        if( Number(text3) !== -1 ){
+            for(let i = 0; i< _cardphone2.length ; i++){           
+                    if(_cardphone2[i].Status === Number(text3)){               
                         _cardphone3.push(_cardphone2[i])
                     }            
                 }        
         } else {
         _cardphone3 = _cardphone2
         }
-        return _cardphone3;
+        // return _cardphone3;
+        this.setState({
+            cardphones : _cardphone3
+        })
     }
     checkOne(Id){
         const Cardphones = this.state.cardphones;
@@ -203,7 +206,7 @@ class Cardphone extends Component {
 
     onShowSearchBox(e) {
         if (e === false){
-            this.getCardphone();
+            this.getCardphone(this.state.selectPage);
         }
     }
     searchCardphone(text1,text2,text3){

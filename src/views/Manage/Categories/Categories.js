@@ -237,12 +237,12 @@ class Categories extends Component {
 
     onShowSearchBox(e) {
         if (e === false){
-            this.getPublishers();
+            this.getCategories();
         }
     }
 
     onClearSearchBox() {
-        this.getPublishers();
+        this.getCategories();
     }
 
     getId(event) {
