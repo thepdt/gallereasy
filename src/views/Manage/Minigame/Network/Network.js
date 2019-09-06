@@ -126,14 +126,16 @@ class Network extends Component {
             modal: false,
         });
     }
-    updateNerwork(){
+
+    updateNetwork(){
         const data = {
-            Id: this.state.id,
-            VendorCode : this.state.vendorCode,
-            Name: this.state.name,
-            Status: Number(this.state.status)
+            Id : this.state.id,  
+            Name: this.state.name,           
+            VendorCode : this.state.vendorCode,           
+            Status : Number(this.state.status),
         }
-        this._networkService.updateNerwork(data)
+        console.log(data)
+        this._networkService.updateNetwork(data)
             .then((result) => {
                 if (result.Message === "Success") {
                     this.getNetwork()
@@ -143,7 +145,7 @@ class Network extends Component {
             });
 
         this.setState({
-            modal: ! this.state.modal,
+            modal:! this.state.modal,
         });
     }
    
@@ -262,7 +264,7 @@ class Network extends Component {
                             {this.state.createModalMode ?
                                 <Button color="primary" onClick={this.createNetwork.bind(this)} disabled={(this.state.name === "") || (this.state.vendorCode === "")||(this.state.status === "")}>Thêm mới</Button>
                                 :
-                                <Button color="primary" onClick={this.updateNerwork.bind(this)}  disabled={(this.state.name === "") || (this.state.vendorCode === "") || (this.state.status === "")}>Cập nhật</Button>
+                                <Button color="primary" onClick={this.updateNetwork.bind(this)}  disabled={(this.state.name === "") || (this.state.vendorCode === "") || (this.state.status === "")}>Cập nhật</Button>
                             }
                             <Button color="secondary" onClick={this.closeModal.bind(this)}>Hủy</Button>
                         </ModalFooter>

@@ -10,6 +10,7 @@ class Award extends Component {
         super(props);
         this.state={
             awards:[],
+            id: '',
             name:'',
             value:'',
             description:'',
@@ -25,7 +26,8 @@ class Award extends Component {
     }
     getAward(){
         this._awardService.getAward()
-            .then((result)=>{                      
+            .then((result)=>{      
+                console.log(result)                
                 if( result.Message === "Success"){
                     this.setState({
                         awards: result.Data,
@@ -36,7 +38,26 @@ class Award extends Component {
                 console.log("error: " + err);
             });            
     }
-    
+    createAward(){
+        const data = {
+            Name : this.state.name,
+            Value : Number(this.state.value),
+            Description : this.state.description
+        }
+        this._awardService.createAward(data)
+            .then((result) => {
+                if (result.Message === "Success") {
+                    this.getAward()
+                }
+            }).catch((err) => {
+                console.log("err: " + err);
+            });
+
+        this.setState({
+            modal: false,
+        });
+
+    } 
     checkOne(Id){
         const Awards = this.state.awards;
         const index = Awards.findIndex(element => element.Id === Id);
@@ -77,7 +98,7 @@ class Award extends Component {
         });
     }
     deleteAward(){
-        if(this.checkedAwards.length !== 0){
+        if(this.state.checkedAwards.length !== 0){
             this._awardService.deleteAward(this.state.checkedAwards[0])
                 .then((result)=>{
                    if(result.Message === "Success"){
@@ -117,32 +138,15 @@ class Award extends Component {
             description: event.target.value
         })
     }
-    createAward(){
-        const data = {
-            NameAward : this.state.name,
-            ValueAward : Number(this.state.value),
-            DescriptionAward : this.state.description
-        }
-        this._awardService.createAward(data)
-            .then((result) => {
-                if (result.Message === "Success") {
-                    this.getAward()
-                }
-            }).catch((err) => {
-                console.log("err: " + err);
-            });
 
-        this.setState({
-            modal: false,
-        });
-    }
     updateAward(){
         const data = {
-            NameAward : this.state.name,
-            ValueAward : Number(this.state.value),
-            DescriptionAward : this.state.description
+            Id: this.state.id,
+            Name : this.state.name,
+            Value : Number(this.state.value),
+            Description : this.state.description
         }
-
+        console.log(data)
         this._awardService.updateAward(data)
             .then((result) => {
                 if (result.Message === "Success") {
@@ -155,6 +159,18 @@ class Award extends Component {
         this.setState({
             modal: false,
         });
+    }
+    
+    showAwardDetail(id){
+        const awardSelected = this.state.awards.find(element =>element.Id === id)
+        this.setState({
+            modal: !this.state.modal,
+            createModalMode: false,
+            id: awardSelected.Id,
+            name : awardSelected.Name,
+            value :awardSelected.Value,
+            description: awardSelected.Description
+        },()=>{ console.log(awardSelected)})
     }
     render(){
         return(
@@ -198,7 +214,7 @@ class Award extends Component {
                                                         </label>
                                                     </td>
                                                     <td >{index +1}</td>
-                                                    <td>{award.Name}</td>
+                                                    <td className ="title" onClick ={()=>this.showAwardDetail(award.Id)}>{award.Name}</td>
                                                     <td>{award.Value}</td>
                                                     <td>{award.Description}</td>
                                                 </tr>)
@@ -236,7 +252,8 @@ class Award extends Component {
                                     <Label htmlFor="description-input">Mô tả:</Label>
                                 </Col>
                                 <Col md="8" xs="12">
-                                    <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescriptionaward(e)} />
+                                    <Input type="text" id="description-input" name="description-input" value={this.state.description} onChange={(e) => this.getDescriptionaward(e)} invalid={(this.state.description === "")} />
+                                    <FormFeedback valid={false}>Mô tả giải thưởng không được bỏ trống</FormFeedback>                                   
                                 </Col>
                             </FormGroup>
                         </ModalBody>
