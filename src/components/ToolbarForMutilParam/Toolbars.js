@@ -15,12 +15,13 @@ class ToolBars extends Component {
             searchNameText: "",
             searchValueText:"",
             searchStatusText:"",
+            xxx:'Tên nhà mạng',
             optionValueTexts:[                
                 {value: 10000, text:"10000"},
                 {value: 20000, text:"20000"},
                 {value: 50000, text:"50000"},
                 {value: 100000, text:"100000"},
-                {value:-1, text: "Chọn tất cả"}
+                {value:-1, text: "Tất cả giá trị"}
 
             ],
             optionStatusTexts:[                
@@ -32,7 +33,7 @@ class ToolBars extends Component {
             ],
             optionByValue: false,
             optionByStatus:false,
-            orderByValueTextOption:"Chọn tất cả",
+            orderByValueTextOption:"Tất cả giá trị",
             orderByValueOption:-1,
             orderByStatusTextOption:"Tất cả trạng thái",
             orderByStatusValueOption: -1,
@@ -146,32 +147,30 @@ class ToolBars extends Component {
                 <Row>
                     {this.state.showSearchBox &&
                         (   
-                            <Row className = "searchbox">
-                                <div className ="btn-group" role="group"> 
-                                    <div className ="col-3">
-                                        <div className = "input-group"> 
-                                            <span className ="input-group-text">Name</span>          
-                                            <Input type ="text" id ="search-name" onChange = {(e) => this.getSearchName(e)}  placeholder = {this.props.searchName}></Input> 
-                                        </div>
-                                       
+                            <Row className = "searchbox">                            
+
+                                    <div className ="col-3"  >
+                                        <div className = "input-group">                                                                                            
+                                            <Input type ="text" id ="search-name" onChange = {(e) => this.getSearchName(e)}  placeholder = {this.props.searchName} ></Input>                                              
+                                            
+                                        </div>                                       
                                     </div>
                                     <div className = "col-3">
-                                        <div className = "input-group">
-                                            {/* <span className = "input-group-text">Value</span> */}
-                                            {/* <Input type ="text" id ="search-value" onChange ={(e) =>this.getSearchValue(e)} placeholder ={this.props.searchValue}></Input> */}
+                                        <div className = "input-group">                                            
                                             <Dropdown isOpen={this.state.optionByValue} toggle={this.optionByValueToggle}>
                                                 <DropdownToggle caret>{this.state.orderByValueTextOption}</DropdownToggle> 
                                                 <DropdownMenu>
                                                     {this.state.optionValueTexts.map(option =>
-                                                        <DropdownItem id={option.value} key={option.value} onClick={()=>this.getSearchValue(option.value ,option.text)}>{option.text}</DropdownItem>)}
+                                                        <DropdownItem id={option.value} key={option.value} onClick={()=>this.getSearchValue(option.value ,option.text)}>{option.text}</DropdownItem>)
+                                                        
+                                                    }
                                                 </DropdownMenu>
+
                                             </Dropdown>
                                         </div>                                        
                                     </div>
                                     <div className ="col-3">
-                                        <div className = "input-group">
-                                            {/* <span className ="input-group-text">Status</span> */}
-                                            {/* <Input type="text" id="search-status" onChange ={(e)=>this.getSearchStatus(e)} placeholder ={this.props.searchStatus}></Input> */}
+                                        <div className = "input-group">                                           
                                             <Dropdown isOpen={this.state.optionByStatus} toggle={this.optionByStatusToggle}>
                                                 <DropdownToggle caret>{this.state.orderByStatusTextOption}</DropdownToggle> 
                                                 <DropdownMenu>
@@ -182,8 +181,8 @@ class ToolBars extends Component {
                                         </div>                                        
                                     </div>
                             
-                                </div>
-                                <Button color ="primary" onClick ={()=>this.props.onSearch(this.state.searchNameText,this.state.searchValueText,this.state.searchStatusText)} ><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
+                               
+                                <Button color ="primary" onClick ={()=>this.props.onSearch(this.state.searchNameText,this.state.orderByValueOption,this.state.orderByStatusValueOption)} ><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
                             </Row>
                         )
                     }

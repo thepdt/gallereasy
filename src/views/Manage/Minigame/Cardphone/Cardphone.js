@@ -375,7 +375,7 @@ class Cardphone extends Component {
                     // valueOptions={this.state.cardphones}
                     // searchOptions={[{ value: 2, text: "Theo trạng thái thẻ nạp"}]} 
                     // searchPlaceholder2 = {'Tìm kiếm theo trạng thái thẻ'} />
-                    searchName ={'Mã nhà mạng'}
+                    searchName ={'Tên nhà mạng'}
                     searchValue ={'Giá trị'}
                     searchStatus={'Status'}
                     />
