@@ -45,6 +45,10 @@ const HotTrends = React.lazy(() => import('./views/Manage/HotTrends'));
 const AndroidVersions = React.lazy(() => import('./views/Manage/Versions/Android'));
 const IosVersions = React.lazy(() => import('./views/Manage/Versions/Ios'));
 const ConfigApp = React.lazy(() => import('./views/Manage/Versions/ConfigApp'));
+const Award = React.lazy(() => import('./views/Manage/Minigame/Award'));
+const Network = React.lazy(() => import('./views/Manage/Minigame/Network'));
+const Cardphone = React.lazy(() => import('./views/Manage/Minigame/Cardphone/Cardphone'));
+
 
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
@@ -100,6 +104,12 @@ const routes = [
     { path: '/manage/versions/android', exact: true,  name: 'AndroidVersions', component: AndroidVersions },
     { path: '/manage/versions/ios', exact: true,  name: 'IosVersions', component: IosVersions },
     { path: '/manage/versions/configApp', exact: true,  name: 'ConfigApp', component: ConfigApp },
+    { path: '/manage/minigame/award', exact: true,  name: 'Award', component: Award },
+    { path: '/manage/minigame/network', exact: true,  name: 'Network', component: Network },
+    { path: '/manage/minigame/cardphone', exact: true,  name: 'Cardphone', component: Cardphone },
+
+
+   
 ];
 
 export default routes;

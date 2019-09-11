@@ -711,6 +711,22 @@ class Posts extends Component {
         });
     }
 
+    handlePinTop() {
+        console.log("pin top");
+        if (this.state.checkedPosts.length !== 0) {
+            this._postService.handlePinTop(this.state.checkedPosts[0])
+                .then((result) => {
+                    if (result.Message === "Success") {
+                        const Posts = this.state.posts;
+                        const index = Posts.findIndex(element => element.Id === this.state.checkedPosts[0]);
+                        Posts[index].checked = !Posts[index].checked
+                        this.setState({
+                            posts: Posts
+                        });
+                    }
+                })
+        }
+    }
     tabPane() {
         const selectedOptionsStyles = {
             color: "#3c763d",
@@ -1147,7 +1163,7 @@ class Posts extends Component {
                                         <Row className="right">
                                             <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selecteSearchPage.bind(this)} />
                                         </Row> :
-                                        <Row className="pagination">
+                                        <Row className="">
                                             <Col md="3">
                                                 {/* <Row> */}
                                                 <DateTimePicker onChange={this.fromDateChange} value={this.state.fromDatePicked} />
@@ -1157,12 +1173,14 @@ class Posts extends Component {
                                                 <DateTimePicker onChange={this.toDateChange} value={this.state.toDatePicked} />
                                             </Col>
                                             <Col md="6" className="right">
-
-                                                <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} />
+                                                <Button color="primary" onClick={this.handlePinTop.bind(this)}>Pin Top</Button>
+                                                {/* <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} /> */}
                                             </Col>
                                             {/* </Row> */}
-
                                         </Row>
+                                        // <Row>
+                                        //     <Button color ="primary" onClick={this.handlePinTop()}>Pin Top</Button>
+                                        // </Row>
                                     }
                                     <Table responsive hover bordered striped>
                                         <thead>
@@ -1202,6 +1220,8 @@ class Posts extends Component {
                                             )}
                                         </tbody>
                                     </Table>
+                                    <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} />
+
                                 </CardBody>
                             </Card>
                         </Col>

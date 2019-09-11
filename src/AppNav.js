@@ -69,6 +69,30 @@ export default {
                         },
                     ]
                 },
+                {
+                    name: 'Minigame',
+                    url: '/manage/minigame',
+                    icon: 'fa fa-gamepad',
+                    children: [
+                        
+                        {
+                            name: 'Giải thưởng',
+                            url: '/manage/minigame/award',
+                            icon: 'fa fa-gift',
+                        },
+                        {
+                            name: 'Thẻ nạp điện thoại',
+                            url: '/manage/minigame/cardphone',
+                            icon: 'fa fa-credit-card',
+                        },
+                        {
+                            name: 'Nhà mạng',
+                            url: '/manage/minigame/network',
+                            icon: 'fa fa-volume-control-phone',
+                        },
+
+                    ]
+                },
             ],
         }
     ],

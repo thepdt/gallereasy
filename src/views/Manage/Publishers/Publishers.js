@@ -77,6 +77,7 @@ class Publishers extends Component {
     }
 
     onShowSearchBox(e) {
+        console.log(e)
         if (e === false){
             this.getPublishers();
         }

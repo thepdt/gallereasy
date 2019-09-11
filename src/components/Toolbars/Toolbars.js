@@ -81,7 +81,6 @@ class ToolBars extends Component {
                 {this.state.showSearchBox &&
                     (<Row className="searchbox">
                         <div className="btn-group" role="group">
-
                             <ButtonDropdown isOpen={this.state.searchOptionOpen} toggle={this.searchOptionToggle}>
                                 <DropdownToggle caret>{this.state.searchOptionValue}</DropdownToggle>
                                 <DropdownMenu>

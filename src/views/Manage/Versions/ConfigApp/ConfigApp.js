@@ -23,7 +23,7 @@ class ConfigApp extends Component {
     //get all Versions
     getConfigApp() {
         this._configAppService.getConfigApp()
-            .then((result) => {
+            .then((result) => {                
                 if (result.Message === "Success") {
                     result.Data.checked = false
 
