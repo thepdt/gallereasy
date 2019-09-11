@@ -14,8 +14,7 @@ class ToolBars extends Component {
             searchOptionValue: "Chế độ tìm kiếm",
             searchNameText: "",
             searchValueText:"",
-            searchStatusText:"",
-            xxx:'Tên nhà mạng',
+            searchStatusText:"",   
             optionValueTexts:[                
                 {value: 10000, text:"10000"},
                 {value: 20000, text:"20000"},

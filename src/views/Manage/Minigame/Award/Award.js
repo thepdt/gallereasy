@@ -26,8 +26,7 @@ class Award extends Component {
     }
     getAward(){
         this._awardService.getAward()
-            .then((result)=>{      
-                console.log(result)                
+            .then((result)=>{              
                 if( result.Message === "Success"){
                     this.setState({
                         awards: result.Data,
@@ -145,8 +144,7 @@ class Award extends Component {
             Name : this.state.name,
             Value : Number(this.state.value),
             Description : this.state.description
-        }
-        console.log(data)
+        }       
         this._awardService.updateAward(data)
             .then((result) => {
                 if (result.Message === "Success") {
@@ -170,7 +168,7 @@ class Award extends Component {
             name : awardSelected.Name,
             value :awardSelected.Value,
             description: awardSelected.Description
-        },()=>{ console.log(awardSelected)})
+        })
     }
     render(){
         return(

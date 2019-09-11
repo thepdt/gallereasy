@@ -47,8 +47,7 @@ class Cardphone extends Component {
     
     getCardphone(pageIndex){        
             this._cardphoneService.getCardphone(pageIndex)            
-            .then((result) => {                
-                console.log(result)
+            .then((result) => {   
                 if(result.Message === "Success"){
                     result.Data.forEach(element => {
                         element.checked = false
@@ -75,55 +74,7 @@ class Cardphone extends Component {
             }
         })
     }
-
-    // getCardphoneStatus(e){        
-    //     const CardphoneSelect = this.state.cardphones       
-    //     var _cardphone = []
-    //     for(var i = 0; i< CardphoneSelect.length ; i++){           
-    //         if(CardphoneSelecCardphoneSelect[i].Status === Number(e) ){               
-    //             _cardphone.push(CardphoneSelect[i])
-    //         }
-    //     }        
-    //     this.setState({tt    
-    //         cardphones :_cardphone
-    //     })
-      
-    // }
-
-    // getSearchCardphone(text1,text2,text3){
-    //     const CardphoneSelect = this.state.cardphones
-    //     var _cardphone =[]
-    //     for(var i = 0; i< CardphoneSelect.length ; i++){           
-    //         if(CardphoneSelect[i].Name === text1 && CardphoneSelect[i].Value=== Number(text2) && CardphoneSelect[i].Status === Number(text3) ){               
-    //             _cardphone.push(CardphoneSelect[i])
-    //         }
-    //         else if(text1 === " " && Number(text2) === -1 && Number(text3) === -1){
-    //             _cardphone = CardphoneSelect
-    //         }
-    //         else if(text1 = " " && CardphoneSelect[i].Value === Number(text2) && CardphoneSelect[i].Status === Number(text3)){
-    //             _cardphone.push(CardphoneSelect[i])
-    //         }
-    //         else if(CardphoneSelect[i].Name === text1 && Number(text2) ===-1 && CardphoneSelect[i].Status === Number(text3)){
-    //             _cardphone.push(CardphoneSelect[i])
-    //         }
-    //         else if(CardphoneSelect[i].Name === text1 && CardphoneSelect[i].Value === Number(text2) && Number(text3) ===-1){
-    //             _cardphone.push(CardphoneSelect[i])
-    //         }
-    //         else if(CardphoneSelect[i].Name ===text1 && Number(text2) ===-1 && Number(text3) === -1){
-    //             _cardphone.push(CardphoneSelect[i])
-    //         }
-    //         else if(text1 === " " && CardphoneSelect[i].Value === Number(text2) && Number(text3) === -1){
-    //             _cardphone.push(CardphoneSelect[i])
-    //         }
-    //         else if (text1 === " " && Number(text2) === -1 && CardphoneSelect[i].Status === Number(text3)){
-    //             _cardphone.push(CardphoneSelect[i])
-    //         }
-    //     }        
-    //     this.setState({
-    //         cardphones :_cardphone
-    //     })
-    // }
-
+ 
     getSearchCardphone(text1,text2,text3){
         const CardphoneSelect = this.state.cardphones
         var _cardphone1 =[]
@@ -157,8 +108,7 @@ class Cardphone extends Component {
                 }        
         } else {
         _cardphone3 = _cardphone2
-        }
-        // return _cardphone3;
+        }     
         this.setState({
             cardphones : _cardphone3
         })
@@ -209,38 +159,41 @@ class Cardphone extends Component {
             this.getCardphone(this.state.selectPage);
         }
     }
-    searchCardphone(text1,text2,text3){
-        console.log(text1,text2,text3)
+
+    searchCardphone(text1,text2,text3){       
         this.getSearchCardphone(text1,text2,text3)
         
     }
+
     onClearSearchBox() {
         this.getCardphone();
     }
+
     getVendorCode(event){
         this.setState ({
             vendorCode: event.target.value
         })
     }
+
     getSerial(event){
         this.setState ({
             serial: event.target.value
-        })
-        
+        })        
     }
-   
+
     getCode(event){
         this.setState({
             code: event.target.value
         })
     }
+
     getValue (event){        
         this.setState({
             value:event.target.value
         })
     }
+
     getStatus (event){
-        console.log(event.target.value)
         this.setState({
             status:event.target.value
         })
@@ -292,7 +245,6 @@ class Cardphone extends Component {
             Value : Number(this.state.value),
             Status :this.state.status,
         }
-        console.log(data)
         this._cardphoneService.updateCardphone(data)
             .then((result) => {
                 if (result.Message === "Success") {
@@ -309,7 +261,6 @@ class Cardphone extends Component {
 
 
     deleteCardphone(){
-        console.log(this.state.checkedCardphones)
         if(this.state.checkedCardphones.length !== 0){
             this._cardphoneService.deleteCardphone(this.state.checkedCardphones[0])
                 .then((result)=>{
@@ -339,14 +290,10 @@ class Cardphone extends Component {
             optionVendorCode : event.target.innerText,
             vendorCode : event.target.innerText
 
-        })    
-        console.log(event.target.innerText)    
+        })        
     }
 
-    changeStatus(value,text){
-        console.log(value)
-        console.log(text)
-
+    changeStatus(value,text){ 
         this.setState({
             orderByStatusOptionOpen: !this.state.orderByStatusOptionOpen,
             orderByStatusOptionValue: text,
@@ -372,9 +319,6 @@ class Cardphone extends Component {
                     onShowSearchBox={e => this.onShowSearchBox(e)}
                     onSearch={(text1,text2,text3) => this.searchCardphone(text1,text2,text3)}
                     onClearSearchBox={e => this.onClearSearchBox()}
-                    // valueOptions={this.state.cardphones}
-                    // searchOptions={[{ value: 2, text: "Theo trạng thái thẻ nạp"}]} 
-                    // searchPlaceholder2 = {'Tìm kiếm theo trạng thái thẻ'} />
                     searchName ={'Tên nhà mạng'}
                     searchValue ={'Giá trị'}
                     searchStatus={'Status'}
@@ -438,14 +382,7 @@ class Cardphone extends Component {
                                  <Col md="4" xs="12">
                                     <Label htmlFor="name-input" className="title-required">Mã nhà mạng:</Label>
                                 </Col>
-                                <Col md="8" xs="12">
-                                    {/* <Input type="select" id="name-input" name="name-input" autoFocus value={this.state.vendorCode} onChange={(e) => this.getVendorCode(e)} invalid={this.state.vendorCode === ""}>
-                                            <option key ='-1' value =''>Lựa chọn mã nhà mạng</option>
-                                            {this.state.vendorcodes.map(vendorcode=>(
-                                                <option key={vendorcode.Id} value={vendorcode.VendorCode}>{vendorcode.VendorCode}</option>
-                                            ))}
-                                    </Input>
-                                    <FormFeedback valid={false}>Mã nhà mạng không được bỏ trống</FormFeedback> */}
+                                <Col md="8" xs="12">                                   
                                     <Dropdown isOpen={this.state.orderByVendorCodeOptionOpen} toggle={this.orderByVendorCodeOptionToggle}>
                                         <DropdownToggle caret>{this.state.optionVendorCode}</DropdownToggle>     
                                         <DropdownMenu>
@@ -487,13 +424,7 @@ class Cardphone extends Component {
                                 <Col md="4" xs="12">
                                     <Label htmlFor="status-input">Status:</Label>
                                 </Col>
-                                <Col md="8" xs="12">
-                                    {/* <Input type="select" id="status-input" name="status-input" value={this.state.status} onChange={(e) => this.getStatus(e)} invalid={(this.state.status === "")}>
-                                            <option key= '-1' value =''>Lưạ chọn trạng thái của thẻ</option>
-                                            {this.state.orderByStatusOptions.map(option=>
-                                                (<option key={option.value} value={option.value}>{option.text}</option>))}
-                                    </Input>
-                                    <FormFeedback valid={false}>Status của thẻ không được bỏ trống</FormFeedback> */}
+                                <Col md="8" xs="12">                                    
                                     <Dropdown isOpen={this.state.orderByStatusOptionOpen} toggle={this.orderByStatusOptionToggle}>
                                         <DropdownToggle caret>{this.state.orderByStatusOptionValue}</DropdownToggle>     
                                         <DropdownMenu>

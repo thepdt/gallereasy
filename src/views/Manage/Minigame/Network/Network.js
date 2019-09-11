@@ -26,7 +26,6 @@ class Network extends Component {
     getNetwork(){
         this._networkService.getNetwork()
             .then((result)=>{
-                console.log(result)
                 if( result.Message ==="Success"){
                     this.setState({
                         networks : result.Data
@@ -134,7 +133,6 @@ class Network extends Component {
             VendorCode : this.state.vendorCode,           
             Status : Number(this.state.status),
         }
-        console.log(data)
         this._networkService.updateNetwork(data)
             .then((result) => {
                 if (result.Message === "Success") {

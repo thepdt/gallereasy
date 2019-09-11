@@ -126,7 +126,6 @@ class Posts extends Component {
         this._postService.getPosts(String(fromDate.getTime()).slice(0, 10), String(toDate.getTime()).slice(0, 10), paggeIndex)
             .then((result) => {
                 if (result.Message === "Success" && result.Data !== null) {
-                    console.log(result);
                     result.Data.forEach(element => {
                         element.checked = false
                         // element.statusText = this.state.statusOptions.find(el => el.key === element.Status).value
