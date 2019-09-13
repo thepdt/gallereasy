@@ -183,6 +183,7 @@ class Cardphone extends Component {
         this.getSearchCardphone(this.state.selectPage,text1, text2, text3)
     
         this.setState({
+            searchMode: true ,
             searchtext1: text1,
             searchtext2: text2,
             searchtext3: text3
@@ -192,6 +193,9 @@ class Cardphone extends Component {
 
     onClearSearchBox() {
         this.getCardphone();
+        this.setState({
+            searchMode: false
+        })
     }
 
     getVendorCode(event) {
