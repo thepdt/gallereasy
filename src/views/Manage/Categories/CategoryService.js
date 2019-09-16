@@ -30,6 +30,23 @@ class CategoryService {
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         }).then(res => res.json());
     }
+
+    getPostByCategory(categoryCode, pageIndex, lastId){
+        
+        if (pageIndex === 1) {
+            const url = process.env.REACT_APP_BASE_URL_WEB_API + "/profile/:profileId/categories/"+ categoryCode +"/posts?pageSize=10&pageIndex=1"
+            return fetch(url).then(res =>res.json())
+        }
+        else{
+            const url = process.env.REACT_APP_BASE_URL_WEB_API + "/profile/:profileId/categories/"+ categoryCode +"/posts?pageSize=10&pageIndex=" + pageIndex + "&lastId=" +lastId
+            return fetch(url).then(res =>res.json())
+        }        
+        
+    }
+    getHotPostByCategory(pageIndex){
+        const  url = process.env.REACT_APP_BASE_URL_WEB_API + "/profile/:profileId/posts/hot/web?pageIndex="+ pageIndex
+        return fetch(url).then(res =>res.json())
+    }
 }
 
 export default CategoryService;
