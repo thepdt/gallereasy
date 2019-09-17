@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
 import PaginationComponent from "react-reactstrap-pagination";
 import CardphoneService from "./CardphoneService";
-import Notifications from '../../../../components/Notifications';
+//import Notifications from '../../../../components/Notifications';
 const Toolbars = React.lazy(() => import('../../../../components/ToolbarForMutilParam/Toolbars'));
 
 class Cardphone extends Component {

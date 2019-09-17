@@ -24,7 +24,10 @@ class Categories extends Component {
             ordinal: "",
             postByCategorys: [],
             categoryByCode: "",
-            lastedId:""
+            lastedId:"",
+            checkedpostcategory : [],
+            categoryByListSlide:[]
+            // categorycode:""
         };
         this.showCategoryDetail = this.showCategoryDetail.bind(this);
 
@@ -32,6 +35,7 @@ class Categories extends Component {
 
     componentWillMount() {
         this.getCategories()
+       
     }
 
     //get all categories
@@ -290,44 +294,80 @@ class Categories extends Component {
         })
     }
 
-    showPostByCategory(categoryCode, pageIndex, lastId) {
-        console.log(categoryCode)
-        console.log(pageIndex)
+    showPostByCategory(categoryCode, pageIndex, lastId) { 
         if (categoryCode === "tin-hot") {
             this._categoryService.getHotPostByCategory(pageIndex)
-                .then((result) => {
+                .then((result) => {              
                     if (result.Message === "Success") {
-                        result.Data.forEach(element => {
-                            element.checked = false
+                        var CategoryBySlide = (result.Data).filter((e) => (e.ListSlide).length !== 0)   
+
+                        for(var i =0 ; i< CategoryBySlide.lenght; i++){
+                           var listslide = CategoryBySlide[i].ListSlide
+                            console.log(listslide)        
+                        }
+                        console.log(CategoryBySlide)  
+
+                       
+                        result.Data = result.Data.filter((e)=>(e.ListSlide).length === 0)
+                        result.Data.forEach(element => {                            
+                            element.checked = false                          
                         });
+                       
                         this.setState({
                             postByCategorys: result.Data,
                             categoryByCode: categoryCode,
-                            lastId: result.Data[result.Data.length -1].Id
-
-                        })
-                    }
+                           
+                        })                    
+                    }           
+                    
                 })
         }
         else {
             this._categoryService.getPostByCategory(categoryCode, pageIndex, lastId)
-                .then((result) => {
+                .then((result) => {                   
                     if (result.Message === "Success") {
                         result.Data.forEach(element => {
-                            element.checked = false
+                            element.checked = false                           
                         });
                         this.setState({
                             postByCategorys: result.Data,
                             categoryByCode: categoryCode,
-                            lastedId:lastId
+                            lastedId: (result.Data)[(result.Data).length -1].Id
                         })
                     }
                 })
         }
 
     }
-    getTable(listSlide){
-        console.log(listSlide)
+
+    checkOneShowPost(Id) {
+        const PostByCategorys = this.state.postByCategorys;
+        const index = PostByCategorys.findIndex(element => element.Id === Id);
+        for (var i = 0; i < PostByCategorys.length; i++) {
+            if (i !== index) {
+                PostByCategorys[i].checked = false
+            } else {
+                PostByCategorys[index].checked = !PostByCategorys[index].checked
+            }
+        }
+        if (PostByCategorys[index].checked) {
+            this.setState({
+                checkedpostcategory: [Id],
+            });
+        } else {
+            this.setState({
+                checkedpostcategory: [],
+            });
+        }
+        this.setState({
+            postByCategorys: PostByCategorys
+        });
+    }
+    getTable(){
+        // const CategoryByListSlide = this.state.postByCategorys
+        // if(CategoryByListSlide.ListSlide !== []){
+            console.log("XX")
+        
        
     }
     render() {
@@ -386,14 +426,15 @@ class Categories extends Component {
                                                             <Button color="primary" onClick={this.showPostByCategory.bind(this, category.Code,this.state.selectedPage,this.state.lastedId)}>Bài viết</Button>
                                                         </td>
                                                     </tr>)
-                                                )}
+                                                )
+                                            }
                                         </tbody>
                                     </Table>
                                     <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectePage.bind(this)} />
                                 </CardBody>
                             </Card>
                             <Card>
-                                <CardHeader>Thống kê bài đăng</CardHeader>
+                            <CardHeader>Thống kê bài đăng: {this.state.categoryByCode} </CardHeader>
                                 <CardBody>
                                     <Table responsive hover bordered striped>
                                         <thead>
@@ -403,19 +444,20 @@ class Categories extends Component {
                                                         <span className="label-text"></span>
                                                     </label>
                                                 </th>
-                                                <th scope="col" width="45%" className="centered">Tiêu đề </th>
-                                                <th scope="col" width="22%" className="centered"> Id</th>
+                                                <th scope="col" width="42%" className="centered">Tiêu đề </th>
+                                                <th scope="col" width="25%" className="centered"> Id</th>
                                                 <th scope="col" width="15%" className="centered"> Đầu báo</th>
                                                 <th scope="col" width="15%" className="centered">Chuyên mục AI</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {this.state.postByCategorys.map((postcategory, index) => 
-                                                this.getTable(postcategory.ListSlide)
+                                            {
+                                                this.state.postByCategorys.map((postcategory, index) => 
+                                            //    this.getTable()
                                                 (<tr key={index}>
                                                     <td className="centered">
                                                         <label className="checkbocLable">
-                                                            <Input className="form-check-input" type="checkbox" id={postcategory.Id} name={postcategory.Id} value={postcategory.checked} checked={postcategory.checked} onChange={() => this.checkOne(postcategory.Id)} />
+                                                            <Input className="form-check-input" type="checkbox" id={postcategory.Id} name={postcategory.Id} value={postcategory.checked} checked={postcategory.checked} onChange={() => this.checkOneShowPost(postcategory.Id)} />
                                                             <span className="label-text"></span>
                                                         </label>
                                                     </td>
