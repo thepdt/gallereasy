@@ -26,7 +26,8 @@ class Categories extends Component {
             categoryByCode: "",
             lastedId:"",
             checkedpostcategory : [],
-            categoryByListSlide:[]
+            categoryByListSlide:[],
+           
             // categorycode:""
         };
         this.showCategoryDetail = this.showCategoryDetail.bind(this);
@@ -300,26 +301,22 @@ class Categories extends Component {
                 .then((result) => {              
                     if (result.Message === "Success") {
                         var CategoryBySlide = (result.Data).filter((e) => (e.ListSlide).length !== 0)   
-
-                        for(var i =0 ; i< CategoryBySlide.lenght; i++){
-                           var listslide = CategoryBySlide[i].ListSlide
-                            console.log(listslide)        
-                        }
-                        console.log(CategoryBySlide)  
-
-                       
-                        result.Data = result.Data.filter((e)=>(e.ListSlide).length === 0)
+                        console.log(CategoryBySlide)
+                        var list_Slide = [];
+                        for(var i =0 ; i< CategoryBySlide.length; i++){                            
+                           var list_element = CategoryBySlide[i].ListSlide                                                    
+                        list_Slide = list_Slide.concat(list_element) ;                                                                                            
+                        }          
+                        result.Data= (result.Data).filter((e) =>(e.ListSlide).length === 0).concat(list_Slide) 
+                        console.log(result.Data)
                         result.Data.forEach(element => {                            
                             element.checked = false                          
                         });
-                       
                         this.setState({
                             postByCategorys: result.Data,
-                            categoryByCode: categoryCode,
-                           
+                            categoryByCode: categoryCode,                           
                         })                    
-                    }           
-                    
+                    }       
                 })
         }
         else {
