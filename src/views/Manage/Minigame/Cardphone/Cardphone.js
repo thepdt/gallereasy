@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardBody, CardHeader, Col, Row, Table, Button, Modal, ModalBody, ModalFooter, ModalHeader, FormGroup, FormFeedback, Input, Label, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'reactstrap';
 import PaginationComponent from "react-reactstrap-pagination";
 import CardphoneService from "./CardphoneService";
-//import Notifications from '../../../../components/Notifications';
+// import Notifications from '../../../../components/Notifications';
 const Toolbars = React.lazy(() => import('../../../../components/ToolbarForMutilParam/Toolbars'));
 
 class Cardphone extends Component {
@@ -333,7 +333,7 @@ class Cardphone extends Component {
     }
 
     selectedPage(selectPage) {
-    //    this.getCardphone(selectPage, this.state.selectName, this.state.selectValue, this.state.selectStatus)
+        this.getCardphone(selectPage, this.state.selectName, this.state.selectValue, this.state.selectStatus)
         
         this.setState({
             selectPage: selectPage,
@@ -356,8 +356,10 @@ class Cardphone extends Component {
                 />
 
                 <div className="animated fadeIn">
+                     {/* <Notifications onAddNoti={e => this.addNoti = e}></Notifications> */}
                     <Row>
                         <Col>
+                       
                             <Card>
                                 <CardHeader>
                                     <i className='fa fa-credit-card'></i>Thẻ nạp điện thoại

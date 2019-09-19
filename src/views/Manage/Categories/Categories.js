@@ -288,11 +288,15 @@ class Categories extends Component {
     }
 
     selectePagePostCategory(selectePage) {
-        this.showPostByCategory(this.state.categoryByCode, selectePage, this.state.lastedId)
-        console.log( this.state.lastedId)
+        console.log(selectePage)
+        console.log(this.state.selectedPage)
+       if(selectePage !== this.state.selectedPage){
+        this.showPostByCategory(this.state.categoryByCode,this.state.selectedPage, this.state.lastedId)
         this.setState({
-            selectePage: selectePage
+            selectedPage: selectePage,        
         })
+       }
+        
     }
 
     showPostByCategory(categoryCode, pageIndex, lastId) { 
@@ -300,8 +304,7 @@ class Categories extends Component {
             this._categoryService.getHotPostByCategory(pageIndex)
                 .then((result) => {              
                     if (result.Message === "Success") {
-                        var CategoryBySlide = (result.Data).filter((e) => (e.ListSlide).length !== 0)   
-                        console.log(CategoryBySlide)
+                        var CategoryBySlide = (result.Data).filter((e) => (e.ListSlide).length !== 0)                           
                         var list_Slide = [];
                         for(var i =0 ; i< CategoryBySlide.length; i++){                            
                            var list_element = CategoryBySlide[i].ListSlide                                                    
@@ -334,7 +337,6 @@ class Categories extends Component {
                     }
                 })
         }
-
     }
 
     checkOneShowPost(Id) {
@@ -359,14 +361,9 @@ class Categories extends Component {
         this.setState({
             postByCategorys: PostByCategorys
         });
-    }
-    getTable(){
-        // const CategoryByListSlide = this.state.postByCategorys
-        // if(CategoryByListSlide.ListSlide !== []){
-            console.log("XX")
-        
+    }  
        
-    }
+    
     render() {
         return (
             <div className="container-fullwidth">
@@ -427,7 +424,7 @@ class Categories extends Component {
                                             }
                                         </tbody>
                                     </Table>
-                                    <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectePage.bind(this)} />
+                                    <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectePage.bind(this, this.state.selectedPage)} />
                                 </CardBody>
                             </Card>
                             <Card>
@@ -466,7 +463,7 @@ class Categories extends Component {
                                             )}
                                         </tbody>
                                     </Table>
-                                    <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectePagePostCategory.bind(this)} />
+                                    <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectePagePostCategory.bind(this)} maxPaginationNumbers={3}/>
                                 </CardBody>
                             </Card>
                         </Col>
