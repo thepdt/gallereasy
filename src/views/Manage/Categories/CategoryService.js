@@ -47,6 +47,13 @@ class CategoryService {
         const  url = process.env.REACT_APP_BASE_URL_WEB_API + "/profile/:profileId/posts/hot/web?pageIndex="+ pageIndex
         return fetch(url).then(res =>res.json())
     }
+    handlePinTop(id){
+        const url =  process.env.REACT_APP_BASE_URL_MANAGE + "/news/posts/pin/top/" + id;
+        return fetch(url,{
+            method :"POST",
+            hearders: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        }).then(res => res.json());
+    }
 }
 
 export default CategoryService;
