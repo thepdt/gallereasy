@@ -1,8 +1,12 @@
 class CardphoneService {
-    getCardphone =(pageIndex)=>{       
-        const url = process.env.REACT_APP_BASE_URL_MINIGAME + "/mobile-card/list?pageSize=10&pageIndex=" + pageIndex + "&Name=&Value=-1&Status=-1"  
+    getCardphone =(pageIndex,pageName, pageValue,pageStatus )=>{       
+        const url = process.env.REACT_APP_BASE_URL_MINIGAME + "/mobile-card/list?pageSize=10&pageIndex=" + pageIndex + "&Name=" + pageName +"&Value="+ pageValue +"&Status="+ pageStatus  
         return fetch(url).then(res => res.json());
     }
+    // getSearchCardphone=(pageIndex,pageName,pageValue,pageStatus )=>{       
+    //     const url = process.env.REACT_APP_BASE_URL_MINIGAME + "/mobile-card/list?pageSize=10&pageIndex=" + pageIndex + "&Name=" + pageName +"&Value="+ pageValue +"&Status="+ pageStatus  
+    //     return fetch(url).then(res => res.json());
+    // }
     getVendorCodes=()=>{
         const url = process.env.REACT_APP_BASE_URL_MINIGAME + "/mini-game/exchange-mobile-card/list/vendor"
         return fetch(url).then(res => res.json());

@@ -178,8 +178,7 @@ class ToolBars extends Component {
                                                 </DropdownMenu>
                                             </Dropdown>                                           
                                         </div>                                        
-                                    </div>
-                            
+                                    </div>                           
                                
                                 <Button color ="primary" onClick ={()=>this.props.onSearch(this.state.searchNameText,this.state.orderByValueOption,this.state.orderByStatusValueOption)} ><i className="fa fa-search"></i>&nbsp;Tìm kiếm</Button>
                             </Row>

@@ -724,7 +724,9 @@ class Posts extends Component {
                             posts: Posts
                         });
                     }
-                })
+                }).catch((err) => {
+                    console.log("error: " + err);
+                });
         }
     }
     tabPane() {
@@ -1173,7 +1175,7 @@ class Posts extends Component {
                                                 <DateTimePicker onChange={this.toDateChange} value={this.state.toDatePicked} />
                                             </Col>
                                             <Col md="6" className="right">
-                                                <Button color="primary" onClick={this.handlePinTop.bind(this)}>Pin Top</Button>
+                                                <Button color="primary" onClick={this.handlePinTop.bind(this)} disabled={this.state.checkedPosts.length=== 0}>Pin Top</Button>
                                                 {/* <PaginationComponent totalItems={10000} pageSize={10} onSelect={this.selectedPage.bind(this)} /> */}
                                             </Col>
                                             {/* </Row> */}
