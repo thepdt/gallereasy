@@ -45,7 +45,7 @@ class DefaultHeader extends Component {
                         <NavLink href="#"><i className="icon-location-pin"></i></NavLink>
                     </NavItem> */}
                     <AppHeaderDropdown direction="down">
-                        <DropdownToggle nav isopen="true">
+                        <DropdownToggle nav isOpen="true">
                             <img src={'../../assets/img/avatars/6.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
                         </DropdownToggle>
                         <DropdownMenu right style={{ right: 'auto' }}>
