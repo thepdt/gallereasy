@@ -362,23 +362,23 @@ class Categories extends Component {
         });
     }
 
-    handlePinTop() {
-        console.log("pin top");
-        if (this.state.checkedCategories.length !== 0) {
-            this._categoryService.handlePinTop(this.state.checkedCategories[0])
-                .then((result) => {
-                    if (result.Message === "Success") {
-                        const PostCategorys = this.state.postByCategorys;
-                        this.checkAllonsole.log(PostCategorys)
-                        const index = PostCategorys.findIndex(element => element.Id === this.state.checkedCategories[0]);
-                        PostCategorys[index].checked = !PostCategorys[index].checked
-                        this.setState({
-                            postByCategorys: PostCategorys
-                        });
-                    }
-                })
-        }
-    }
+    // handlePinTop() {
+    //     console.log("pin top");
+    //     if (this.state.checkedCategories.length !== 0) {
+    //         this._categoryService.handlePinTop(this.state.checkedCategories[0])
+    //             .then((result) => {
+    //                 if (result.Message === "Success") {
+    //                     const PostCategorys = this.state.postByCategorys;
+    //                     this.checkAllonsole.log(PostCategorys)
+    //                     const index = PostCategorys.findIndex(element => element.Id === this.state.checkedCategories[0]);
+    //                     PostCategorys[index].checked = !PostCategorys[index].checked
+    //                     this.setState({
+    //                         postByCategorys: PostCategorys
+    //                     });
+    //                 }
+    //             })
+    //     }
+    // }
 
     render() {
         return (
@@ -446,7 +446,7 @@ class Categories extends Component {
                             <Card>
                                 <CardHeader>Thống kê bài đăng: {this.state.categoryByCode} </CardHeader>
                                 <CardBody>
-                                    <Button color="primary" onClick={this.handlePinTop.bind(this)}>Pin Top</Button>
+                                    {/* <Button color="primary" onClick={this.handlePinTop.bind(this)}>Pin Top</Button> */}
                                     <Table responsive hover bordered striped>
                                         <thead>
                                             <tr>
