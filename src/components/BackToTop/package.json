@@ -1,0 +1,6 @@
+{
+  "name": "BackToTop",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./BackToTop.js"
+}

@@ -13,7 +13,8 @@ class DefaultFooter extends Component {
         const { children, ...attributes } = this.props;
         return (
             <React.Fragment>
-                <span>CMS &copy; 2019 Application Software Team</span>
+                <span>Gallereasy POC web app</span>
+                <span className="ml-auto">2359 Media</span>
             </React.Fragment>
         );
     }

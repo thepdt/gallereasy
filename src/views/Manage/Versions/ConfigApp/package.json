@@ -1,7 +1,0 @@
-{
-    "name": "ConfigApp",
-    "version": "0.0.0",
-    "private": true,
-    "main": "./ConfigApp.js"
-}
-  

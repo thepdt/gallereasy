@@ -31,9 +31,11 @@ App-React#v2.0.0
 
 ## Sctipts 
 `npm start` for developing (it runs webpack-dev-server)  
+Please, DO NOT run `npm update`. Just wait...
+
 `npm run build` to run a dev build 
 
-
+## If it has trouble with webpack
 1. Open a terminal window (command prompt) on the node_modules folder outside of your project folder
 
 2. Uninstall webpack and webpack-dev-server:

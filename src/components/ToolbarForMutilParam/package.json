@@ -1,6 +1,0 @@
-{
-    "name": "Toolbars",
-    "version": "0.0.0",
-    "private": true,
-    "main": "./Toolbars.js"
-  }
