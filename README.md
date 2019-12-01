@@ -29,6 +29,8 @@ App-React#v2.0.0
 ## Usage
 `npm i` - to install dependencies
 
+`cp .env.example .env` - to create .env file by coping .env.example
+
 ## Sctipts 
 `npm start` for developing (it runs webpack-dev-server)  
 Please, DO NOT run `npm update`. Just wait...
