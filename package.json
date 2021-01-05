@@ -14,7 +14,7 @@
     "@coreui/react": "^2.1.5",
     "apisauce": "^1.0.2",
     "awesome-debounce-promise": "^2.1.0",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.7.3",
     "classnames": "^2.2.6",
